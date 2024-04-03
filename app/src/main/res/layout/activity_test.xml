@@ -17,7 +17,7 @@
             android:paddingLeft="30dp"
             android:textAlignment="textStart"
             android:textSize="16dp"
-            android:text="의식의 변화, 또렷함 혹은 혼동상태"
+            android:text="테스트"
             >
         </Button>
     </LinearLayout>
