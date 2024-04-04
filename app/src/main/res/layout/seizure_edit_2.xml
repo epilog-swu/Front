@@ -1,7 +1,128 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-             android:orientation="vertical"
-             android:layout_width="match_parent"
-             android:layout_height="match_parent">
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_height="match_parent"
+    android:layout_width="match_parent"
+    android:orientation="vertical" >
 
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1">
+        <LinearLayout
+            android:id="@+id/seizure_edit_1"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="18dp"
+                android:textColor="@color/검정색"
+                android:layout_gravity="center_horizontal"
+                android:text="발작 형태를 선택해주세요"
+                android:layout_marginBottom="50dp"
+                android:layout_marginTop="30dp"
+                />
+            <RadioGroup
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <RadioButton
+                    android:layout_width="match_parent"
+                    android:layout_height="70dp"
+                    android:background="@drawable/seizure_button"
+                    android:textSize="16dp"
+                    android:textColor="@color/검정색"
+                    android:text="잘 모르겠음"
+                    android:gravity="center_vertical"
+                    android:button="@null"
+                    android:drawableEnd="@drawable/seizure_check_button"
+                    android:paddingLeft="20dp"
+                    android:paddingRight="20dp"
+                    android:layout_marginBottom="20dp"
+                    />
+
+                <RadioButton
+                    android:layout_width="match_parent"
+                    android:layout_height="70dp"
+                    android:background="@drawable/seizure_button"
+                    android:textSize="16dp"
+                    android:textColor="@color/검정색"
+                    android:text="전신성 강직-간대성 발작 (대발작)"
+                    android:gravity="center_vertical"
+                    android:button="@null"
+                    android:drawableEnd="@drawable/seizure_check_button"
+                    android:paddingLeft="20dp"
+                    android:paddingRight="20dp"
+                    android:layout_marginBottom="20dp"
+                    />
+
+                <RadioButton
+                    android:layout_width="match_parent"
+                    android:layout_height="70dp"
+                    android:layout_marginBottom="20dp"
+                    android:background="@drawable/seizure_button"
+                    android:button="@null"
+                    android:drawableEnd="@drawable/seizure_check_button"
+                    android:gravity="center_vertical"
+                    android:paddingLeft="20dp"
+                    android:paddingRight="20dp"
+                    android:text="복합 부분 발작"
+                    android:textColor="@color/검정색"
+                    android:textSize="16dp" />
+
+                <RadioButton
+                    android:layout_width="match_parent"
+                    android:layout_height="70dp"
+                    android:layout_marginBottom="20dp"
+                    android:background="@drawable/seizure_button"
+                    android:button="@null"
+                    android:drawableEnd="@drawable/seizure_check_button"
+                    android:gravity="center_vertical"
+                    android:paddingLeft="20dp"
+                    android:paddingRight="20dp"
+                    android:text="단순 부분발작"
+                    android:textColor="@color/검정색"
+                    android:textSize="16dp" />
+
+                <RadioButton
+                    android:layout_width="match_parent"
+                    android:layout_height="70dp"
+                    android:layout_marginBottom="20dp"
+                    android:background="@drawable/seizure_button"
+                    android:button="@null"
+                    android:drawableEnd="@drawable/seizure_check_button"
+                    android:gravity="center_vertical"
+                    android:paddingLeft="20dp"
+                    android:paddingRight="20dp"
+                    android:text="압상스 발작 (소발작)"
+                    android:textColor="@color/검정색"
+                    android:textSize="16dp" />
+
+                <RadioButton
+                    android:layout_width="match_parent"
+                    android:layout_height="70dp"
+                    android:layout_marginBottom="20dp"
+                    android:background="@drawable/seizure_button"
+                    android:button="@null"
+                    android:drawableEnd="@drawable/seizure_check_button"
+                    android:gravity="center_vertical"
+                    android:paddingLeft="20dp"
+                    android:paddingRight="20dp"
+                    android:text="전조증상만 발생"
+                    android:textColor="@color/검정색"
+                    android:textSize="16dp" />
+
+            </RadioGroup>
+        </LinearLayout>
+    </ScrollView>
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:background="@drawable/button"
+        android:textColor="@color/하얀색"
+        android:gravity="center"
+        android:textSize="20dp"
+        android:text="다음" />
 </LinearLayout>

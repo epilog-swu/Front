@@ -9,7 +9,10 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentTransaction
 import com.epi.epilog.databinding.ActivitySeizureEditBinding
+import com.epi.epilog.databinding.SeizureEdit2Binding
+import com.epi.epilog.databinding.SeizureEdit4Binding
 import com.epi.epilog.databinding.SeizureEdit5Binding
+import com.epi.epilog.databinding.SeizureEdit6Binding
 
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -26,13 +29,13 @@ class MainActivity : AppCompatActivity() {
 }
 
 class SeizureFragment: Fragment() {
-    lateinit var binding: SeizureEdit5Binding
+    lateinit var binding: SeizureEdit2Binding
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        binding = SeizureEdit5Binding.inflate(inflater, container, false)
+        binding = SeizureEdit2Binding.inflate(inflater, container, false)
         return binding.root
     }
 }
