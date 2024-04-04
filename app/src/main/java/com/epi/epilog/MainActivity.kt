@@ -1,36 +1,38 @@
 package com.epi.epilog
 
 import android.os.Bundle
-import androidx.activity.ComponentActivity
-import androidx.activity.compose.setContent
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
-import com.epi.epilog.ui.theme.EpilogTheme
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentManager
+import androidx.fragment.app.FragmentTransaction
+import com.epi.epilog.databinding.ActivitySeizureEditBinding
+import com.epi.epilog.databinding.SeizureEdit5Binding
 
-class MainActivity : ComponentActivity() {
+class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_seizure_edit)
+        val binding = ActivitySeizureEditBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+
+        val fragmentManager: FragmentManager = supportFragmentManager
+        val transaction: FragmentTransaction = fragmentManager.beginTransaction()
+        val seizureFragment = SeizureFragment()
+        transaction.add(R.id.seizure_edit_fragment, seizureFragment)
+        transaction.commit()
     }
 }
 
-@Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
-}
-
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    EpilogTheme {
-        Greeting("Android")
+class SeizureFragment: Fragment() {
+    lateinit var binding: SeizureEdit5Binding
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        binding = SeizureEdit5Binding.inflate(inflater, container, false)
+        return binding.root
     }
 }

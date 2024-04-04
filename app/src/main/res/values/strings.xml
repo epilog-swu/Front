@@ -1,5 +1,3 @@
 <resources>
     <string name="app_name">epilog</string>
-    <string name="seizure_content1">%1$d년 %2$d월 %3$d일 %4$s</string>
-    <string name="seizure_content2">발작형태는 %s 입니다.</string>
 </resources>

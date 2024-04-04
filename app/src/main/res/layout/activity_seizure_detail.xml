@@ -1,0 +1,322 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="30dp"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        >
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="80dp"
+            android:layout_marginBottom="15dp"
+            android:orientation="horizontal"
+            android:background="@drawable/seizure_button"
+            android:gravity="center_horizontal">
+    <!--        visibility=gone설정, 아이디 추가-->
+            <ImageView
+                android:id="@+id/seizure_icon_1"
+                android:visibility="gone"
+                android:layout_height="match_parent"
+                android:layout_width="40dp"
+                android:layout_marginLeft="20dp"
+                android:src="@drawable/ic_launcher_background">
+            </ImageView>
+            <ImageView
+                android:id="@+id/seizure_icon_2"
+                android:layout_height="match_parent"
+                android:layout_width="40dp"
+                android:layout_marginLeft="20dp"
+                android:src="@drawable/ic_launcher_background">
+            </ImageView>
+            <ImageView
+                android:id="@+id/seizure_icon_3"
+                android:layout_height="match_parent"
+                android:layout_width="40dp"
+                android:layout_marginLeft="20dp"
+                android:src="@drawable/ic_launcher_background">
+            </ImageView>
+            <ImageView
+                android:id="@+id/seizure_icon_4"
+                android:layout_height="match_parent"
+                android:layout_width="40dp"
+                android:layout_marginLeft="20dp"
+                android:src="@drawable/ic_launcher_background">
+            </ImageView>
+            <ImageView
+                android:id="@+id/seizure_icon_5"
+                android:layout_height="match_parent"
+                android:layout_width="40dp"
+                android:layout_marginLeft="20dp"
+                android:src="@drawable/ic_launcher_background">
+            </ImageView>
+            <ImageView
+                android:id="@+id/seizure_icon_6"
+                android:layout_height="match_parent"
+                android:layout_width="40dp"
+                android:layout_marginLeft="20dp"
+                android:src="@drawable/ic_launcher_background">
+            </ImageView>
+        </LinearLayout>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="20dp"
+            android:textColor="@color/검정색"
+            android:text="발작시간"
+            android:layout_marginBottom="10dp"/>
+        <TextView
+            android:id="@+id/seizure_content1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="16dp"
+            android:textColor="@color/검정색"
+            android:layout_marginBottom="20dp"
+            android:text="2024년 4월 13일 19시 30분"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="20dp"
+            android:textColor="@color/검정색"
+            android:text="발작형태 및 증상"
+            android:layout_marginBottom="10dp" />
+        <TextView
+            android:id="@+id/seizure_content2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="16dp"
+            android:textColor="@color/검정색"
+            android:layout_marginBottom="20dp"
+            android:text="발작 형태는 전조증상만 발생 입니다."/>
+        <TextView
+            android:id="@+id/seizure_content3"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="16dp"
+            android:textColor="@color/검정색"
+            android:layout_marginBottom="20dp"
+            android:text="발작이 발생한 부위는 몸, 움직임, 눈, 입, 갑작스러운 배설, 피부색이며 구체적으로 몸전체, 몸 오른쪽, 움찔거림, 눈동자 위쪽, 갑작스러운 소변 증상이 있었습니다."/>
+        <TextView
+            android:id="@+id/seizure_content4"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="16dp"
+            android:textColor="@color/검정색"
+            android:layout_marginBottom="20dp"
+            android:text="발작 중 의식의 변화, 또렷함 혹은 혼동상태, 대화 및 이해능력, 몸이 뻣뻣해 지거나 늘어짐 등의 현상을 겪었습니다."/>
+        <TextView
+            android:id="@+id/seizure_content5"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="16dp"
+            android:textColor="@color/검정색"
+            android:layout_marginBottom="20dp"
+            android:text="발작은 30초 이내 지속되었습니다."/>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/seizure_button"
+            android:padding="20dp"
+            android:layout_marginBottom="20dp"
+            android:orientation="vertical">
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="18dp"
+                android:textColor="@color/검정색"
+                android:layout_marginBottom="20dp"
+                android:text="키워드" />
+            <com.google.android.flexbox.FlexboxLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:flexWrap="wrap"
+                app:alignItems="flex_start"
+                app:alignContent="flex_start"
+                android:orientation="horizontal">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="전조증상만발생"
+                    android:background="@drawable/badge"
+                    android:layout_marginRight="5dp"
+                    android:layout_marginBottom="5dp"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="몸"
+                    android:background="@drawable/badge"
+                    android:layout_marginRight="5dp"
+                    android:layout_marginBottom="5dp" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="움직임"
+                    android:background="@drawable/badge"
+                    android:layout_marginRight="5dp"
+                    android:layout_marginBottom="5dp" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="눈"
+                    android:background="@drawable/badge"
+                    android:layout_marginRight="5dp"
+                    android:layout_marginBottom="5dp" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="입"
+                    android:background="@drawable/badge"
+                    android:layout_marginRight="5dp"
+                    android:layout_marginBottom="5dp" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="갑작스러운배설"
+                    android:background="@drawable/badge"
+                    android:layout_marginRight="5dp"
+                    android:layout_marginBottom="5dp" />
+            </com.google.android.flexbox.FlexboxLayout >
+        </LinearLayout>
+
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="20dp"
+            android:textColor="@color/검정색"
+            android:text="발작 전/후 반응 및 발작 예상 요인"
+            android:layout_marginBottom="10dp" />
+        <TextView
+            android:id="@+id/seizure_content6"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="16dp"
+            android:textColor="@color/검정색"
+            android:layout_marginBottom="20dp"
+            android:text="발작 전 차분한, 행복한, 기운찬, 걱정스러운, 죄책감 등의 감정 혹은 분위기를 느꼈습니다."/>
+        <TextView
+            android:id="@+id/seizure_content7"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="16dp"
+            android:textColor="@color/검정색"
+            android:layout_marginBottom="20dp"
+            android:text="발작 후 목소리, 손길에 대한 반응, 이름, 장소, 시간에 대한 인식, 힘이 빠짐, 무감각 등의 증상이 있었습니다."/>
+        <TextView
+            android:id="@+id/seizure_content8"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="16dp"
+            android:textColor="@color/검정색"
+            android:layout_marginBottom="20dp"
+            android:text="항뇌전증 약 미복용, 수면부족 또는 수면 질 저하, 과도한 스트레스, 발열, 음주 등이 발작을 일으켰을거라고 추측합니다."/>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/seizure_button"
+            android:padding="20dp"
+            android:layout_marginBottom="20dp"
+            android:orientation="vertical">
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="18dp"
+                android:textColor="@color/검정색"
+                android:layout_marginBottom="20dp"
+                android:text="키워드" />
+            <com.google.android.flexbox.FlexboxLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:flexWrap="wrap"
+                app:alignItems="flex_start"
+                app:alignContent="flex_start"
+                android:orientation="horizontal">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="전조증상만발생"
+                    android:background="@drawable/badge"
+                    android:layout_marginRight="5dp"
+                    android:layout_marginBottom="5dp"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="몸"
+                    android:background="@drawable/badge"
+                    android:layout_marginRight="5dp"
+                    android:layout_marginBottom="5dp" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="움직임"
+                    android:background="@drawable/badge"
+                    android:layout_marginRight="5dp"
+                    android:layout_marginBottom="5dp" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="눈"
+                    android:background="@drawable/badge"
+                    android:layout_marginRight="5dp"
+                    android:layout_marginBottom="5dp" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="입"
+                    android:background="@drawable/badge"
+                    android:layout_marginRight="5dp"
+                    android:layout_marginBottom="5dp" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="갑작스러운배설"
+                    android:background="@drawable/badge"
+                    android:layout_marginRight="5dp"
+                    android:layout_marginBottom="5dp" />
+            </com.google.android.flexbox.FlexboxLayout >
+        </LinearLayout>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="20dp"
+            android:textColor="@color/검정색"
+            android:text="기타"
+            android:layout_marginBottom="10dp" />
+        <TextView
+            android:id="@+id/seizure_content9"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="16dp"
+            android:textColor="@color/검정색"
+            android:layout_marginBottom="20dp"
+            android:text="오늘 요가, 격한 스트레칭 신체활동을 했습니다."/>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/seizure_button"
+            android:padding="20dp"
+            android:layout_marginBottom="20dp"
+            android:orientation="vertical">
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="18dp"
+                android:textColor="@color/검정색"
+                android:layout_marginBottom="20dp"
+                android:text="환자 수기" />
+            <TextView
+                android:id="@+id/seizure_comment"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="16dp"
+                android:textColor="@color/검정색"
+                android:text="오늘은 어쩌구 저쩌구 어쩌구 저쩌구" />
+        </LinearLayout>
+    </LinearLayout>
+</ScrollView>

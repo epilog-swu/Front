@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <style name="Theme.Epilog" parent="android:Theme.Material.Light.NoActionBar" />
+    <style name="Theme.Epilog" parent="@style/Theme.AppCompat.DayNight.NoActionBar" />
     <color name = "메인보라">#8377D8</color>
     <color name = "연보라3">#A798E5</color>
     <color name = "연보라2">#BBB0E9</color>
