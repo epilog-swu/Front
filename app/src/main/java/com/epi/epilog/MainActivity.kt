@@ -11,9 +11,11 @@ import androidx.fragment.app.FragmentTransaction
 import com.epi.epilog.databinding.ActivityModeSelectBinding
 import com.epi.epilog.databinding.ActivitySeizureDetailBinding
 import com.epi.epilog.databinding.ActivitySeizureEditBinding
+import com.epi.epilog.databinding.ActivityStartBinding
 import com.epi.epilog.databinding.SeizureEdit11Binding
 import com.epi.epilog.databinding.SeizureEdit1Binding
 import com.epi.epilog.databinding.SeizureEdit2Binding
+import com.epi.epilog.databinding.SeizureEdit3Binding
 import com.epi.epilog.databinding.SeizureEdit4Binding
 import com.epi.epilog.databinding.SeizureEdit7Binding
 import com.epi.epilog.databinding.SignUp1Binding
@@ -22,25 +24,25 @@ import com.epi.epilog.databinding.SignUp2Binding
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val binding = ActivitySeizureEditBinding.inflate(layoutInflater)
+        val binding = ActivityStartBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        val fragmentManager: FragmentManager = supportFragmentManager
-        val transaction: FragmentTransaction = fragmentManager.beginTransaction()
-        val seizureFragment = SeizureFragment()
-        transaction.add(R.id.seizure_edit_fragment, seizureFragment)
-        transaction.commit()
+//        val fragmentManager: FragmentManager = supportFragmentManager
+//        val transaction: FragmentTransaction = fragmentManager.beginTransaction()
+//        val seizureFragment = SeizureFragment()
+//        transaction.add(R.id.seizure_edit_fragment, seizureFragment)
+//        transaction.commit()
     }
 }
 
 class SeizureFragment: Fragment() {
-    lateinit var binding: SeizureEdit1Binding
+    lateinit var binding: SeizureEdit3Binding
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        binding = SeizureEdit1Binding.inflate(inflater, container, false)
+        binding = SeizureEdit3Binding.inflate(inflater, container, false)
         return binding.root
     }
 }
