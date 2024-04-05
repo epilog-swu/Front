@@ -12,6 +12,7 @@ import com.epi.epilog.databinding.ActivityModeSelectBinding
 import com.epi.epilog.databinding.ActivitySeizureDetailBinding
 import com.epi.epilog.databinding.ActivitySeizureEditBinding
 import com.epi.epilog.databinding.SeizureEdit11Binding
+import com.epi.epilog.databinding.SeizureEdit1Binding
 import com.epi.epilog.databinding.SeizureEdit2Binding
 import com.epi.epilog.databinding.SeizureEdit4Binding
 import com.epi.epilog.databinding.SeizureEdit7Binding
@@ -33,13 +34,13 @@ class MainActivity : AppCompatActivity() {
 }
 
 class SeizureFragment: Fragment() {
-    lateinit var binding: SeizureEdit11Binding
+    lateinit var binding: SeizureEdit1Binding
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        binding = SeizureEdit11Binding.inflate(inflater, container, false)
+        binding = SeizureEdit1Binding.inflate(inflater, container, false)
         return binding.root
     }
 }
