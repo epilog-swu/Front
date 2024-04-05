@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:padding="30dp"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
-    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_height="0dp"
+    android:layout_weight="1"
+    android:padding="30dp">
+    <LinearLayout
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -93,14 +94,16 @@
             android:textColor="@color/검정색"
             android:layout_marginBottom="20dp"
             android:text="발작 형태는 전조증상만 발생 입니다."/>
+
         <TextView
             android:id="@+id/seizure_content3"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textSize="16dp"
-            android:textColor="@color/검정색"
             android:layout_marginBottom="20dp"
-            android:text="발작이 발생한 부위는 몸, 움직임, 눈, 입, 갑작스러운 배설, 피부색이며 구체적으로 몸전체, 몸 오른쪽, 움찔거림, 눈동자 위쪽, 갑작스러운 소변 증상이 있었습니다."/>
+            android:text="발작이 발생한 부위는 몸, 움직임, 눈, 입, 갑작스러운 배설, 피부색이며 구체적으로 몸전체, 몸 오른쪽, 움찔거림, 눈동자 위쪽, 갑작스러운 소변 증상이 있었습니다."
+            android:textColor="@color/검정색"
+            android:textSize="16dp" />
+
         <TextView
             android:id="@+id/seizure_content4"
             android:layout_width="match_parent"
