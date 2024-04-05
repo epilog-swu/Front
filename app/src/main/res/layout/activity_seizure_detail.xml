@@ -22,52 +22,51 @@
     <!--        visibility=gone설정, 아이디 추가-->
             <ImageView
                 android:id="@+id/seizure_icon_1"
-                android:visibility="gone"
                 android:layout_height="match_parent"
-                android:layout_width="24dp"
-                android:layout_marginRight="10dp"
-                android:layout_marginLeft="10dp"
-                android:src="@drawable/ic_launcher_background">
+                android:layout_width="34dp"
+                android:layout_marginRight="5dp"
+                android:layout_marginLeft="5dp"
+                android:src="@drawable/seizure_status_1">
             </ImageView>
             <ImageView
                 android:id="@+id/seizure_icon_2"
                 android:layout_height="match_parent"
-                android:layout_width="24dp"
-                android:layout_marginRight="10dp"
-                android:layout_marginLeft="10dp"
-                android:src="@drawable/ic_launcher_background">
+                android:layout_width="34dp"
+                android:layout_marginRight="5dp"
+                android:layout_marginLeft="5dp"
+                android:src="@drawable/seizure_status_2">
             </ImageView>
             <ImageView
                 android:id="@+id/seizure_icon_3"
                 android:layout_height="match_parent"
-                android:layout_width="24dp"
-                android:layout_marginRight="10dp"
-                android:layout_marginLeft="10dp"
-                android:src="@drawable/ic_launcher_background">
+                android:layout_width="34dp"
+                android:layout_marginRight="5dp"
+                android:layout_marginLeft="5dp"
+                android:src="@drawable/seizure_status_3">
             </ImageView>
             <ImageView
                 android:id="@+id/seizure_icon_4"
                 android:layout_height="match_parent"
-                android:layout_width="24dp"
-                android:layout_marginRight="10dp"
-                android:layout_marginLeft="10dp"
-                android:src="@drawable/ic_launcher_background">
+                android:layout_width="34dp"
+                android:layout_marginRight="5dp"
+                android:layout_marginLeft="5dp"
+                android:src="@drawable/seizure_status_4">
             </ImageView>
             <ImageView
                 android:id="@+id/seizure_icon_5"
                 android:layout_height="match_parent"
-                android:layout_width="24dp"
-                android:layout_marginRight="10dp"
-                android:layout_marginLeft="10dp"
-                android:src="@drawable/ic_launcher_background">
+                android:layout_width="34dp"
+                android:layout_marginRight="5dp"
+                android:layout_marginLeft="5dp"
+                android:src="@drawable/seizure_status_5">
             </ImageView>
             <ImageView
                 android:id="@+id/seizure_icon_6"
                 android:layout_height="match_parent"
-                android:layout_width="24dp"
-                android:layout_marginRight="10dp"
-                android:layout_marginLeft="10dp"
-                android:src="@drawable/ic_launcher_background">
+                android:layout_width="34dp"
+                android:layout_marginRight="5dp"
+                android:layout_marginLeft="5dp"
+                android:src="@drawable/seizure_status_6">
             </ImageView>
         </LinearLayout>
         <TextView
@@ -152,6 +151,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="전조증상만발생"
+                    android:textSize="12dp"
+                    android:textColor="@color/검정색"
                     android:background="@drawable/badge"
                     android:layout_marginRight="5dp"
                     android:layout_marginBottom="5dp"/>
@@ -159,6 +160,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="몸"
+                    android:textSize="12dp"
+                    android:textColor="@color/검정색"
                     android:background="@drawable/badge"
                     android:layout_marginRight="5dp"
                     android:layout_marginBottom="5dp" />
@@ -166,6 +169,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="움직임"
+                    android:textSize="12dp"
+                    android:textColor="@color/검정색"
                     android:background="@drawable/badge"
                     android:layout_marginRight="5dp"
                     android:layout_marginBottom="5dp" />
@@ -173,6 +178,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="눈"
+                    android:textSize="12dp"
+                    android:textColor="@color/검정색"
                     android:background="@drawable/badge"
                     android:layout_marginRight="5dp"
                     android:layout_marginBottom="5dp" />
@@ -180,6 +187,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="입"
+                    android:textSize="12dp"
+                    android:textColor="@color/검정색"
                     android:background="@drawable/badge"
                     android:layout_marginRight="5dp"
                     android:layout_marginBottom="5dp" />
@@ -187,6 +196,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="갑작스러운배설"
+                    android:textSize="12dp"
+                    android:textColor="@color/검정색"
                     android:background="@drawable/badge"
                     android:layout_marginRight="5dp"
                     android:layout_marginBottom="5dp" />
@@ -250,6 +261,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="전조증상만발생"
+                    android:textSize="12dp"
+                    android:textColor="@color/검정색"
                     android:background="@drawable/badge"
                     android:layout_marginRight="5dp"
                     android:layout_marginBottom="5dp"/>
@@ -257,6 +270,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="몸"
+                    android:textSize="12dp"
+                    android:textColor="@color/검정색"
                     android:background="@drawable/badge"
                     android:layout_marginRight="5dp"
                     android:layout_marginBottom="5dp" />
@@ -264,6 +279,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="움직임"
+                    android:textSize="12dp"
+                    android:textColor="@color/검정색"
                     android:background="@drawable/badge"
                     android:layout_marginRight="5dp"
                     android:layout_marginBottom="5dp" />
@@ -271,6 +288,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="눈"
+                    android:textSize="12dp"
+                    android:textColor="@color/검정색"
                     android:background="@drawable/badge"
                     android:layout_marginRight="5dp"
                     android:layout_marginBottom="5dp" />
@@ -278,6 +297,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="입"
+                    android:textSize="12dp"
+                    android:textColor="@color/검정색"
                     android:background="@drawable/badge"
                     android:layout_marginRight="5dp"
                     android:layout_marginBottom="5dp" />
@@ -285,6 +306,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="갑작스러운배설"
+                    android:textSize="12dp"
+                    android:textColor="@color/검정색"
                     android:background="@drawable/badge"
                     android:layout_marginRight="5dp"
                     android:layout_marginBottom="5dp" />
