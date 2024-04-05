@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_height="match_parent"
+    android:layout_width="match_parent"
+    android:orientation="vertical" >
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1">
+        <LinearLayout
+            android:id="@+id/seizure_edit_1"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="18dp"
+                android:textColor="@color/검정색"
+                android:layout_gravity="center_horizontal"
+                android:text="경련 후 발생한 일을 선택해주세요"
+                android:layout_marginBottom="50dp"
+                android:layout_marginTop="30dp"
+                />
+            <CheckBox
+                android:layout_width="match_parent"
+                android:layout_height="70dp"
+                android:background="@drawable/seizure_button"
+                android:textSize="16dp"
+                android:textColor="@color/검정색"
+                android:text="알 수 없음"
+                android:gravity="center_vertical"
+                android:button="@null"
+                android:drawableEnd="@drawable/seizure_check_button"
+                android:paddingLeft="20dp"
+                android:paddingRight="20dp"
+                android:layout_marginBottom="20dp"
+                />
+
+            <CheckBox
+                android:layout_width="match_parent"
+                android:layout_height="70dp"
+                android:background="@drawable/seizure_button"
+                android:textSize="16dp"
+                android:textColor="@color/검정색"
+                android:text="목소리, 손길에 대한 반응"
+                android:gravity="center_vertical"
+                android:button="@null"
+                android:drawableEnd="@drawable/seizure_check_button"
+                android:paddingLeft="20dp"
+                android:paddingRight="20dp"
+                android:layout_marginBottom="20dp"
+                />
+
+            <CheckBox
+                android:layout_width="match_parent"
+                android:layout_height="70dp"
+                android:layout_marginBottom="20dp"
+                android:background="@drawable/seizure_button"
+                android:button="@null"
+                android:drawableEnd="@drawable/seizure_check_button"
+                android:gravity="center_vertical"
+                android:paddingLeft="20dp"
+                android:paddingRight="20dp"
+                android:text="이름, 장소, 시간에 대한 인식"
+                android:textColor="@color/검정색"
+                android:textSize="16dp" />
+
+            <CheckBox
+                android:layout_width="match_parent"
+                android:layout_height="70dp"
+                android:layout_marginBottom="20dp"
+                android:background="@drawable/seizure_button"
+                android:button="@null"
+                android:drawableEnd="@drawable/seizure_check_button"
+                android:gravity="center_vertical"
+                android:paddingLeft="20dp"
+                android:paddingRight="20dp"
+                android:text="경련에 대한 기억"
+                android:textColor="@color/검정색"
+                android:textSize="16dp" />
+
+            <CheckBox
+                android:layout_width="match_parent"
+                android:layout_height="70dp"
+                android:background="@drawable/seizure_button"
+                android:textSize="16dp"
+                android:textColor="@color/검정색"
+                android:text="의사소통 능력"
+                android:gravity="center_vertical"
+                android:button="@null"
+                android:drawableEnd="@drawable/seizure_check_button"
+                android:paddingLeft="20dp"
+                android:paddingRight="20dp"
+                android:layout_marginBottom="20dp"
+                />
+            <CheckBox
+                android:layout_width="match_parent"
+                android:layout_height="70dp"
+                android:background="@drawable/seizure_button"
+                android:textSize="16dp"
+                android:textColor="@color/검정색"
+                android:text="힘이 빠짐(무력감), 무감각"
+                android:gravity="center_vertical"
+                android:button="@null"
+                android:drawableEnd="@drawable/seizure_check_button"
+                android:paddingLeft="20dp"
+                android:paddingRight="20dp"
+                android:layout_marginBottom="20dp"
+                />
+
+            <CheckBox
+                android:layout_width="match_parent"
+                android:layout_height="70dp"
+                android:background="@drawable/seizure_button"
+                android:textSize="16dp"
+                android:textColor="@color/검정색"
+                android:text="행동 혹은 기분의 변화"
+                android:gravity="center_vertical"
+                android:button="@null"
+                android:drawableEnd="@drawable/seizure_check_button"
+                android:paddingLeft="20dp"
+                android:paddingRight="20dp"
+                android:layout_marginBottom="20dp"
+                />
+            <CheckBox
+                android:layout_width="match_parent"
+                android:layout_height="70dp"
+                android:background="@drawable/seizure_button"
+                android:textSize="16dp"
+                android:textColor="@color/검정색"
+                android:text="피로감, 졸림"
+                android:gravity="center_vertical"
+                android:button="@null"
+                android:drawableEnd="@drawable/seizure_check_button"
+                android:paddingLeft="20dp"
+                android:paddingRight="20dp"
+                android:layout_marginBottom="20dp"
+                />
+        </LinearLayout>
+    </ScrollView>
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:background="@drawable/button"
+        android:textColor="@color/하얀색"
+        android:gravity="center"
+        android:textSize="20dp"
+        android:text="다음" />
+</LinearLayout>
