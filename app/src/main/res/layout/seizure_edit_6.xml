@@ -19,6 +19,7 @@
                 android:layout_height="wrap_content"
                 android:textSize="18dp"
                 android:textColor="@color/검정색"
+                android:textAlignment="center"
                 android:layout_gravity="center_horizontal"
                 android:text="경련 후 발생한 일을 선택해주세요"
                 android:layout_marginBottom="50dp"

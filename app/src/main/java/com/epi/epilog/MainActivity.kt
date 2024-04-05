@@ -11,7 +11,9 @@ import androidx.fragment.app.FragmentTransaction
 import com.epi.epilog.databinding.ActivityModeSelectBinding
 import com.epi.epilog.databinding.ActivitySeizureDetailBinding
 import com.epi.epilog.databinding.ActivitySeizureEditBinding
+import com.epi.epilog.databinding.SeizureEdit11Binding
 import com.epi.epilog.databinding.SeizureEdit2Binding
+import com.epi.epilog.databinding.SeizureEdit4Binding
 import com.epi.epilog.databinding.SeizureEdit7Binding
 import com.epi.epilog.databinding.SignUp1Binding
 import com.epi.epilog.databinding.SignUp2Binding
@@ -31,13 +33,13 @@ class MainActivity : AppCompatActivity() {
 }
 
 class SeizureFragment: Fragment() {
-    lateinit var binding: SeizureEdit7Binding
+    lateinit var binding: SeizureEdit11Binding
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        binding = SeizureEdit7Binding.inflate(inflater, container, false)
+        binding = SeizureEdit11Binding.inflate(inflater, container, false)
         return binding.root
     }
 }
