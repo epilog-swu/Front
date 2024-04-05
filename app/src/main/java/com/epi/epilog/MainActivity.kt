@@ -8,26 +8,24 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentTransaction
+import com.epi.epilog.databinding.ActivityModeSelectBinding
 import com.epi.epilog.databinding.ActivitySeizureDetailBinding
 import com.epi.epilog.databinding.ActivitySeizureEditBinding
-import com.epi.epilog.databinding.SeizureEdit10Binding
 import com.epi.epilog.databinding.SeizureEdit2Binding
-import com.epi.epilog.databinding.SeizureEdit4Binding
-import com.epi.epilog.databinding.SeizureEdit5Binding
-import com.epi.epilog.databinding.SeizureEdit6Binding
-import com.epi.epilog.databinding.SeizureEdit8Binding
+import com.epi.epilog.databinding.SignUp1Binding
+import com.epi.epilog.databinding.SignUp2Binding
 
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val binding = ActivitySeizureEditBinding.inflate(layoutInflater)
+        val binding = ActivitySeizureDetailBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        val fragmentManager: FragmentManager = supportFragmentManager
-        val transaction: FragmentTransaction = fragmentManager.beginTransaction()
-        val seizureFragment = SeizureFragment()
-        transaction.add(R.id.seizure_edit_fragment, seizureFragment)
-        transaction.commit()
+//        val fragmentManager: FragmentManager = supportFragmentManager
+//        val transaction: FragmentTransaction = fragmentManager.beginTransaction()
+//        val seizureFragment = SeizureFragment()
+//        transaction.add(R.id.seizure_edit_fragment, seizureFragment)
+//        transaction.commit()
     }
 }
 
