@@ -51,6 +51,7 @@
 
 <!--    TextView 밑줄 효과는 코틀린 코드에서-->
     <TextView
+        android:id="@+id/signup_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
