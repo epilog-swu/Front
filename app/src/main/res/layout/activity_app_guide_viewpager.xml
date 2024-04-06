@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="340dp"
+    android:layout_height="550dp"
+    android:layout_gravity="center"
+    android:orientation="vertical">
+
+    <TextView
+        android:text="@string/app_name_capital"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="40dp"
+        android:gravity="top|center"
+        android:textColor="#000000"
+        android:background="@color/light_purple"
+        />
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="400dp"
+        android:background="@color/main_purple"/>
+
+</LinearLayout>
