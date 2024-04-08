@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
@@ -19,19 +20,20 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal">
 
+
         <Button
             android:layout_width="140dp"
             android:layout_height="150dp"
             android:background="@drawable/mode_purple_button_shape"
-            android:drawableLeft="@drawable/baseline_info_24"
-            android:drawablePadding="0dp"
+            app:icon="@drawable/baseline_info_24"
+            app:iconPadding="0dp"
+            app:iconGravity="textStart"
             android:layout_marginStart="55dp"
             android:layout_marginEnd="10dp"
             android:text="환자"
             android:textSize="17dp"
             android:textStyle="bold"
-            android:textColor="@color/white">
-        </Button>
+            android:textColor="@color/white" />
 
         <Button
             android:layout_width="140dp"
