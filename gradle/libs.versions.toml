@@ -12,6 +12,11 @@ fragment = "1.6.2"
 appcompat = "1.6.1"
 material = "1.11.0"
 constraintlayout = "2.1.4"
+materialCalendarview = "2.0.1"
+viewpager2 = "1.1.0-beta02"
+dotsindicator = "1.0.1"
+circleindicator = "2.1.6"
+materialCalendarviewVersion = "1.4.3"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -32,6 +37,11 @@ androidx-fragment = { group = "androidx.fragment", name = "fragment", version.re
 androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
 material = { group = "com.google.android.material", name = "material", version.ref = "material" }
 androidx-constraintlayout = { group = "androidx.constraintlayout", name = "constraintlayout", version.ref = "constraintlayout" }
+androidx-viewpager2 = { group = "androidx.viewpager2", name = "viewpager2", version.ref = "viewpager2" }
+dotsindicator = { group = "com.gitee.archermind-ti", name = "dotsindicator", version.ref = "dotsindicator" }
+circleindicator = { group = "me.relex", name = "circleindicator", version.ref = "circleindicator" }
+material-calendarview = { module = "com.github.prolificinteractive:material-calendarview", version.ref = "materialCalendarview" }
+prolificinteractive-material-calendarview = { group = "com.prolificinteractive", name = "material-calendarview", version.ref = "materialCalendarviewVersion" }
 
 
 [plugins]
