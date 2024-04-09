@@ -20,6 +20,7 @@
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="30dp"
                 android:layout_marginBottom="50dp"
+                android:textAlignment="center"
                 android:text="경련 중 발생한 변화를 선택해주세요"
                 android:textColor="@color/검정색"
                 android:textSize="18dp" />
