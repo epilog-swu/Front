@@ -38,11 +38,11 @@ class MainActivity : AppCompatActivity() {
         val binding = ActivitySeizureEditBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        val fragmentManager: FragmentManager = supportFragmentManager
-        val transaction: FragmentTransaction = fragmentManager.beginTransaction()
-        val seizureFragment = SeizureFragment()
-        transaction.add(R.id.seizure_edit_fragment, seizureFragment)
-        transaction.commit()
+//        val fragmentManager: FragmentManager = supportFragmentManager
+//        val transaction: FragmentTransaction = fragmentManager.beginTransaction()
+//        val seizureFragment = SeizureFragment()
+//        transaction.add(R.id.seizure_edit_fragment, seizureFragment)
+//        transaction.commit()
     }
 }
 
