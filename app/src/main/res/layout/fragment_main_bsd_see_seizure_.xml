@@ -73,6 +73,17 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
 
+        <!--icon-text set1-->
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/see_seizure_icon_layout_set1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            app:layout_constraintTop_toTopOf="@id/see_seizure_icon_layout"
+            app:layout_constraintBottom_toBottomOf="@id/see_seizure_icon_layout"
+            app:layout_constraintStart_toStartOf="@id/see_seizure_icon_layout"
+            app:layout_constraintEnd_toStartOf="@id/see_seizure_icon_layout_set2">
+
         <!-- 아이콘과 텍스트 세트; 이 세트들은 동적으로 추가됩니다 -->
         <!-- 예를 들어, 하나의 아이콘 세트입니다 -->
         <ImageView
@@ -80,10 +91,10 @@
             android:layout_width="48dp"
             android:layout_height="48dp"
             android:layout_marginTop="16dp"
-            android:layout_marginStart="20dp"
             android:src="@drawable/icon_sun"
             android:background="@drawable/circle_shape"
             app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toTopOf="@id/see_seizure_icon_text_1"
             />
@@ -96,19 +107,32 @@
             android:textSize="13dp"
             android:textColor="@color/black"
             app:layout_constraintTop_toBottomOf="@id/see_seizure_icon_1"
-            app:layout_constraintStart_toStartOf="@id/see_seizure_icon_1"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="@id/see_seizure_icon_1"
             app:layout_constraintBottom_toBottomOf="parent" />
+
+         </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <!--icon-text set2-->
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/see_seizure_icon_layout_set2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            app:layout_constraintTop_toTopOf="@id/see_seizure_icon_layout"
+            app:layout_constraintBottom_toBottomOf="@id/see_seizure_icon_layout"
+            app:layout_constraintStart_toEndOf="@id/see_seizure_icon_layout_set1"
+            app:layout_constraintEnd_toStartOf="@id/see_seizure_icon_layout_set3">
 
         <ImageView
             android:id="@+id/see_seizure_icon_2"
             android:layout_width="48dp"
             android:layout_height="48dp"
             android:layout_marginTop="16dp"
-            android:layout_marginStart="20dp"
             android:src="@drawable/icon_sun"
             android:background="@drawable/circle_shape"
-            app:layout_constraintStart_toEndOf="@id/see_seizure_icon_1"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toTopOf="@id/see_seizure_icon_text_2"
             />
@@ -125,31 +149,123 @@
             app:layout_constraintEnd_toEndOf="@id/see_seizure_icon_2"
             app:layout_constraintBottom_toBottomOf="parent" />
 
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <!--icon-text set3-->
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/see_seizure_icon_layout_set3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            app:layout_constraintTop_toTopOf="@id/see_seizure_icon_layout"
+            app:layout_constraintBottom_toBottomOf="@id/see_seizure_icon_layout"
+            app:layout_constraintStart_toEndOf="@id/see_seizure_icon_layout_set2"
+            app:layout_constraintEnd_toStartOf="@id/see_seizure_icon_plus_layout">
+
+            <ImageView
+                android:id="@+id/see_seizure_icon_3"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:layout_marginTop="16dp"
+                android:src="@drawable/icon_cloud"
+                android:background="@drawable/circle_shape"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toTopOf="@id/see_seizure_icon_text_3"
+                />
+
+            <TextView
+                android:id="@+id/see_seizure_icon_text_3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="17시 50분"
+                android:textSize="13dp"
+                android:textColor="@color/black"
+                app:layout_constraintTop_toBottomOf="@id/see_seizure_icon_3"
+                app:layout_constraintStart_toStartOf="@id/see_seizure_icon_3"
+                app:layout_constraintEnd_toEndOf="@id/see_seizure_icon_3"
+                app:layout_constraintBottom_toBottomOf="parent" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+        <!--icon-text set4-->
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/see_seizure_icon_layout_set4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            app:layout_constraintTop_toTopOf="@id/see_seizure_icon_layout"
+            app:layout_constraintBottom_toBottomOf="@id/see_seizure_icon_layout"
+            app:layout_constraintStart_toEndOf="@id/see_seizure_icon_layout_set3"
+            app:layout_constraintEnd_toStartOf="@id/see_seizure_icon_plus_layout">
+
+            <ImageView
+                android:id="@+id/see_seizure_icon_4"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:layout_marginTop="16dp"
+                android:src="@drawable/icon_moon"
+                android:background="@drawable/circle_shape"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toTopOf="@id/see_seizure_icon_text_4"
+                />
+
+            <TextView
+                android:id="@+id/see_seizure_icon_text_4"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="수면중"
+                android:textSize="13dp"
+                android:textColor="@color/black"
+                app:layout_constraintTop_toBottomOf="@id/see_seizure_icon_4"
+                app:layout_constraintStart_toStartOf="@id/see_seizure_icon_4"
+                app:layout_constraintEnd_toEndOf="@id/see_seizure_icon_4"
+                app:layout_constraintBottom_toBottomOf="parent" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+        <!--sezuire plus set-->
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/see_seizure_icon_plus_layout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="20dp"
+            android:layout_marginStart="20dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toEndOf="@id/see_seizure_icon_layout_set4">
+
         <ImageButton
             android:id="@+id/plus_seizure_btn"
-            android:layout_width="60dp"
-            android:layout_height="60dp"
-            android:layout_marginEnd="20dp"
+            android:layout_width="55dp"
+            android:layout_height="55dp"
             android:src="@drawable/plus_seizure"
             android:background="?android:attr/selectableItemBackground"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintTop_toTopOf="parent"/>
-
-        <Button
-            android:id="@+id/plus_seizure_textbtn"
-            android:layout_width="45dp"
-            android:layout_height="18dp"
-            android:layout_marginEnd="5dp"
-            android:text="일지 추가"
-            android:textSize="10dp"
-            android:textStyle="bold"
-            android:textColor="@color/white"
-            android:background="@drawable/yellow_button_shape"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.3" />
+            app:layout_constraintStart_toStartOf="parent"/>
+
+            <Button
+                android:id="@+id/plus_seizure_textbtn"
+                android:layout_width="45dp"
+                android:layout_height="18dp"
+                android:background="@drawable/yellow_button_shape"
+                android:text="일지 추가"
+                android:textColor="@color/white"
+                android:textSize="10dp"
+                android:textStyle="bold"
+                app:layout_constraintTop_toBottomOf="@id/plus_seizure_btn"
+                app:layout_constraintStart_toStartOf="@id/plus_seizure_btn"
+                app:layout_constraintEnd_toEndOf="@id/plus_seizure_btn"
+                app:layout_constraintBottom_toBottomOf="parent"/>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
 
         <!-- 추가 세트를 위한 View를 동적으로 만들거나, visibility를 조절하여 표시하도록 코틀린/자바 코드에서 관리합니다. -->
 
