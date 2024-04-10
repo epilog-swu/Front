@@ -1,0 +1,16 @@
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Checked state -->
+    <item android:state_checked="true">
+        <shape android:shape="rectangle">
+            <solid android:color="@color/연보라2"/>
+            <corners android:radius="8dp"/>
+        </shape>
+    </item>
+    <!-- Default state (unchecked) -->
+    <item android:state_checked="false">
+        <shape android:shape="rectangle">
+            <solid android:color="@color/제일연한보라"/>
+            <corners android:radius="8dp"/>
+        </shape>
+    </item>
+</selector>

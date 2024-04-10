@@ -52,6 +52,7 @@ android {
 
 dependencies {
     implementation("com.google.android.flexbox:flexbox:3.0.0")
+    implementation (libs.androidx.viewpager2)
     implementation(libs.androidx.constraintlayout)
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)

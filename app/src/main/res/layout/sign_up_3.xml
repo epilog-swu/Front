@@ -91,31 +91,44 @@
         android:layout_width="24dp"
         android:layout_height="24dp"
         android:layout_marginStart="8dp"
-        android:src="@drawable/baseline_info_23"
+        android:src="@drawable/info_button"
         app:layout_constraintBottom_toBottomOf="@+id/textView5"
         app:layout_constraintStart_toEndOf="@+id/textView5"
         app:layout_constraintTop_toTopOf="@+id/textView5" />
-    <Button
-        android:id="@+id/button5"
-        android:layout_width="wrap_content"
-        android:layout_height="30dp"
-        android:layout_marginStart="20dp"
-        android:layout_marginTop="20dp"
-        android:text="카바마제빈"
-        android:background="@drawable/badge"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView5" />
 
-    <Button
-        android:id="@+id/button6"
-        android:layout_width="wrap_content"
-        android:layout_height="30dp"
-        android:layout_marginLeft="20dp"
-        android:layout_marginTop="20dp"
-        android:background="@drawable/badge"
-        android:text="페니토인"
-        app:layout_constraintLeft_toRightOf="@+id/button5"
-        app:layout_constraintTop_toBottomOf="@+id/textView5" />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="22dp"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/infoIcon"
+        app:layout_constraintVertical_bias="0.0">
+
+        <TextView
+            android:id="@+id/badgeCavamazepine"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:background="@drawable/badge"
+            android:padding="8dp"
+            android:text="카바마제빈"
+            android:textColor="#000"/>
+
+
+        <TextView
+            android:id="@+id/badgePhenytoin"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:background="@drawable/badge"
+            android:padding="8dp"
+            android:text="페니토인"
+            android:textColor="#000"/>
+    </LinearLayout>
 
     <Button
         android:id="@+id/next_button"
