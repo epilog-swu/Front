@@ -11,13 +11,14 @@
         android:layout_marginTop="150dp"
         android:text="회원가입시 발급받은\n연동 코드를 입력해주세요."
         android:textSize="30dp"
+        android:textColor="@color/black"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
 
-    <com.google.android.material.button.MaterialButton
+    <EditText
         android:id="@+id/login_code_box"
         android:layout_width="340dp"
         android:layout_height="150dp"
