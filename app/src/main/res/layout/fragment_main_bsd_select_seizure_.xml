@@ -67,7 +67,7 @@
         android:layout_height="100dp"
         android:layout_marginStart="20dp"
         android:layout_marginEnd="20dp"
-        android:layout_margintop="15dp"
+        android:layout_marginTop="15dp"
         android:orientation="horizontal"
         android:background="@drawable/seizure_button"
         android:gravity="center_horizontal"

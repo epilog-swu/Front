@@ -19,6 +19,7 @@ import androidx.fragment.app.FragmentTransaction
 import com.epi.epilog.databinding.ActivityModeSelectBinding
 import com.epi.epilog.databinding.ActivitySeizureEditBinding
 import com.epi.epilog.databinding.ActivityStartBinding
+import com.epi.epilog.databinding.MainCalendarBinding
 import com.epi.epilog.databinding.SeizureEdit11Binding
 import com.epi.epilog.databinding.SeizureEdit1Binding
 import com.epi.epilog.databinding.SeizureEdit2Binding
@@ -35,9 +36,16 @@ import com.epi.epilog.databinding.SignUp5Binding
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val binding = ActivitySeizureEditBinding.inflate(layoutInflater)
+        val binding = MainCalendarBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+
+        // calendarFragment를 기본 프래그먼트로 설정
+        if (savedInstanceState == null) {
+            supportFragmentManager.beginTransaction()
+                .replace(R.id.main_calender_layout, calendarFragment())
+                .commit()
+        }
 //        val fragmentManager: FragmentManager = supportFragmentManager
 //        val transaction: FragmentTransaction = fragmentManager.beginTransaction()
 //        val seizureFragment = SeizureFragment()
