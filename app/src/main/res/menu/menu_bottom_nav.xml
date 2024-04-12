@@ -2,14 +2,18 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
         android:id="@+id/fragment_home"
-        android:title="홈"/>
+        android:title="홈"
+        android:icon="@drawable/bottom_nav_calender"/>
     <item
         android:id="@+id/fragment_search"
-        android:title="복약"/>
+        android:title="복약"
+        android:icon="@drawable/bottom_nav_capsule"/>
     <item
         android:id="@+id/fragment_favorite"
-        android:title="연동"/>
+        android:title="연동"
+        android:icon="@drawable/bottom_nav_watch"/>
     <item
         android:id="@+id/fragment_settings"
-        android:title="내정보"/>
+        android:title="내정보"
+        android:icon="@drawable/bottom_nav_my"/>
 </menu>
