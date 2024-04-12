@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--fragment_seizure_edit1~11파일과 같이 쓰이는 액티비티-->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
     android:layout_width="match_parent"
