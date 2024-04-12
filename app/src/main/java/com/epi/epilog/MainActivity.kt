@@ -21,6 +21,7 @@ import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentTransaction
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import androidx.viewpager2.widget.ViewPager2
+import com.epi.epilog.databinding.ActivityMainNavBinding
 import com.epi.epilog.databinding.ActivityModeSelectBinding
 import com.epi.epilog.databinding.ActivitySeizureEditBinding
 import com.epi.epilog.databinding.ActivityStartBinding
@@ -37,8 +38,7 @@ import com.epi.epilog.databinding.MedicineChecklistBinding
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-//        super.onCreate(savedInstanceState)
-//        val binding = ActivitySeizureEditBinding.inflate(layoutInflater)
+//        val binding = ActivityMainNavBinding.inflate(layoutInflater)
 //        setContentView(binding.root)
 
 //        val fragmentManager: FragmentManager = supportFragmentManager
