@@ -1,11 +1,11 @@
+package com.epi.epilog
+
 import android.os.Build
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.RecyclerView
-import com.epi.epilog.R
 import com.epi.epilog.databinding.ItemCalendarListBinding
-import com.epi.epilog.ui.theme.CalendarVO
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.util.Locale

@@ -1,21 +1,13 @@
 package com.epi.epilog
 
-import android.content.Intent
 import android.os.Bundle
 import android.text.SpannableString
 import android.text.style.UnderlineSpan
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
-import androidx.compose.material3.ModalBottomSheet
-import androidx.fragment.app.DialogFragment
-import com.epi.epilog.databinding.ActivitySeizureDetailBinding
-import com.google.android.material.bottomsheet.BottomSheetDialog
-import androidx.core.content.ContextCompat
-import androidx.core.content.ContextCompat.startActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentTransaction
@@ -26,6 +18,7 @@ import com.epi.epilog.databinding.ActivityModeSelectBinding
 import com.epi.epilog.databinding.ActivitySeizureEditBinding
 import com.epi.epilog.databinding.ActivityStartBinding
 import com.epi.epilog.databinding.FragmentSeizureEdit9Binding
+import com.epi.epilog.databinding.MainCalendarBinding
 import com.epi.epilog.databinding.SignUp1Binding
 import com.epi.epilog.databinding.SignUp2Binding
 import com.epi.epilog.databinding.SignUp3Binding
@@ -38,16 +31,16 @@ import com.epi.epilog.databinding.MedicineChecklistBinding
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-//        val binding = ActivityMainNavBinding.inflate(layoutInflater)
-//        setContentView(binding.root)
 
-//        val fragmentManager: FragmentManager = supportFragmentManager
-//        val transaction: FragmentTransaction = fragmentManager.beginTransaction()
-//        val seizureFragment = SeizureFragment()
-//        transaction.add(R.id.seizure_edit_fragment, seizureFragment)
-//        transaction.commit()
-//        val intent = Intent(this, MedicineAddModify::class.java)
-//        startActivity(intent)
+        val binding = MainCalendarBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+
+        // calendarFragment를 기본 프래그먼트로 설정
+        if (savedInstanceState == null) {
+            supportFragmentManager.beginTransaction()
+                .replace(R.id.main_calender_layout, calendarFragment())
+                .commit()
+        }
 
     }
 }
@@ -137,7 +130,7 @@ class MedicineCheckList : AppCompatActivity() {
         setContentView(binding.root)
         if (savedInstanceState == null) {
             supportFragmentManager.beginTransaction()
-                .replace(R.id.fragment_container, CalendarFragment.newInstance())
+                .replace(R.id.fragment_container, unable.newInstance())
                 .commitNow()
         }
         //복용지연알림 밑줄 코드

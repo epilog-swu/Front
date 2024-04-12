@@ -1,4 +1,4 @@
-package com.epi.epilog.ui.theme
+package com.epi.epilog
 
 data class CalendarVO(
     var cl_date: String = "", // 날짜

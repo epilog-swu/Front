@@ -1,31 +1,43 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+
     <TextView
+        android:id="@+id/whoRU"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="당신은 누구십니까?"
         android:layout_gravity="center"
-        android:layout_marginTop="150dp"
-        android:layout_marginBottom="120dp"
-        android:textSize="20dp">
-    </TextView>
+        android:text="당신은 누구십니까?"
+        android:textColor="@color/black"
+        android:textSize="25dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.18" />
 
-    <LinearLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/mode_select_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:layout_marginTop="110dp"
+        android:orientation="horizontal"
+        app:layout_constraintTop_toBottomOf="@+id/whoRU"
+        app:layout_constraintBottom_toTopOf="@+id/signup_text">
+
 
 
         <Button
+            android:id="@+id/mode_patient_btn"
             android:layout_width="140dp"
             android:layout_height="150dp"
             android:background="@drawable/mode_purple_button_shape"
-            app:icon="@drawable/baseline_info_24"
+            app:icon="@drawable/info_btn_white"
             app:iconPadding="0dp"
             app:iconGravity="textStart"
             android:layout_marginStart="55dp"
@@ -33,9 +45,44 @@
             android:text="환자"
             android:textSize="17dp"
             android:textStyle="bold"
-            android:textColor="@color/white" />
+            android:textColor="@color/white"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/mode_protector_btn"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"/>
+
+
+<!--        <RelativeLayout-->
+<!--            android:id="@+id/patient_layout"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_gravity="center_horizontal"-->
+<!--            android:layout_marginBottom="20dp"-->
+<!--            app:layout_constraintStart_toStartOf="parent"-->
+<!--            app:layout_constraintTop_toTopOf="parent"-->
+<!--            app:layout_constraintBottom_toBottomOf="parent">-->
+<!--            <Button-->
+<!--                android:layout_width="140dp"-->
+<!--                android:layout_height="150dp"-->
+<!--                android:background="@drawable/mode_purple_button_shape"-->
+<!--                android:text="환자"-->
+<!--                android:textSize="16dp"-->
+<!--                android:textColor="@color/white"-->
+<!--                android:gravity="center|start"-->
+<!--                android:button="@null"-->
+<!--                android:paddingLeft="54dp"-->
+<!--                android:paddingRight="20dp"/>-->
+<!--            <ImageView-->
+<!--                android:layout_width="20dp"-->
+<!--                android:layout_height="20dp"-->
+<!--                android:layout_alignParentStart="true"-->
+<!--                android:layout_centerVertical="true"-->
+<!--                android:layout_marginStart="20dp"-->
+<!--                android:src="@drawable/info_btn_white"/>-->
+<!--        </RelativeLayout>-->
 
         <Button
+            android:id="@+id/mode_protector_btn"
             android:layout_width="140dp"
             android:layout_height="150dp"
             android:background="@drawable/mode_white_button_shape"
@@ -44,14 +91,17 @@
             android:text="보호자"
             android:textSize="17dp"
             android:textStyle="bold"
-            android:textColor="@color/main_purple">
+            android:textColor="@color/main_purple"
+            app:layout_constraintStart_toEndOf="@id/mode_patient_btn"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"/>
 
-        </Button>
-
-    </LinearLayout>
 
 
-<!--    TextView 밑줄 효과는 코틀린 코드에서-->
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
     <TextView
         android:id="@+id/signup_text"
         android:layout_width="wrap_content"
@@ -59,7 +109,10 @@
         android:layout_gravity="center"
         android:layout_marginTop="5dp"
         android:text="계정이 없으신가요?회원가입하기"
-        android:clickable="true"/>
+        android:clickable="true"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/mode_select_layout" />
 
 
-</LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

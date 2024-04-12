@@ -63,7 +63,7 @@
                         android:layout_alignParentStart="true"
                         android:layout_centerVertical="true"
                         android:layout_marginStart="20dp"
-                        android:src="@drawable/info_button"/>
+                        android:src="@drawable/info_btn"/>
                 </RelativeLayout>
                 <RelativeLayout
                     android:layout_width="match_parent"
@@ -88,7 +88,7 @@
                         android:layout_alignParentStart="true"
                         android:layout_centerVertical="true"
                         android:layout_marginStart="20dp"
-                        android:src="@drawable/info_button"/>
+                        android:src="@drawable/info_btn"/>
                 </RelativeLayout>
                 <RelativeLayout
                     android:layout_width="match_parent"
@@ -113,7 +113,7 @@
                         android:layout_alignParentStart="true"
                         android:layout_centerVertical="true"
                         android:layout_marginStart="20dp"
-                        android:src="@drawable/info_button"/>
+                        android:src="@drawable/info_btn"/>
                 </RelativeLayout>
                 <RelativeLayout
                     android:layout_width="match_parent"
@@ -138,7 +138,7 @@
                         android:layout_alignParentStart="true"
                         android:layout_centerVertical="true"
                         android:layout_marginStart="20dp"
-                        android:src="@drawable/info_button"/>
+                        android:src="@drawable/info_btn"/>
                 </RelativeLayout>
                 <CheckBox
                     android:layout_width="match_parent"
