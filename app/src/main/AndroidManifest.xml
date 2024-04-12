@@ -17,6 +17,10 @@
         <activity android:name=".SignUp3Activity"/>
         <activity android:name=".SignUp4Activity"/>
         <activity android:name=".SignUp5Activity"/>
+        <activity android:name=".MedicineAddModify"/>
+        <activity android:name=".MedicineDetail"/>
+        <activity android:name=".MedicineCheckList"/>
+
         <activity
             android:name=".MainActivity"
             android:exported="true"
