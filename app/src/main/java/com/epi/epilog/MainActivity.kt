@@ -21,16 +21,11 @@ import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentTransaction
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import androidx.viewpager2.widget.ViewPager2
+import com.epi.epilog.databinding.ActivityMainNavBinding
 import com.epi.epilog.databinding.ActivityModeSelectBinding
 import com.epi.epilog.databinding.ActivitySeizureEditBinding
 import com.epi.epilog.databinding.ActivityStartBinding
-import com.epi.epilog.databinding.SeizureEdit11Binding
-import com.epi.epilog.databinding.SeizureEdit1Binding
-import com.epi.epilog.databinding.SeizureEdit2Binding
-import com.epi.epilog.databinding.SeizureEdit3Binding
-import com.epi.epilog.databinding.SeizureEdit4Binding
-import com.epi.epilog.databinding.SeizureEdit7Binding
-import com.epi.epilog.databinding.SeizureEdit9Binding
+import com.epi.epilog.databinding.FragmentSeizureEdit9Binding
 import com.epi.epilog.databinding.SignUp1Binding
 import com.epi.epilog.databinding.SignUp2Binding
 import com.epi.epilog.databinding.SignUp3Binding
@@ -43,8 +38,7 @@ import com.epi.epilog.databinding.MedicineChecklistBinding
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-//        super.onCreate(savedInstanceState)
-//        val binding = ActivitySeizureEditBinding.inflate(layoutInflater)
+//        val binding = ActivityMainNavBinding.inflate(layoutInflater)
 //        setContentView(binding.root)
 
 //        val fragmentManager: FragmentManager = supportFragmentManager
@@ -59,13 +53,13 @@ class MainActivity : AppCompatActivity() {
 }
 
 class SeizureFragment: Fragment() {
-    lateinit var binding: SeizureEdit9Binding
+    lateinit var binding: FragmentSeizureEdit9Binding
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        binding = SeizureEdit9Binding.inflate(inflater, container, false)
+        binding = FragmentSeizureEdit9Binding.inflate(inflater, container, false)
         return binding.root
     }
 }
