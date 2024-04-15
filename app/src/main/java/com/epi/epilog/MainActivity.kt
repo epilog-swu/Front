@@ -9,14 +9,6 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentManager
-import androidx.fragment.app.FragmentTransaction
-import androidx.viewpager2.adapter.FragmentStateAdapter
-import androidx.viewpager2.widget.ViewPager2
-import com.epi.epilog.databinding.ActivityMainNavBinding
-import com.epi.epilog.databinding.ActivityModeSelectBinding
-import com.epi.epilog.databinding.ActivitySeizureEditBinding
-import com.epi.epilog.databinding.ActivityStartBinding
 import com.epi.epilog.databinding.FragmentSeizureEdit9Binding
 import com.epi.epilog.databinding.MainCalendarBinding
 import com.epi.epilog.databinding.SignUp1Binding
@@ -38,7 +30,7 @@ class MainActivity : AppCompatActivity() {
         // calendarFragment를 기본 프래그먼트로 설정
         if (savedInstanceState == null) {
             supportFragmentManager.beginTransaction()
-                .replace(R.id.main_calender_layout, calendarFragment())
+                .replace(R.id.main_calender_layout, MainCalendarFragment())
                 .commit()
         }
 
