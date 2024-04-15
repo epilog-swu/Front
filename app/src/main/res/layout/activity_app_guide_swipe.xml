@@ -1,34 +1,53 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity"
+    android:id="@+id/app_guide_layout"
+    tools:context=".AppGuideSwipeActivity"
     android:gravity="center">
 
-    <FrameLayout
-        android:layout_gravity="center"
-        android:layout_width="340dp"
-        android:layout_height="550dp">
+    <TextView
+        android:text="@string/app_name_capital"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="40dp"
+        android:gravity="center"
+        android:textColor="#000000"
+        android:background="@color/light_purple"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/app_guide_viewpager"
+        android:layout_marginBottom="50dp"
+        android:layout_marginTop="100dp"/>
 
-        <androidx.viewpager2.widget.ViewPager2
-            android:id="@+id/viewpager"
+
+
+    <androidx.viewpager2.widget.ViewPager2
+            android:id="@+id/app_guide_viewpager"
             android:layout_gravity="center"
             android:clipToPadding="false"
             android:clipChildren="false"
             android:layout_width="match_parent"
             android:layout_height="400dp"
             android:scaleType="fitXY"
-            android:layout_marginBottom="10dp"/>
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/app_guide_indicator"/>
 
-        <me.relex.circleindicator.CircleIndicator3
-            android:id="@+id/indicator"
+    <me.relex.circleindicator.CircleIndicator3
+            android:id="@+id/app_guide_indicator"
             android:layout_width="match_parent"
             android:layout_height="48dp"
+            app:ci_drawable_unselected="@drawable/gray_radius"
+            app:ci_drawable="@drawable/blue_radius"
+            app:ci_animator="@animator/scale_with_alpha"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/app_guide_viewpager"
             android:layout_marginBottom="10dp"
             android:layout_gravity="bottom"/>
 
-    </FrameLayout>
-
-</LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

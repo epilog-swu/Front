@@ -16,7 +16,7 @@ class Login_Protector_Activity : AppCompatActivity() {
 
         //로그인 버튼이 눌려서 인증 성공 -> 메인 화면으로 전환
         binding.protectorLoginBtn.setOnClickListener {
-            val intent: Intent = Intent(this, MainActivity::class.java)
+            val intent: Intent = Intent(this, MainCalendarActivity::class.java)
             startActivity(intent)
         }
     }
