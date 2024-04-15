@@ -1,12 +1,16 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
 xmlns:app="http://schemas.android.com/apk/res-auto"
 xmlns:tools="http://schemas.android.com/tools"
+
 android:id="@+id/main_bsd_noseizure_layout"
 android:layout_width="match_parent"
 android:layout_height="match_parent"
 app:behavior_hideable="true"
 app:behavior_draggable="true"
 app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
+
+
+<!--발작 일지가 없을 때 보여줄 bottomsheetdialog 레이아웃 -->
 
 <TextView
     android:id="@+id/btm_sheet_dlg_no_seizure_title"
@@ -65,6 +69,7 @@ app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior
 
 
 <TextView
+    android:id="@+id/noseizure_text"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:text="기록된 일지가 없습니다"

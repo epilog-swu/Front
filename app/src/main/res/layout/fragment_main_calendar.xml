@@ -10,7 +10,7 @@
     android:layout_height="match_parent"
     tools:context=".MainCalendarFragment">
 
-
+    <!--Google에서 제공하는 materialcalendarview 이용 -->
     <com.prolificinteractive.materialcalendarview.MaterialCalendarView
         android:id="@+id/MaincalendarView"
         android:layout_width="match_parent"

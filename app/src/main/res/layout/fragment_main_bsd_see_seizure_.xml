@@ -8,6 +8,9 @@
     app:behavior_draggable="true"
     app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
 
+
+    <!-- 발작 일지 선택 화면 띄워주는 bottomsheetdialog 레이아웃 -->
+
     <TextView
         android:id="@+id/btm_sheet_dlg_see_seizure_title"
         android:layout_width="wrap_content"
@@ -85,7 +88,8 @@
             app:layout_constraintEnd_toStartOf="@id/see_seizure_icon_layout_set2">
 
         <!-- 아이콘과 텍스트 세트; 이 세트들은 동적으로 추가됩니다 -->
-        <!-- 예를 들어, 하나의 아이콘 세트입니다 -->
+        <!-- 시간대를 나타내는 ImageView와 시간대를 텍스트로 나타냄-->
+
         <ImageView
             android:id="@+id/see_seizure_icon_1"
             android:layout_width="48dp"
@@ -227,6 +231,7 @@
                 app:layout_constraintBottom_toBottomOf="parent" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
+
         <!--sezuire plus set-->
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/see_seizure_icon_plus_layout"
