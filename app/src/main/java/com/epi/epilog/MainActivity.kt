@@ -10,6 +10,7 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
+import com.epi.epilog.databinding.ActivityModeSelectBinding
 import com.epi.epilog.databinding.ActivityStartBinding
 import com.epi.epilog.databinding.FragmentSeizureEdit9Binding
 import com.epi.epilog.databinding.MainCalendarBinding
@@ -26,10 +27,8 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        val binding = ActivityStartBinding.inflate(layoutInflater)
+        val binding = ActivityModeSelectBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
-
 
         // calendarFragment를 기본 프래그먼트로 설정
 //        if (savedInstanceState == null) {
