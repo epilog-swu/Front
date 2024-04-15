@@ -1,4 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
+
+<!-- 메인 캘린더 페이지 1에 나올 달력을 가져오는 fragment파일 -->
+
+
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -6,8 +10,9 @@
     android:layout_height="match_parent"
     tools:context=".MainCalendarFragment">
 
+
     <com.prolificinteractive.materialcalendarview.MaterialCalendarView
-        android:id="@+id/calendarView"
+        android:id="@+id/MaincalendarView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:mcv_firstDayOfWeek="sunday"
