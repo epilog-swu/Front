@@ -17,6 +17,10 @@ viewpager2 = "1.1.0-beta02"
 dotsindicator = "1.0.1"
 circleindicator = "2.1.6"
 materialCalendarviewVersion = "1.4.3"
+playServicesWearable = "18.1.0"
+composeMaterial = "1.2.1"
+composeFoundation = "1.2.1"
+coreSplashscreen = "1.0.1"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -42,6 +46,10 @@ dotsindicator = { group = "com.gitee.archermind-ti", name = "dotsindicator", ver
 circleindicator = { group = "me.relex", name = "circleindicator", version.ref = "circleindicator" }
 material-calendarview = { module = "com.github.prolificinteractive:material-calendarview", version.ref = "materialCalendarview" }
 prolificinteractive-material-calendarview = { group = "com.prolificinteractive", name = "material-calendarview", version.ref = "materialCalendarviewVersion" }
+play-services-wearable = { group = "com.google.android.gms", name = "play-services-wearable", version.ref = "playServicesWearable" }
+androidx-compose-material = { group = "androidx.wear.compose", name = "compose-material", version.ref = "composeMaterial" }
+androidx-compose-foundation = { group = "androidx.wear.compose", name = "compose-foundation", version.ref = "composeFoundation" }
+androidx-core-splashscreen = { group = "androidx.core", name = "core-splashscreen", version.ref = "coreSplashscreen" }
 
 
 [plugins]
