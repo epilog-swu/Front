@@ -21,3 +21,4 @@ dependencyResolutionManagement {
 
 rootProject.name = "epilog"
 include(":app")
+include(":wear")
