@@ -6,4 +6,7 @@
     -->
     <string name="hello_world">From the Square world,\nHello, %1$s!</string>
     <string name="wearable_layout_scroll_behavior">hello!</string>
+    <string name="blood_sugar_title">5월 14일 혈당기록</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>
