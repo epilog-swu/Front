@@ -34,7 +34,7 @@
     <Button
         android:id="@+id/dialog_button_yes"
         android:layout_width="match_parent"
-        android:layout_height="20dp"
+        android:layout_height="28dp"
         android:layout_below="@+id/dialog_text_sub"
         android:text="네, 지금 먹었습니다"
         android:textColor="@color/검정색"
@@ -46,7 +46,7 @@
     <Button
         android:id="@+id/dialog_button_no"
         android:layout_width="match_parent"
-        android:layout_height="20dp"
+        android:layout_height="28dp"
         android:layout_below="@+id/dialog_button_yes"
         android:text="예정된 시간에 식사했습니다"
         android:textSize="10sp"

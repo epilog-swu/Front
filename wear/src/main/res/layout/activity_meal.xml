@@ -2,7 +2,7 @@
 <androidx.wear.widget.WearableRecyclerView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/wearable_recycler_view_medicine"
+    android:id="@+id/wearable_recycler_view_meal"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:padding="30dp"

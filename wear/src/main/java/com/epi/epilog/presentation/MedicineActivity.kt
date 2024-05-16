@@ -3,10 +3,8 @@ package com.epi.epilog.presentation
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import android.widget.Button
 import android.widget.CheckBox
 import androidx.activity.ComponentActivity
-import androidx.appcompat.app.AlertDialog
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.epi.epilog.R
@@ -27,7 +25,7 @@ class MedicineActivity : ComponentActivity() {
         viewManager = LinearLayoutManager(this)
         viewAdapter = MyAdapter(myDataset, this)
 
-        recyclerView = findViewById<RecyclerView>(R.id.wearable_recycler_view).apply {
+        recyclerView = findViewById<RecyclerView>(R.id.wearable_recycler_view_medicine).apply {
             setHasFixedSize(true)
             layoutManager = viewManager
             adapter = viewAdapter
@@ -48,34 +46,13 @@ class MedicineActivity : ComponentActivity() {
             val item = myDataset[position]
             holder.checkBox.text = item
 
-            // 체크박스에 클릭 리스너 추가
             holder.checkBox.setOnClickListener {
-                if (holder.checkBox.isChecked == true)
-                    context.showDialog()
+                if (holder.checkBox.isChecked == true){
+                    // 서버에 체크신호 보내기
+                }
             }
         }
 
         override fun getItemCount() = myDataset.size
-    }
-
-    fun showDialog() {
-        val builder = AlertDialog.Builder(this)
-        val inflater = layoutInflater
-        val dialogView = inflater.inflate(R.layout.activity_checklist_dialog, null)
-        builder.setView(dialogView)
-        builder.setCancelable(true)
-        with(builder){
-            val dialog = builder.create()
-
-            dialogView.findViewById<Button>(R.id.dialog_button_yes).setOnClickListener {
-                // 현재 시각에 밥을 먹음
-                dialog.dismiss()
-            }
-            dialogView.findViewById<Button>(R.id.dialog_button_no).setOnClickListener {
-                // 제시간에 밥을 먹음
-                dialog.dismiss()
-            }
-            dialog.show()
-        }
     }
 }
