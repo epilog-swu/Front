@@ -5,21 +5,19 @@ import android.view.View
 import android.widget.RadioGroup
 import android.widget.TimePicker
 import androidx.activity.ComponentActivity
+import androidx.appcompat.app.AppCompatActivity
 import com.epi.epilog.R
 
-class BloodSugarActivity : ComponentActivity() {
+class BloodSugarActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_blood_sugar)
 
-        val radioGroup : RadioGroup = findViewById(R.id.blood_sugar_radio_group)
-        val timePicker : TimePicker = findViewById(R.id.blood_sugar_timepicker)
-        radioGroup.setOnCheckedChangeListener { group, checkedId ->
-            if (checkedId == R.id.blood_sugar_btn8) {
-                timePicker.visibility = View.VISIBLE
-            } else {
-                timePicker.visibility = View.GONE
-            }
-        }
+        val timeInputFragment = BloodSugarTimeInputFragment()
+
+        // Dynamically add fragment
+        supportFragmentManager.beginTransaction()
+            .add(R.id.blood_sugar_input_form, timeInputFragment)
+            .commit()
     }
 }
