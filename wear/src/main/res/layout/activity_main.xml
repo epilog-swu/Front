@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<HorizontalScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="#FFFFFF"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <ScrollView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="20dp"
+            android:paddingBottom="50dp">
+
+            <!-- 둥근 배경을 위한 FrameLayout -->
+            <FrameLayout
+                android:id="@+id/graph_blood_sugar_layout"
+                android:layout_width="wrap_content"
+                android:layout_height="170dp"
+                android:layout_gravity="center"
+                android:background="@drawable/round_background"
+                android:clipToOutline="true"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <!-- LineChart 배치 -->
+                <com.github.mikephil.charting.charts.LineChart
+                    android:id="@+id/graph_blood_sugar_chart"
+                    android:layout_width="250dp"
+                    android:layout_height="match_parent"
+                    android:layout_margin="10dp"/>
+            </FrameLayout>
+
+            <!-- 버튼들 배치 -->
+            <Button
+                android:id="@+id/btn_blood_sugar_record"
+                android:layout_width="match_parent"
+                android:layout_height="28dp"
+                android:text="혈당 기록하기"
+                android:textColor="@color/검정색"
+                android:textSize="8sp"
+                android:background="@drawable/blood_sugar_btn"
+                android:layout_marginTop="10dp"
+                android:layout_marginLeft="32dp"
+                android:layout_marginRight="32dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/graph_blood_sugar_layout"/>
+
+            <Button
+                android:id="@+id/btn_check_medicine"
+                android:layout_width="match_parent"
+                android:layout_height="28dp"
+                android:text="복약 체크리스트"
+                android:textSize="8sp"
+                android:textColor="@color/검정색"
+                android:background="@drawable/blood_sugar_btn"
+                android:layout_marginTop="10dp"
+                android:layout_marginLeft="32dp"
+                android:layout_marginRight="32dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/btn_blood_sugar_record"
+                app:layout_constraintEnd_toEndOf="parent"/>
+
+            <Button
+                android:id="@+id/btn_check_meals"
+                android:layout_width="match_parent"
+                android:layout_height="28dp"
+                android:text="식사 체크리스트"
+                android:textSize="8sp"
+                android:textColor="@color/검정색"
+                android:background="@drawable/blood_sugar_btn"
+                android:layout_marginTop="10dp"
+                android:layout_marginLeft="32dp"
+                android:layout_marginRight="32dp"
+                android:layout_marginBottom="50dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/btn_check_medicine"
+                app:layout_constraintEnd_toEndOf="parent"/>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </ScrollView>
+</HorizontalScrollView>
