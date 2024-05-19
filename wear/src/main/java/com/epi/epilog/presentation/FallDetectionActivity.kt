@@ -18,7 +18,7 @@ class FallDetectionActivity : ComponentActivity(), SensorEventListener {
 
         sensorManager = getSystemService(SENSOR_SERVICE) as SensorManager
         accelerometer = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER)
-        // 100Hz 데이터 수집을 위해 SENSOR_DELAY_FASTEST 대신 10ms 간격 사용
+        // 100Hz 데이터 수집을 위해 10ms 간격 사용
         sensorManager.registerListener(this, accelerometer, 10000) // 10ms 간격
     }
 
