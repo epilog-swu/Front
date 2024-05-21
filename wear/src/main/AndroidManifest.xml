@@ -3,6 +3,7 @@
     <uses-permission android:name="android.permission.WAKE_LOCK" />
 
     <uses-feature android:name="android.hardware.type.watch" />
+    <uses-permission android:name="android.permission.HIGH_SAMPLING_RATE_SENSORS" />
 
     <application
         android:allowBackup="true"
@@ -34,6 +35,7 @@
             </intent-filter>
         </activity>
 
+
         <activity
             android:name=".presentation.MedicineActivity"
             android:theme="@style/Theme.AppCompat.DayNight.NoActionBar">
@@ -46,6 +48,16 @@
             android:name=".presentation.MealActivity"
             android:theme="@style/Theme.AppCompat.DayNight.NoActionBar">
         </activity>
+        <activity android:name=".presentation.FallDetectionActivity"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+
+
     </application>
 
 </manifest>
