@@ -1,14 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-
-<HorizontalScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="#FFFFFF"
     xmlns:app="http://schemas.android.com/apk/res-auto">
-
-    <ScrollView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
@@ -16,20 +11,35 @@
             android:layout_margin="20dp"
             android:paddingBottom="50dp">
 
+
+
             <!-- 둥근 배경을 위한 FrameLayout -->
             <FrameLayout
                 android:id="@+id/graph_blood_sugar_layout"
-                android:layout_width="wrap_content"
-                android:layout_height="170dp"
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
                 android:layout_gravity="center"
                 android:clipToOutline="true"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent">
 
+                <TextView
+                    android:id="@+id/today_blood_sugar_records_counts"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="오늘의 혈당 기록 : 3"
+                    android:textColor="#000000"
+                    android:textSize="10sp"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginBottom="15dp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintBottom_toTopOf="@id/graph_blood_sugar_chart"/>
+
                 <!-- LineChart 배치 -->
                 <com.github.mikephil.charting.charts.LineChart
                     android:id="@+id/graph_blood_sugar_chart"
-                    android:layout_width="250dp"
+                    android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_margin="10dp"/>
             </FrameLayout>
@@ -43,7 +53,6 @@
                 android:textColor="@color/검정색"
                 android:textSize="8sp"
                 android:background="@drawable/blood_sugar_btn"
-                android:layout_marginTop="10dp"
                 android:layout_marginLeft="32dp"
                 android:layout_marginRight="32dp"
                 app:layout_constraintStart_toStartOf="parent"
@@ -76,11 +85,26 @@
                 android:layout_marginTop="10dp"
                 android:layout_marginLeft="32dp"
                 android:layout_marginRight="32dp"
-                android:layout_marginBottom="50dp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/btn_check_medicine"
                 app:layout_constraintEnd_toEndOf="parent"/>
 
+            <Button
+                android:id="@+id/btn_check_graph"
+                android:layout_width="match_parent"
+                android:layout_height="28dp"
+                android:text="그래프 보기"
+                android:textSize="8sp"
+                android:textColor="@color/검정색"
+                android:background="@drawable/blood_sugar_btn"
+                android:layout_marginTop="10dp"
+                android:layout_marginLeft="32dp"
+                android:layout_marginRight="32dp"
+                android:layout_marginBottom="50dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/btn_check_meals"
+                app:layout_constraintEnd_toEndOf="parent"/>
+
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>
-</HorizontalScrollView>
+
