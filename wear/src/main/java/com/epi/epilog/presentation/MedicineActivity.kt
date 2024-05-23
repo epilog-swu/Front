@@ -3,12 +3,13 @@ package com.epi.epilog.presentation
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.CheckBox
 import androidx.activity.ComponentActivity
+import androidx.appcompat.app.AlertDialog
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.epi.epilog.R
-
 
 class MedicineActivity : ComponentActivity() {
 
@@ -32,6 +33,31 @@ class MedicineActivity : ComponentActivity() {
         }
     }
 
+    fun showDialog() {
+        val builder = AlertDialog.Builder(this)
+        val inflater = layoutInflater
+        val dialogView = inflater.inflate(R.layout.activity_checklist_dialog_2, null)
+        builder.setView(dialogView)
+        builder.setCancelable(true)
+        with(builder) {
+            val dialog = create()
+
+            dialogView.findViewById<Button>(R.id.dialog_button_yes).setOnClickListener {
+                // 현재 시각에 밥을 먹음
+                dialog.dismiss()
+            }
+            dialogView.findViewById<Button>(R.id.dialog_button_no).setOnClickListener {
+                // 제시간에 밥을 먹음
+                dialog.dismiss()
+            }
+            dialogView.findViewById<Button>(R.id.dialog_button_pass).setOnClickListener {
+                // 식사를 건너뜀
+                dialog.dismiss()
+            }
+            dialog.show()
+        }
+    }
+
     class MyAdapter(private val myDataset: Array<String>, private val context: MedicineActivity) :
         RecyclerView.Adapter<MyAdapter.MyViewHolder>() {
 
@@ -45,10 +71,9 @@ class MedicineActivity : ComponentActivity() {
         override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
             val item = myDataset[position]
             holder.checkBox.text = item
-
             holder.checkBox.setOnClickListener {
-                if (holder.checkBox.isChecked == true){
-                    // 서버에 체크신호 보내기
+                if (holder.checkBox.isChecked) {
+                    context.showDialog()
                 }
             }
         }
