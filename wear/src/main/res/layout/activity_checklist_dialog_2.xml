@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_height="match_parent"
+    android:layout_width="wrap_content"
+    android:layout_margin="20dp">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" >
+        <TextView
+            android:id="@+id/dialog_text_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="복약 시간이 예정 시간이 다릅니다"
+            android:textSize="14sp"
+            android:layout_marginTop="32dp"
+            android:layout_marginLeft="32dp"
+            android:layout_marginRight="32dp"
+            android:textAlignment="center"
+            android:textColor="@color/검정색"/>
+        <TextView
+            android:id="@+id/dialog_text_sub"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="지금 드셨나요?"
+            android:layout_below="@+id/dialog_text_title"
+            android:textSize="12sp"
+            android:layout_marginTop="5dp"
+            android:layout_marginLeft="32dp"
+            android:layout_marginRight="32dp"
+            android:textAlignment="center"
+            android:textColor="@color/검정색"/>
+        <Button
+            android:id="@+id/dialog_button_yes"
+            android:layout_width="match_parent"
+            android:layout_height="28dp"
+            android:layout_below="@+id/dialog_text_sub"
+            android:text="네, 지금 먹었습니다"
+            android:textColor="@color/검정색"
+            android:textSize="10sp"
+            android:background="@drawable/checklist_dialog_btn"
+            android:layout_marginTop="10dp"
+            android:layout_marginLeft="32dp"
+            android:layout_marginRight="32dp"/>
+        <Button
+            android:id="@+id/dialog_button_no"
+            android:layout_width="match_parent"
+            android:layout_height="28dp"
+            android:layout_below="@+id/dialog_button_yes"
+            android:text="예정된 시간에 식사했습니다"
+            android:textSize="10sp"
+            android:textColor="@color/검정색"
+            android:background="@drawable/checklist_dialog_btn"
+            android:layout_marginTop="5dp"
+            android:layout_marginLeft="32dp"
+            android:layout_marginRight="32dp"/>
+        <Button
+            android:id="@+id/dialog_button_pass"
+            android:layout_width="match_parent"
+            android:layout_height="28dp"
+            android:layout_below="@+id/dialog_button_yes"
+            android:text="복약을 건너뛰었습니다"
+            android:textSize="10sp"
+            android:textColor="@color/검정색"
+            android:background="@drawable/checklist_dialog_btn"
+            android:layout_marginTop="38dp"
+            android:layout_marginLeft="32dp"
+            android:layout_marginRight="32dp"
+            android:layout_marginBottom="32dp"/>
+
+
+    </RelativeLayout>
+</ScrollView>

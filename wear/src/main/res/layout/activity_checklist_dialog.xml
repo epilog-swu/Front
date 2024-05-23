@@ -55,6 +55,19 @@
         android:layout_marginTop="5dp"
         android:layout_marginLeft="32dp"
         android:layout_marginRight="32dp"/>
+    <Button
+        android:id="@+id/dialog_button_pass"
+        android:layout_width="match_parent"
+        android:layout_height="28dp"
+        android:layout_below="@+id/dialog_button_yes"
+        android:text="식사를 건너뛰었습니다"
+        android:textSize="10sp"
+        android:textColor="@color/검정색"
+        android:background="@drawable/checklist_dialog_btn"
+        android:layout_marginTop="38dp"
+        android:layout_marginLeft="32dp"
+        android:layout_marginRight="32dp"
+        android:layout_marginBottom="32dp"/>
 
 
 </RelativeLayout>
