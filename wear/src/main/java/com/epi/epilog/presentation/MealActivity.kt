@@ -74,6 +74,10 @@ class MealActivity : ComponentActivity() {
                 // 제시간에 밥을 먹음
                 dialog.dismiss()
             }
+            dialogView.findViewById<Button>(R.id.dialog_button_pass).setOnClickListener {
+                // 식사를 건너뜀
+                dialog.dismiss()
+            }
             dialog.show()
         }
     }
