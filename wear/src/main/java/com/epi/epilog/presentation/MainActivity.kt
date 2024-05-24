@@ -3,11 +3,9 @@ package com.epi.epilog.presentation
 import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
-import android.util.Log
 import android.view.View
-import android.view.ViewTreeObserver
+import android.widget.TextView
 import androidx.activity.ComponentActivity
-import androidx.recyclerview.widget.RecyclerView
 import com.epi.epilog.databinding.ActivityMainBinding
 import com.github.mikephil.charting.charts.LineChart
 import com.github.mikephil.charting.components.XAxis
@@ -15,21 +13,31 @@ import com.github.mikephil.charting.data.Entry
 import com.github.mikephil.charting.data.LineData
 import com.github.mikephil.charting.data.LineDataSet
 import com.github.mikephil.charting.formatter.ValueFormatter
-import com.ramotion.cardslider.CardSliderLayoutManager
-import com.ramotion.cardslider.CardSnapHelper
+import com.kizitonwose.calendar.core.CalendarDay
+import com.kizitonwose.calendar.core.WeekDay
+import com.kizitonwose.calendar.view.WeekDayBinder
+import com.kizitonwose.calendar.view.ViewContainer
+import com.kizitonwose.calendar.view.WeekCalendarView
 import com.epi.epilog.R
+import com.kizitonwose.calendar.core.atStartOfMonth
+import com.kizitonwose.calendar.core.firstDayOfWeekFromLocale
+import com.kizitonwose.calendar.view.MonthDayBinder
+import java.time.DayOfWeek
+import java.time.LocalDate
+import java.time.YearMonth
+import java.time.temporal.WeekFields
+import java.util.Locale
 
 class MainActivity : ComponentActivity() {
 
     private lateinit var binding: ActivityMainBinding
     private lateinit var chart: LineChart
+    private lateinit var weekCalendarView: WeekCalendarView
 
     private val bloodSugarChartData = ArrayList<Entry>() // 데이터 배열
     private lateinit var lineData: LineData
 
     private var todayDataCounts: Int = 0
-
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -39,9 +47,34 @@ class MainActivity : ComponentActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-
         // chart 초기화
         chart = binding.graphBloodSugarChart
+
+        // 주단위 캘린더 초기화
+        weekCalendarView = binding.calendarView
+
+        weekCalendarView.dayBinder = object : WeekDayBinder<DayViewContainer> {
+            // Called only when a new container is needed.
+            override fun create(view: View) = DayViewContainer(view)
+
+            // Called every time we need to reuse a container.
+            override fun bind(container: DayViewContainer, data: WeekDay) {
+                container.textView.text = data.date.dayOfMonth.toString()
+            }
+        }
+
+        class DayViewContainer(view: View) : ViewContainer(view) {
+            val textView: TextView = view.findViewById(R.id.calendarDayText)
+        }
+
+        val currentDate = LocalDate.now()
+        val currentMonth = YearMonth.now()
+        val startDate = currentMonth.minusMonths(100).atStartOfMonth() // Adjust as needed
+        val endDate = currentMonth.plusMonths(100).atEndOfMonth()  // Adjust as needed
+        val firstDayOfWeek = firstDayOfWeekFromLocale() // Available from the library
+        weekCalendarView.setup(startDate, endDate, firstDayOfWeek)
+        weekCalendarView.scrollToWeek(currentDate)
+
 
         // 그래프 데이터 설정 및 차트 초기화
         initChartData()
@@ -67,21 +100,36 @@ class MainActivity : ComponentActivity() {
             val intent = Intent(this, GraphActivity::class.java)
             startActivity(intent)
         }
-
-
-        // initCountryText()
-        // initSwitchers()
-        // initGreenDot()
     }
 
-
-
+    // 주단위 캘린더 초기화 메서드
+    // 주단위 캘린더 초기화 메서드
+    // 주단위 캘린더 초기화 메서드
+//    private fun initWeekCalendarView() {
+//        if (::weekCalendarView.isInitialized) {
+//            weekCalendarView.setup(
+//                startDate = LocalDate.now().minusMonths(1),
+//                endDate = LocalDate.now().plusMonths(1),
+//                firstDayOfWeek = DayOfWeek.MONDAY
+//            )
+//
+//            weekCalendarView.dayBinder = object : WeekDayBinder<DayViewContainer> {
+//                override fun create(view: View) = DayViewContainer(view)
+//                override fun bind(container: DayViewContainer, data: WeekDay) {
+//                    container.textView.text = data.date.dayOfMonth.toString()
+//                }
+//            }
+//
+//            weekCalendarView.weekScrollListener = { weekDays ->
+//                // Handle week scroll event
+//            }
+//        }
+//    }
 
 
     // 차트 데이터 초기화 메서드
     private fun initChartData() {
         // 일단, 더미데이터
-        // x는 그냥 길이, y는 실제 수치라고 생각하면 됩니다.
         bloodSugarChartData.add(Entry(0f, 50f))
         bloodSugarChartData.add(Entry(240f, 70f))
         bloodSugarChartData.add(Entry(480f, 120f))
@@ -95,13 +143,9 @@ class MainActivity : ComponentActivity() {
         // 데이터 이름 및 Line 설정
         val set = LineDataSet(bloodSugarChartData, "Blood Sugar Levels")
         set.setDrawValues(false)
-
-        // 색상
         set.color = Color.parseColor("#A798E5") // Line의 색상을 설정
         val circleColor = Color.parseColor("#8377D8") // 메인보라
         set.setCircleColors(circleColor) // 데이터 셋의 색상을 설정
-
-        // 강조 표시
         set.highLightColor = Color.TRANSPARENT
         set.mode = LineDataSet.Mode.LINEAR
 
@@ -116,10 +160,6 @@ class MainActivity : ComponentActivity() {
             invalidate() // 차트를 다시 그립니다.
 
             // 좌우 스크롤 및 줌 가능하게 설정
-            // setDragEnabled(true)
-            // setScaleEnabled(true)
-            // setPinchZoom(true)
-            // setVisibleXRangeMaximum(7f) // 한 번에 보이는 최대 x축 범위 설정
             moveViewToX(0f) // 초기 위치 설정
         }
 
@@ -147,7 +187,7 @@ class MainActivity : ComponentActivity() {
             textSize = 0.3f // 텍스트 크기 설정
             valueFormatter = object : ValueFormatter() {
                 override fun getFormattedValue(value: Float): String {
-                    return value.toInt().toString()
+                    return value.toInt().toInt().toString()
                 }
             }
         }
@@ -167,10 +207,5 @@ class MainActivity : ComponentActivity() {
         legend.isEnabled = false // 제목을 숨김
 
         chart.invalidate() // 다시 그리기
-    }
-
-
-    private fun onActiveCardChange() {
-        // 여기에 카드 변경 시 처리할 로직을 추가하세요
     }
 }
