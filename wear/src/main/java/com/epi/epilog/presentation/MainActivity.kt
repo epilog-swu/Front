@@ -5,6 +5,7 @@ import android.graphics.Color
 import android.os.Bundle
 import android.view.View
 import android.widget.TextView
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import com.epi.epilog.databinding.ActivityMainBinding
 import com.github.mikephil.charting.charts.LineChart
@@ -19,6 +20,7 @@ import com.kizitonwose.calendar.view.WeekDayBinder
 import com.kizitonwose.calendar.view.ViewContainer
 import com.kizitonwose.calendar.view.WeekCalendarView
 import com.epi.epilog.R
+import com.kizitonwose.calendar.core.DayPosition
 import com.kizitonwose.calendar.core.atStartOfMonth
 import com.kizitonwose.calendar.core.firstDayOfWeekFromLocale
 import com.kizitonwose.calendar.view.MonthDayBinder
@@ -39,6 +41,8 @@ class MainActivity : ComponentActivity() {
 
     private var todayDataCounts: Int = 0
 
+    private var selectedDate: LocalDate? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setTheme(android.R.style.Theme_DeviceDefault)
@@ -53,27 +57,7 @@ class MainActivity : ComponentActivity() {
         // 주단위 캘린더 초기화
         weekCalendarView = binding.calendarView
 
-        weekCalendarView.dayBinder = object : WeekDayBinder<DayViewContainer> {
-            // Called only when a new container is needed.
-            override fun create(view: View) = DayViewContainer(view)
-
-            // Called every time we need to reuse a container.
-            override fun bind(container: DayViewContainer, data: WeekDay) {
-                container.textView.text = data.date.dayOfMonth.toString()
-            }
-        }
-
-        class DayViewContainer(view: View) : ViewContainer(view) {
-            val textView: TextView = view.findViewById(R.id.calendarDayText)
-        }
-
-        val currentDate = LocalDate.now()
-        val currentMonth = YearMonth.now()
-        val startDate = currentMonth.minusMonths(100).atStartOfMonth() // Adjust as needed
-        val endDate = currentMonth.plusMonths(100).atEndOfMonth()  // Adjust as needed
-        val firstDayOfWeek = firstDayOfWeekFromLocale() // Available from the library
-        weekCalendarView.setup(startDate, endDate, firstDayOfWeek)
-        weekCalendarView.scrollToWeek(currentDate)
+        initWeekCalendarView()
 
 
         // 그래프 데이터 설정 및 차트 초기화
@@ -105,27 +89,72 @@ class MainActivity : ComponentActivity() {
     // 주단위 캘린더 초기화 메서드
     // 주단위 캘린더 초기화 메서드
     // 주단위 캘린더 초기화 메서드
-//    private fun initWeekCalendarView() {
-//        if (::weekCalendarView.isInitialized) {
-//            weekCalendarView.setup(
-//                startDate = LocalDate.now().minusMonths(1),
-//                endDate = LocalDate.now().plusMonths(1),
-//                firstDayOfWeek = DayOfWeek.MONDAY
-//            )
-//
-//            weekCalendarView.dayBinder = object : WeekDayBinder<DayViewContainer> {
-//                override fun create(view: View) = DayViewContainer(view)
-//                override fun bind(container: DayViewContainer, data: WeekDay) {
-//                    container.textView.text = data.date.dayOfMonth.toString()
-//                }
-//            }
-//
-//            weekCalendarView.weekScrollListener = { weekDays ->
-//                // Handle week scroll event
-//            }
-//        }
-//    }
+    private fun initWeekCalendarView() {
+        weekCalendarView.dayBinder = object : WeekDayBinder<DayViewContainer> {
+            // Called only when a new container is needed.
+            override fun create(view: View) = DayViewContainer(view)
 
+            // Called every time we need to reuse a container.
+            override fun bind(container: DayViewContainer, data: WeekDay) {
+                container.textView.text = data.date.dayOfMonth.toString()
+
+                // 날짜 클릭 리스너 설정
+                container.textView.setOnClickListener {
+                    onDateSelected(data.date)
+                }
+
+                // 선택된 날짜 강조 표시
+                if (data.date == selectedDate) {
+                    container.textView.setBackgroundResource(R.drawable.round_background)
+                } else {
+                    container.textView.setBackgroundResource(0)
+                }
+            }
+        }
+
+        class DayViewContainer(view: View) : ViewContainer(view) {
+            val textView: TextView = view.findViewById(R.id.calendarDayText)
+        }
+
+        val currentDate = LocalDate.now()
+        val currentMonth = YearMonth.now()
+        val startDate = currentMonth.minusMonths(100).atStartOfMonth() // Adjust as needed
+        val endDate = currentMonth.plusMonths(100).atEndOfMonth()  // Adjust as needed
+        val firstDayOfWeek = firstDayOfWeekFromLocale() // Available from the library
+        weekCalendarView.setup(startDate, endDate, firstDayOfWeek)
+        weekCalendarView.scrollToWeek(currentDate)
+
+    }
+
+    class DayViewContainer(view: View) : ViewContainer(view) {
+        val textView: TextView = view.findViewById(R.id.calendarDayText)
+
+    }
+
+
+
+    private fun onDateSelected(date: LocalDate) {
+        // 선택된 날짜에 대해 원하는 동작을 수행합니다.
+        // 예를 들어, Toast 메시지를 표시하거나 다른 화면으로 이동할 수 있습니다.
+        val currentSelection = selectedDate
+        if (currentSelection == date) {
+            // If the user clicks the same date, clear selection.
+            selectedDate = null
+        } else {
+            selectedDate = date
+        }
+
+        // Reload the newly selected date so the dayBinder is
+        // called and we can ADD the selection background.
+        weekCalendarView.notifyDateChanged(date)
+        if (currentSelection != null) {
+            // We need to also reload the previously selected
+            // date so we can REMOVE the selection background.
+            weekCalendarView.notifyDateChanged(currentSelection)
+        }
+
+        Toast.makeText(this, "선택된 날짜: $date", Toast.LENGTH_SHORT).show()
+    }
 
     // 차트 데이터 초기화 메서드
     private fun initChartData() {
