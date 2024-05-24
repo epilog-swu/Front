@@ -13,6 +13,7 @@
 
 
 
+
             <!-- 둥근 배경을 위한 FrameLayout -->
             <FrameLayout
                 android:id="@+id/graph_blood_sugar_layout"
@@ -24,7 +25,7 @@
                 app:layout_constraintTop_toTopOf="parent">
 
                 <TextView
-                    android:id="@+id/today_blood_sugar_records_counts"
+                    android:id="@+id/blood_sugar_records_counts"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="오늘의 혈당 기록 : 3"
