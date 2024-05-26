@@ -1,6 +1,7 @@
 package com.epi.epilog.presentation
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.Button
@@ -10,6 +11,7 @@ import androidx.appcompat.app.AlertDialog
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.epi.epilog.R
+import java.time.LocalDate
 
 class MealActivity : ComponentActivity() {
 
@@ -20,8 +22,21 @@ class MealActivity : ComponentActivity() {
     private val myDataset = arrayOf("8시 0분 아침식사", "12시 30분 점심식사", "18시 0분 저녁식사")
 
     override fun onCreate(savedInstanceState: Bundle?) {
+
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_meal)
+
+        //오늘의 날짜 정보 받기
+        val selectedDate = intent.getStringExtra("SELECTED_DATE")?.let {
+            LocalDate.parse(it)
+        }
+        if (selectedDate != null) {
+            // 날짜 정보를 제대로 받았는지 로그와 토스트 메시지로 확인
+            Log.d("MealActivity", "Received date: $selectedDate")
+        } else {
+            Log.e("MealActivity", "No date received")
+        }
+
 
         viewManager = LinearLayoutManager(this)
         viewAdapter = MyAdapter(myDataset, this)
