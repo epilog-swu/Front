@@ -29,9 +29,12 @@ class BloodSugarInputFragment : Fragment() {
 
         val submitButton = view.findViewById<Button>(R.id.blood_sugar_submit_btn)
         submitButton.setOnClickListener {
-            val intent = Intent(requireActivity(), MainActivity::class.java)
-            intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK
-            startActivity(intent)
-        }
+
+
+                    val intent = Intent(requireActivity(), MainActivity::class.java)
+                    intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK
+                    startActivity(intent)
+                }
+            }
+
     }
-}
