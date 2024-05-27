@@ -57,6 +57,7 @@ android {
 
 dependencies {
 
+    implementation(libs.androidx.room.common)
     //calendar 라이브러리 사용하려고 추가
     coreLibraryDesugaring ("com.android.tools:desugar_jdk_libs:2.0.4")
     implementation("com.kizitonwose.calendar:compose:2.5.1") // Compose
@@ -65,7 +66,6 @@ dependencies {
 
     //그래프 라이브러리 사용하려고 추가
     implementation ("com.github.PhilJay:MPAndroidChart:v3.1.0")
-
     implementation(libs.play.services.wearable)
     implementation(platform(libs.androidx.compose.bom))
     implementation(libs.androidx.ui)
@@ -84,4 +84,13 @@ dependencies {
     androidTestImplementation(libs.androidx.ui.test.junit4)
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
+
+    //서버
+    implementation ("com.squareup.retrofit2:retrofit:2.9.0")
+    implementation ("com.squareup.retrofit2:converter-gson:2.9.0")
+    implementation ("com.squareup.retrofit2:adapter-rxjava2:2.9.0")
+
+    implementation ("com.squareup.okhttp3:logging-interceptor:4.9.0")
+    implementation ("cz.msebera.android:httpclient:4.4.1.2")
+
 }

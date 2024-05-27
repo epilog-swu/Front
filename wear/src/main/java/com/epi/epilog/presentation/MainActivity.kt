@@ -1,11 +1,15 @@
 package com.epi.epilog.presentation
 
+import android.content.Context
 import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
+import android.util.Log
 import android.view.ViewTreeObserver
 import androidx.activity.ComponentActivity
 import com.epi.epilog.databinding.ActivityMainBinding
+import com.epi.epilog.presentation.theme.Data
+import com.epi.epilog.presentation.theme.api.RetrofitService
 import com.github.mikephil.charting.charts.LineChart
 import com.github.mikephil.charting.components.Description
 import com.github.mikephil.charting.components.XAxis
@@ -13,6 +17,13 @@ import com.github.mikephil.charting.data.Entry
 import com.github.mikephil.charting.data.LineData
 import com.github.mikephil.charting.data.LineDataSet
 import com.github.mikephil.charting.formatter.ValueFormatter
+import com.google.gson.Gson
+import com.google.gson.GsonBuilder
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
 
 class MainActivity : ComponentActivity() {
@@ -24,6 +35,7 @@ class MainActivity : ComponentActivity() {
     private lateinit var lineData: LineData
 
     private var todayDataCounts: Int = 0
+    private lateinit var retrofitService: RetrofitService
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -42,7 +54,10 @@ class MainActivity : ComponentActivity() {
         initChartData()
         initChart()
 
-
+        //로그인 시 토큰 발급
+        initializeRetrofit()
+        postData()
+        
         //버튼 클릭 리스너 구현
         binding.btnBloodSugarRecord.setOnClickListener {
             val intent = Intent(
@@ -68,6 +83,28 @@ class MainActivity : ComponentActivity() {
 
     }
 
+    //토큰 가져오기 메서드
+    private fun getTokenFromSession(): String? {
+        val sharedPreferences = getSharedPreferences("AppPrefs", Context.MODE_PRIVATE)
+        return sharedPreferences.getString("AuthToken", null)
+    }
+    private fun disableButtons() {
+        binding.btnBloodSugarRecord.isEnabled = false
+        binding.btnCheckMedicine.isEnabled = false
+        binding.btnCheckMeals.isEnabled = false
+    }
+
+    private fun enableButtons() {
+        binding.btnBloodSugarRecord.setOnClickListener {
+            startActivity(Intent(this, BloodSugarActivity::class.java))
+        }
+        binding.btnCheckMedicine.setOnClickListener {
+            startActivity(Intent(this, MedicineActivity::class.java))
+        }
+        binding.btnCheckMeals.setOnClickListener {
+            startActivity(Intent(this, MealActivity::class.java))
+        }
+    }
     // 차트 데이터 초기화 메서드
     private fun initChartData() {
         // 일단, 더미데이터
@@ -191,4 +228,59 @@ class MainActivity : ComponentActivity() {
         chart!!.invalidate() //다시 그리기
 
     }
+    private fun initializeRetrofit() {
+        val gson : Gson = GsonBuilder()
+            .setLenient()
+            .create()
+        val retrofit = Retrofit.Builder()
+            .baseUrl("http://epilog-develop-env.eba-imw3vi3g.ap-northeast-2.elasticbeanstalk.com/")
+            .addConverterFactory(GsonConverterFactory.create(gson))
+            .build()
+        retrofitService = retrofit.create(RetrofitService::class.java)
+    }
+    private fun postData() {
+        val post = Data()
+        val call = retrofitService.postData(post)
+        call.enqueue(object : Callback<String> {
+            override fun onResponse(call: Call<String>, response: Response<String>) {
+                if (response.isSuccessful) {
+                    response.body()?.let {
+                        Log.d("BloodSugarTimeInput", "Server Response: $it")
+                        saveTokenToSession(it)  // Save the token
+                        runOnUiThread {
+                            setupButtonListeners()  // Update button states after token is saved
+                        }
+                    }
+                } else {
+                    val errorBody = response.errorBody()?.string()
+                    Log.d("BloodSugarTimeInput", "Error Response: $errorBody")
+                    Log.d("BloodSugarTimeInput", "Response Code: ${response.code()}")
+                    runOnUiThread {
+                        disableButtons()  // Optionally disable buttons if token fetch fails
+                    }
+                }
+            }
+
+            override fun onFailure(call: Call<String>, t: Throwable) {
+                Log.d("BloodSugarTimeInput", "POST failed: ${t.message}")
+                runOnUiThread {
+                    disableButtons()  // Disable buttons on failure
+                }
+            }
+        })
+    }
+
+    private fun setupButtonListeners() {
+        val token = getTokenFromSession()
+        if (token.isNullOrEmpty()) {
+            disableButtons()
+        } else {
+            enableButtons()
+        }
+    }
+    private fun saveTokenToSession(token: String) {
+        val sharedPreferences = getSharedPreferences("AppPrefs", Context.MODE_PRIVATE)
+        sharedPreferences.edit().putString("AuthToken", token).apply()
+    }
+
 }
