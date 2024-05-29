@@ -1,5 +1,6 @@
 package com.epi.epilog.presentation
 
+import CalendarInitializer
 import android.content.Context
 import android.content.Intent
 import android.graphics.Color
@@ -105,33 +106,6 @@ class MainActivity : ComponentActivity(), SensorEventListener {
         binding.btnBloodSugarRecord.isEnabled = true
         binding.btnCheckMedicine.isEnabled = true
         binding.btnCheckMeals.isEnabled = true
-    }
-
-    private fun initChartData() {
-        bloodSugarChartData.add(Entry(0f, 50f))
-        bloodSugarChartData.add(Entry(240f, 70f))
-        bloodSugarChartData.add(Entry(480f, 120f))
-        bloodSugarChartData.add(Entry(720f, 90f))
-        bloodSugarChartData.add(Entry(960f, 250f))
-        bloodSugarChartData.add(Entry(1200f, 300f))
-        bloodSugarChartData.add(Entry(1440f, 30f))
-
-        todayDataCounts = 3
-
-        //데이터 이름 및 Line 설정
-        val set = LineDataSet(bloodSugarChartData, "Blood Sugar Levels")
-        set.setDrawValues(false)
-
-        //색상
-        set.color = Color.parseColor("#FFFFFF")
-        val circleColor = Color.parseColor("#8377D8")
-        set.setCircleColors(circleColor)
-
-        //강조 표시
-        set.highLightColor = Color.TRANSPARENT
-        set.mode = LineDataSet.Mode.LINEAR
-
-        lineData = LineData(set)
     }
 
     private fun navigateToActivity(activityClass: Class<*>) {
