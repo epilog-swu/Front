@@ -3,12 +3,17 @@ package com.epi.epilog.presentation
 import android.content.Context
 import android.content.Intent
 import android.graphics.Color
+import android.hardware.Sensor
+import android.hardware.SensorEvent
+import android.hardware.SensorEventListener
+import android.hardware.SensorManager
 import android.os.Bundle
 import android.util.Log
 import androidx.activity.ComponentActivity
 import com.epi.epilog.databinding.ActivityMainBinding
 import com.epi.epilog.presentation.theme.Data
 import com.epi.epilog.presentation.theme.api.RetrofitService
+import com.epi.epilog.presentation.theme.api.SensorData
 import com.github.mikephil.charting.charts.LineChart
 import com.github.mikephil.charting.data.Entry
 import com.github.mikephil.charting.data.LineData
@@ -23,7 +28,7 @@ import retrofit2.Response
 import com.kizitonwose.calendar.view.WeekCalendarView
 import java.time.LocalDate
 
-class MainActivity : ComponentActivity() {
+class MainActivity : ComponentActivity(), SensorEventListener {
 
     private lateinit var binding: ActivityMainBinding
     private lateinit var chart: LineChart
@@ -36,6 +41,10 @@ class MainActivity : ComponentActivity() {
 
     private lateinit var weekCalendarView: WeekCalendarView
     private lateinit var calendarInitializer: CalendarInitializer // 변경된 부분: 변수 선언
+
+    private lateinit var sensorManager: SensorManager
+    private var accelerometer: Sensor? = null
+    private val sensorData = mutableListOf<SensorData>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -60,6 +69,11 @@ class MainActivity : ComponentActivity() {
 
         // 버튼 클릭 리스너 설정
         setButtonListeners()
+
+        // Initialize sensors
+        sensorManager = getSystemService(Context.SENSOR_SERVICE) as SensorManager
+        accelerometer = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER)
+        sensorManager.registerListener(this, accelerometer, SensorManager.SENSOR_DELAY_FASTEST)
     }
 
     private fun setButtonListeners() {
@@ -187,5 +201,49 @@ class MainActivity : ComponentActivity() {
     private fun saveTokenToSession(token: String) {
         val sharedPreferences = getSharedPreferences("AppPrefs", Context.MODE_PRIVATE)
         sharedPreferences.edit().putString("AuthToken", token).apply()
+    }
+
+    override fun onSensorChanged(event: SensorEvent?) {
+        event?.let {
+            val x = it.values[0]
+            val y = it.values[1]
+            val z = it.values[2]
+            sensorData.add(SensorData(x, y, z))
+
+            if (sensorData.size == 100) {
+                Log.d("SensorData", "Sending data: $sensorData")
+                postSensorData()
+                sensorData.clear()
+            }
+        }
+    }
+
+    private fun postSensorData() {
+        val token = getTokenFromSession()
+        if (token.isNullOrEmpty()) {
+            Log.d("BloodSugarTimeInput", "Auth token is missing.")
+            return
+        }
+
+        val call = retrofitService.postSensorData(sensorData, "Bearer $token")
+        call.enqueue(object : Callback<Boolean> {
+            override fun onResponse(call: Call<Boolean>, response: Response<Boolean>) {
+                if (response.isSuccessful) {
+                    val responseBody = response.body()
+                    Log.d("BloodSugarTimeInput", "Sensor Data Response: $responseBody")
+                } else {
+                    val errorBody = response.errorBody()?.string()
+                    Log.e("BloodSugarTimeInput", "Response was not successful: Code ${response.code()}, Error Body: $errorBody")
+                }
+            }
+
+            override fun onFailure(call: Call<Boolean>, t: Throwable) {
+                Log.e("BloodSugarTimeInput", "POST failed: ${t.message}")
+            }
+        })
+    }
+
+    override fun onAccuracyChanged(sensor: Sensor?, accuracy: Int) {
+        // 필요한 경우 정확도 변경 처리
     }
 }

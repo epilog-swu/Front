@@ -1,8 +1,6 @@
 package com.epi.epilog.presentation
 
-import android.content.Context
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -14,9 +12,11 @@ import com.epi.epilog.R
 
 class BloodSugarTimeInputFragment : Fragment() {
 
+    private lateinit var occurrenceType: String
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
     ): View? {
         return inflater.inflate(R.layout.fragment_blood_sugar_time_input, container, false)
     }
@@ -29,17 +29,37 @@ class BloodSugarTimeInputFragment : Fragment() {
         radioGroup.setOnCheckedChangeListener { _, checkedId ->
             timePicker.visibility =
                 if (checkedId == R.id.blood_sugar_btn8) View.VISIBLE else View.GONE
+
+            occurrenceType = when (checkedId) {
+                R.id.blood_sugar_btn1 -> "아침식사 전"
+                R.id.blood_sugar_btn2 -> "아침식사 후"
+                R.id.blood_sugar_btn3 -> "점심식사 전"
+                R.id.blood_sugar_btn4 -> "점심식사 후"
+                R.id.blood_sugar_btn5 -> "저녁식사 전"
+                R.id.blood_sugar_btn6 -> "저녁식사 후"
+                R.id.blood_sugar_btn7 -> "자기 전"
+                R.id.blood_sugar_btn8 -> {
+                    val hour = timePicker.hour
+                    val minute = timePicker.minute
+                    "시간으로 기록하기: $hour:$minute"
+                }
+                else -> ""
+            }
         }
 
         view.findViewById<Button>(R.id.blood_sugar_next_btn).setOnClickListener {
+            val bundle = Bundle().apply {
+                putString("occurrenceType", occurrenceType)
+            }
+            val fragment = BloodSugarInputFragment().apply {
+                arguments = bundle
+            }
+
             activity?.supportFragmentManager?.beginTransaction()?.apply {
-                replace(R.id.blood_sugar_input_form, BloodSugarInputFragment())
-                addToBackStack(null)  // 뒤로 가기 스택에 추가
+                replace(R.id.blood_sugar_input_form, fragment)
+                addToBackStack(null)
                 commit()
             }
         }
     }
-
 }
-
-

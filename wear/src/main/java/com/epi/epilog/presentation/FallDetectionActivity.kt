@@ -35,7 +35,7 @@ class FallDetectionActivity : ComponentActivity(), SensorEventListener {
 
     private fun initializeRetrofit() {
         val retrofit = Retrofit.Builder()
-            .baseUrl("http://epilog-develop-env.eba-imw3vi3g.ap-northeast-2.elasticbeanstalk.com/")
+            .baseUrl("http://epilog-develop-env.eba-imw3vi3g.ap-northeast-2.elasticbeanstalk.com:8080/")
             .addConverterFactory(GsonConverterFactory.create())
             .build()
         retrofitService = retrofit.create(RetrofitService::class.java)
@@ -57,6 +57,8 @@ class FallDetectionActivity : ComponentActivity(), SensorEventListener {
     }
 
     private fun postSensorData() {
+
+//        val token="eyJhbGciOiJIUzI1NiJ9.eyJtZW1iZXJJZCI6MSwiaWF0IjoxNzE2OTY0MzY1LCJleHAiOjE4MDMzNjQzNjV9.B_02rRCymUCDjNSDEexLKfvTA3qkpZ1PEdZ9z2VFiNY"
         val sharedPreferences = getSharedPreferences("AppPrefs", Context.MODE_PRIVATE)
         val token = sharedPreferences.getString("AuthToken", "")
         if (token.isNullOrEmpty()) {
@@ -67,8 +69,10 @@ class FallDetectionActivity : ComponentActivity(), SensorEventListener {
         val call = retrofitService.postSensorData(sensorData, "Bearer $token")
         call.enqueue(object : Callback<Boolean> {
             override fun onResponse(call: Call<Boolean>, response: Response<Boolean>) {
-                Log.d("BloodSugarTimeInput", "Sensor Data Response: ${response.isSuccessful}")
-            }
+                if (response.isSuccessful) {
+
+                    val responseBody = response.body()
+                    Log.d("BloodSugarTimeInput", "Sensor Data Response: $responseBody")            }}
 
             override fun onFailure(call: Call<Boolean>, t: Throwable) {
                 Log.d("BloodSugarTimeInput", "POST failed: ${t.message}")
