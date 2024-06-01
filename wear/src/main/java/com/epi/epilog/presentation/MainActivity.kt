@@ -1,5 +1,6 @@
 package com.epi.epilog.presentation
 
+import CalendarInitializer
 import android.content.Context
 import android.content.Intent
 import android.graphics.Color
@@ -83,6 +84,19 @@ class MainActivity : ComponentActivity() {
         }
     }
 
+
+
+    private fun disableButtons() {
+        binding.btnBloodSugarRecord.isEnabled = false
+        binding.btnCheckMedicine.isEnabled = false
+        binding.btnCheckMeals.isEnabled = false
+    }
+
+    private fun enableButtons() {
+        binding.btnBloodSugarRecord.isEnabled = true
+        binding.btnCheckMedicine.isEnabled = true
+        binding.btnCheckMeals.isEnabled = true
+    }
 
 
     private fun navigateToActivity(activityClass: Class<*>) {

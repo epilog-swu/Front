@@ -15,8 +15,6 @@ class BloodSugarActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_blood_sugar)
 
-        val timeInputFragment = BloodSugarTimeInputFragment()
-
         //오늘의 날짜 정보 받기
         val selectedDate = intent.getStringExtra("SELECTED_DATE")?.let {
             LocalDate.parse(it)
@@ -27,6 +25,15 @@ class BloodSugarActivity : AppCompatActivity() {
         } else {
             Log.e("BloodSugarActivity", "No date received")
         }
+
+
+        // 프래그먼트에 전달할 번들 생성
+        val bundle = Bundle()
+        bundle.putString("SELECTED_DATE", selectedDate.toString())
+
+        // 프래그먼트를 생성하고 번들을 설정
+        val timeInputFragment = BloodSugarTimeInputFragment()
+        timeInputFragment.arguments = bundle
 
         // Dynamically add fragment
         supportFragmentManager.beginTransaction()
