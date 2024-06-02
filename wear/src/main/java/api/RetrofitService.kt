@@ -13,7 +13,6 @@ import retrofit2.http.POST
 
 public interface RetrofitService {
 
-
     @Headers("Content-Type: application/json")
     @POST("api/auth/login/code")
     fun postData(@Body data: Data): Call<String>
@@ -26,20 +25,8 @@ public interface RetrofitService {
         @Body data: Blood,
         @Header("Authorization") authToken: String
     ): Call<ApiResponse>
-
-//    companion object {
-//        private const val BASE_URL = "http://epilog-develop-env.eba-imw3vi3g.ap-northeast-2.elasticbeanstalk.com/"
-//
-//        fun create(): RetrofitService {
-//            val retrofit = Retrofit.Builder()
-//                .baseUrl(BASE_URL)
-//                .addConverterFactory(GsonConverterFactory.create())
-//                .build()
-//            return retrofit.create(RetrofitService::class.java)
-//        }
-//    }
-
 }
+
 
 data class SensorData(
     val x: Float,
