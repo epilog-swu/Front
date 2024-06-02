@@ -48,12 +48,24 @@ class ChartInitializer(private val chart: LineChart) {
             moveViewToX(0f)
         }
 
+        //간격 조정을 위한 xInterval 계산
         val xAxis = chart.xAxis
+        val entryCount = bloodSugarChartData.size
+        val xInterval = if (entryCount > 1) 1440f / (entryCount - 1) else 1440f
+
+        bloodSugarChartData.forEachIndexed { index, entry ->
+            entry.x = index * xInterval
+
+            //bloodSugarChartData는 Entry 객체들의 리스트
+            //각 Entry 객체는 그래프의 데이터 포인트를 나타내며, x값과 y값을 가짐
+            //각 데이터 포인트의 x값을 데이터의 인덱스와 간격(xInterval)에 따라 재설정
+        }
+
         xAxis.apply {
             setDrawLabels(false)
-            axisMaximum = 1200f
-            axisMinimum = -240f
-            granularity = 240f
+            axisMaximum = 1440f
+            axisMinimum = 0f
+            granularity = xInterval
             textColor = Color.BLACK
             textSize = 0.05f
             position = XAxis.XAxisPosition.BOTTOM

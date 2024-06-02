@@ -77,6 +77,7 @@ class MainActivity : ComponentActivity(), SensorEventListener {
         sensorManager.registerListener(this, accelerometer, SensorManager.SENSOR_DELAY_FASTEST)
     }
 
+    // 버튼 클릭 리스너
     private fun setButtonListeners() {
         binding.btnBloodSugarRecord.setOnClickListener {
             navigateToActivity(BloodSugarActivity::class.java)
@@ -89,6 +90,16 @@ class MainActivity : ComponentActivity(), SensorEventListener {
         binding.btnCheckMeals.setOnClickListener {
             navigateToActivity(MealActivity::class.java)
         }
+    }
+
+    //버튼 클릭 리스너에 포함된 메서드 - 인텐트 적용(날짜 보내기)
+    private fun navigateToActivity(activityClass: Class<*>) {
+        val intent = Intent(this, activityClass).apply {
+            calendarInitializer.getSelectedDate()?.let {
+                putExtra("SELECTED_DATE", it.toString())
+            }
+        }
+        startActivity(intent)
     }
 
     private fun getTokenFromSession(): String? {
@@ -108,18 +119,11 @@ class MainActivity : ComponentActivity(), SensorEventListener {
         binding.btnCheckMeals.isEnabled = true
     }
 
-    private fun navigateToActivity(activityClass: Class<*>) {
-        val intent = Intent(this, activityClass).apply {
-            calendarInitializer.getSelectedDate()?.let {
-                putExtra("SELECTED_DATE", it.toString())
-            }
-        }
-        startActivity(intent)
-    }
 
     private fun onDateSelected(date: LocalDate) {
     }
 
+    //레트로핏 초기화
     private fun initializeRetrofit() {
         val gson: Gson = GsonBuilder()
             .setLenient()
