@@ -22,7 +22,7 @@ class ChartInitializer(private val chart: LineChart) {
         bloodSugarChartData.add(Entry(0f, 50f))
         bloodSugarChartData.add(Entry(240f, 70f))
         bloodSugarChartData.add(Entry(480f, 120f))
-        bloodSugarChartData.add(Entry(720f, 90f))
+        //bloodSugarChartData.add(Entry(720f, 90f))
         bloodSugarChartData.add(Entry(960f, 250f))
         bloodSugarChartData.add(Entry(1200f, 300f))
         bloodSugarChartData.add(Entry(1440f, 30f))
