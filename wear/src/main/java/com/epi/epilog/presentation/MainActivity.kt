@@ -70,6 +70,7 @@ class MainActivity : ComponentActivity() {
 
     }
 
+    // 버튼 클릭 리스너
     private fun setButtonListeners() {
         binding.btnBloodSugarRecord.setOnClickListener {
             navigateToActivity(BloodSugarActivity::class.java)
@@ -84,6 +85,15 @@ class MainActivity : ComponentActivity() {
         }
     }
 
+    //버튼 클릭 리스너에 포함된 메서드 - 인텐트 적용(날짜 보내기)
+    private fun navigateToActivity(activityClass: Class<*>) {
+        val intent = Intent(this, activityClass).apply {
+            calendarInitializer.getSelectedDate()?.let {
+                putExtra("SELECTED_DATE", it.toString())
+            }
+        }
+        startActivity(intent)
+    }
 
 
     private fun disableButtons() {
@@ -99,18 +109,7 @@ class MainActivity : ComponentActivity() {
     }
 
 
-    private fun navigateToActivity(activityClass: Class<*>) {
-        val intent = Intent(this, activityClass).apply {
-            calendarInitializer.getSelectedDate()?.let {
-                putExtra("SELECTED_DATE", it.toString())
-            }
-        }
-        startActivity(intent)
-    }
-
     private fun onDateSelected(date: LocalDate) {
     }
-
-
 
 }
