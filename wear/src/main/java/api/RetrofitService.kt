@@ -2,14 +2,17 @@ package com.epi.epilog.presentation.theme.api
 
 import com.epi.epilog.presentation.ApiResponse
 import com.epi.epilog.presentation.Blood
+import com.epi.epilog.presentation.BloodSugarDatas
 import com.epi.epilog.presentation.theme.Data
 import retrofit2.Call
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.Body
+import retrofit2.http.GET
 import retrofit2.http.Header
 import retrofit2.http.Headers
 import retrofit2.http.POST
+import retrofit2.http.Query
 
 public interface RetrofitService {
 
@@ -25,6 +28,12 @@ public interface RetrofitService {
         @Body data: Blood,
         @Header("Authorization") authToken: String
     ): Call<ApiResponse>
+
+    @GET("/api/diabetes/bloodsugars")
+    fun getBloodSugarDatas(
+        @Query("date") date: String,
+        @Header("Authorization") authToken: String
+    ) : Call<BloodSugarDatas>
 }
 
 
