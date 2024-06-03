@@ -8,9 +8,11 @@ import android.hardware.Sensor
 import android.hardware.SensorEvent
 import android.hardware.SensorEventListener
 import android.hardware.SensorManager
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import androidx.activity.ComponentActivity
+import com.epi.epilog.FallDetectionService
 import com.epi.epilog.databinding.ActivityMainBinding
 import com.epi.epilog.presentation.theme.Data
 import com.epi.epilog.presentation.theme.api.RetrofitService
@@ -57,10 +59,11 @@ class MainActivity : ComponentActivity() {
         chart = binding.graphBloodSugarChart
         weekCalendarView = binding.calendarView
 
+        startFallDetectionService()
+
         // CalendarInitializer 사용
         calendarInitializer = CalendarInitializer(this, weekCalendarView, this::onDateSelected) // 변경된 부분: 초기화
         calendarInitializer.initWeekCalendarView()
-
 
         // ChartInitializer 사용
         ChartInitializer(chart).initChart()
@@ -69,6 +72,17 @@ class MainActivity : ComponentActivity() {
         setButtonListeners()
 
     }
+
+
+    private fun startFallDetectionService() { //낙상감지 포그라운드 서비스 실행
+        val serviceIntent = Intent(this, FallDetectionService::class.java)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            startForegroundService(serviceIntent)
+        } else {
+            startService(serviceIntent)
+        }
+    }
+
 
     private fun setButtonListeners() {
         binding.btnBloodSugarRecord.setOnClickListener {
@@ -85,20 +99,6 @@ class MainActivity : ComponentActivity() {
     }
 
 
-
-    private fun disableButtons() {
-        binding.btnBloodSugarRecord.isEnabled = false
-        binding.btnCheckMedicine.isEnabled = false
-        binding.btnCheckMeals.isEnabled = false
-    }
-
-    private fun enableButtons() {
-        binding.btnBloodSugarRecord.isEnabled = true
-        binding.btnCheckMedicine.isEnabled = true
-        binding.btnCheckMeals.isEnabled = true
-    }
-
-
     private fun navigateToActivity(activityClass: Class<*>) {
         val intent = Intent(this, activityClass).apply {
             calendarInitializer.getSelectedDate()?.let {
@@ -110,7 +110,4 @@ class MainActivity : ComponentActivity() {
 
     private fun onDateSelected(date: LocalDate) {
     }
-
-
-
 }

@@ -25,8 +25,10 @@ public interface RetrofitService {
         @Body data: Blood,
         @Header("Authorization") authToken: String
     ): Call<ApiResponse>
-}
 
+    @POST("api/detection/emergency")
+    fun postEmergencyContact(@Body data: Map<String, Double>, @Header("Authorization") authToken: String): Call<ApiResponse>
+}
 
 data class SensorData(
     val x: Float,

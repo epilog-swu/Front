@@ -1,5 +1,6 @@
 package com.epi.epilog.presentation
 
+import android.app.AlertDialog
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
@@ -28,6 +29,13 @@ class LoginActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        if (isLoggedIn()) { //로그인한 상태일 경우
+            navigateToMainActivity()
+            finish()
+            return
+        }
+
         setContentView(R.layout.login)
 
         initializeRetrofit()
@@ -40,7 +48,7 @@ class LoginActivity : ComponentActivity() {
             if (code.isNotEmpty() && code == "123456") {
                 postData(code)
             } else {
-                Log.d("LoginActivity", "Code input is empty or incorrect")
+                showInvalidCodeDialog() //다른 연동코드 입력 시
             }
         }
     }
@@ -62,9 +70,9 @@ class LoginActivity : ComponentActivity() {
                 if (response.isSuccessful) {
                     response.body()?.let {
                         Log.d("LoginActivity", "Server Response: $it")
-                        saveTokenToSession(it)
-                        navigateToMainActivity()
-                        startFallDetectionService()
+                        saveTokenToSession(it) //토큰 저장
+                        setLoggedIn(true)
+                        navigateToMainActivity() //메인 액티비티로 이동
                         disableBatteryOptimization()
                     }
                 } else {
@@ -84,20 +92,22 @@ class LoginActivity : ComponentActivity() {
         sharedPreferences.edit().putString("AuthToken", token).apply()
     }
 
+    private fun setLoggedIn(loggedIn: Boolean) {
+        val sharedPreferences = getSharedPreferences("AppPrefs", Context.MODE_PRIVATE)
+        sharedPreferences.edit().putBoolean("LoggedIn", loggedIn).apply()
+    }
+
+    private fun isLoggedIn(): Boolean {
+        val sharedPreferences = getSharedPreferences("AppPrefs", Context.MODE_PRIVATE)
+        return sharedPreferences.getBoolean("LoggedIn", false)
+    }
+
     private fun navigateToMainActivity() {
         val intent = Intent(this, MainActivity::class.java)
         startActivity(intent)
         finish()
     }
 
-    private fun startFallDetectionService() {
-        val serviceIntent = Intent(this, FallDetectionService::class.java)
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            startForegroundService(serviceIntent)
-        } else {
-            startService(serviceIntent)
-        }
-    }
 
     private fun disableBatteryOptimization() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
@@ -112,4 +122,19 @@ class LoginActivity : ComponentActivity() {
         }
     }
 
+    private fun showInvalidCodeDialog() {
+        val dialogView = layoutInflater.inflate(R.layout.login_modal, null)
+        val dialog = AlertDialog.Builder(this)
+            .setView(dialogView)
+            .create()
+
+        dialogView.findViewById<Button>(R.id.button2).setOnClickListener {
+            dialog.dismiss()
+            val intent = Intent(this, LoginActivity::class.java)
+            startActivity(intent)
+            finish()
+        }
+
+        dialog.show()
+    }
 }

@@ -1,8 +1,10 @@
 package com.epi.epilog
 
 import android.app.*
+import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
+import android.content.IntentFilter
 import android.hardware.Sensor
 import android.hardware.SensorEvent
 import android.hardware.SensorEventListener
@@ -13,6 +15,7 @@ import android.os.PowerManager
 import android.util.Log
 import androidx.core.app.NotificationCompat
 import com.epi.epilog.R
+import com.epi.epilog.presentation.FallDetectionActivity
 import com.epi.epilog.presentation.theme.api.RetrofitService
 import com.epi.epilog.presentation.theme.api.SensorData
 import com.google.gson.Gson
@@ -38,6 +41,8 @@ class FallDetectionService : Service(), SensorEventListener {
     private lateinit var wakeLock: PowerManager.WakeLock
     private val timer = Timer()
 
+    private var isModalShown = false  // 모달 창이 표시되었는지 확인하는 플래그 변수
+
     override fun onCreate() {
         super.onCreate()
         sensorManager = getSystemService(Context.SENSOR_SERVICE) as SensorManager
@@ -48,6 +53,7 @@ class FallDetectionService : Service(), SensorEventListener {
         startForegroundService()
         acquireWakeLock()
         startDataTransmissionTimer()
+        registerReceiver(activityDestroyReceiver, IntentFilter("com.epi.epilog.ACTION_ACTIVITY_DESTROYED"))
     }
 
     private fun startForegroundService() {
@@ -134,9 +140,13 @@ class FallDetectionService : Service(), SensorEventListener {
         call.enqueue(object : Callback<Boolean> {
             override fun onResponse(call: Call<Boolean>, response: Response<Boolean>) {
                 if (response.isSuccessful) {
-                    val responseBody = response.body()
+                    val responseBody = true
                     Log.d("SensorData", "Sensor Data Response: $responseBody")
                     updateNotification("Sensor Data Response: $responseBody")
+
+                    if (responseBody && !isModalShown) {
+                        showFallDetectionActivity()
+                    }
                 } else {
                     val errorBody = response.errorBody()?.string()
                     Log.e("BloodSugarTimeInput", "Response was not successful: Code ${response.code()}, Error Body: $errorBody")
@@ -157,6 +167,20 @@ class FallDetectionService : Service(), SensorEventListener {
         manager.notify(notificationId, notification)
     }
 
+    private fun showFallDetectionActivity() {
+        isModalShown = true
+        val intent = Intent(this, FallDetectionActivity::class.java).apply {
+            flags = Intent.FLAG_ACTIVITY_NEW_TASK
+        }
+        startActivity(intent)
+    }
+
+    private val activityDestroyReceiver = object : BroadcastReceiver() {
+        override fun onReceive(context: Context?, intent: Intent?) {
+            isModalShown = false
+        }
+    }
+
     override fun onAccuracyChanged(sensor: Sensor?, accuracy: Int) {
         // 필요한 경우 정확도 변경 처리
     }
@@ -166,6 +190,7 @@ class FallDetectionService : Service(), SensorEventListener {
         sensorManager.unregisterListener(this)
         releaseWakeLock()
         timer.cancel()
+        unregisterReceiver(activityDestroyReceiver)
     }
 
     override fun onBind(intent: Intent?): IBinder? {
