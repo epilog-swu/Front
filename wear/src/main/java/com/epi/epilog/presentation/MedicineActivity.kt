@@ -89,6 +89,7 @@ class MedicineActivity : ComponentActivity() {
             val selectedDate = intent.getStringExtra("SELECTED_DATE")?.let {
                 LocalDate.parse(it)
             }
+            Log.d("MedicineActivity", selectedDate.toString())
 
             val authToken = getTokenFromSession()
             if (authToken.isNullOrEmpty()) {

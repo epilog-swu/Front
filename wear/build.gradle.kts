@@ -58,6 +58,7 @@ android {
 dependencies {
 
     implementation(libs.androidx.room.common)
+    implementation(libs.generativeai)
     //calendar 라이브러리 사용하려고 추가
     coreLibraryDesugaring ("com.android.tools:desugar_jdk_libs:2.0.4")
     implementation("com.kizitonwose.calendar:compose:2.5.1") // Compose
@@ -90,7 +91,6 @@ dependencies {
     implementation ("com.squareup.retrofit2:converter-gson:2.9.0")
     implementation ("com.squareup.retrofit2:adapter-rxjava2:2.9.0")
 
-    implementation ("com.squareup.okhttp3:logging-interceptor:4.9.0")
-    implementation ("cz.msebera.android:httpclient:4.4.1.2")
+    implementation ("com.google.android.gms:play-services-location:21.0.1")
 
 }

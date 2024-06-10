@@ -9,10 +9,12 @@ import android.hardware.Sensor
 import android.hardware.SensorEvent
 import android.hardware.SensorEventListener
 import android.hardware.SensorManager
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.widget.TextView
 import androidx.activity.ComponentActivity
+import com.epi.epilog.FallDetectionService
 import com.epi.epilog.R
 import com.epi.epilog.databinding.ActivityMainBinding
 import com.epi.epilog.presentation.theme.Data
@@ -75,6 +77,10 @@ class MainActivity : ComponentActivity() {
 
         // 버튼 클릭 리스너 설정
         setButtonListeners()
+
+        // FallDetectionService 실행
+        startFallDetectionService()
+
     }
 
     // Retrofit 초기화 메서드
@@ -109,6 +115,15 @@ class MainActivity : ComponentActivity() {
             }
         }
         startActivity(intent)
+    }
+
+    private fun startFallDetectionService() {
+        val serviceIntent = Intent(this, FallDetectionService::class.java)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            startForegroundService(serviceIntent)
+        } else {
+            startService(serviceIntent)
+        }
     }
 
     private fun disableButtons() {

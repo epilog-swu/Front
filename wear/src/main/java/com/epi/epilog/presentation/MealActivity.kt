@@ -1,5 +1,6 @@
 package com.epi.epilog.presentation
 
+import android.content.Context.MODE_PRIVATE
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -8,48 +9,101 @@ import android.widget.Button
 import android.widget.CheckBox
 import androidx.activity.ComponentActivity
 import androidx.appcompat.app.AlertDialog
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.epi.epilog.R
+import com.epi.epilog.presentation.theme.api.MealCheckItem
+import com.epi.epilog.presentation.theme.api.MealCheckListResponse
+import com.epi.epilog.presentation.theme.api.MealUpdateInfo
+import com.epi.epilog.presentation.theme.api.RetrofitService
+import com.epi.epilog.presentation.theme.api.State
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
 import java.time.LocalDate
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 
 class MealActivity : ComponentActivity() {
-
     private lateinit var recyclerView: RecyclerView
-    private lateinit var viewAdapter: RecyclerView.Adapter<*>
-    private lateinit var viewManager: RecyclerView.LayoutManager
-
-    private val myDataset = arrayOf("8시 0분 아침식사", "12시 30분 점심식사", "18시 0분 저녁식사")
+    private lateinit var viewAdapter: MyAdapter
+    private lateinit var retrofitService: RetrofitService
+    private var myDataset: MutableList<MealCheckItem> = mutableListOf()
 
     override fun onCreate(savedInstanceState: Bundle?) {
-
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_meal)
-
-        //오늘의 날짜 정보 받기
-        val selectedDate = intent.getStringExtra("SELECTED_DATE")?.let {
-            LocalDate.parse(it)
-        }
+        setupRetrofit()
+        val selectedDate = intent.getStringExtra("SELECTED_DATE")?.let { LocalDate.parse(it) }
         if (selectedDate != null) {
-            // 날짜 정보를 제대로 받았는지 로그와 토스트 메시지로 확인
-            Log.d("MealActivity", "Received date: $selectedDate")
+            getMealCheckList(selectedDate.toString())
         } else {
             Log.e("MealActivity", "No date received")
         }
+    }
 
+    private fun setupRetrofit() {
+        val baseUrl = "http://epilog-develop-env.eba-imw3vi3g.ap-northeast-2.elasticbeanstalk.com/"
+        retrofitService = Retrofit.Builder()
+            .baseUrl(baseUrl)
+            .addConverterFactory(GsonConverterFactory.create())
+            .build()
+            .create(RetrofitService::class.java)
+    }
 
-        viewManager = LinearLayoutManager(this)
+    private fun getMealCheckList(date: String) {
+        val authToken = getSharedPreferences("AppPrefs", MODE_PRIVATE).getString("AuthToken", null)
+        if (authToken != null) {
+            retrofitService.getMealCheckList(date, "Bearer $authToken")
+                .enqueue(object : Callback<MealCheckListResponse> {
+                    override fun onResponse(
+                        call: Call<MealCheckListResponse>,
+                        response: Response<MealCheckListResponse>
+                    ) {
+                        if (response.isSuccessful && response.body() != null) {
+                            myDataset.clear()
+                            myDataset.addAll(response.body()!!.checklist)
+                            setupRecyclerView()
+                            Log.d("MealActivity", "success")
+                            myDataset.forEach { item ->
+                                Log.d(
+                                    "MealActivity",
+                                    "ID: ${item.id}, Title: ${item.title}, State: ${item.state}, IsComplete: ${item.isComplete}"
+                                )
+                            }
+                        } else {
+                            Log.e(
+                                "MealActivity",
+                                "Failed to load data: " + response.errorBody()?.string()
+                            )
+                        }
+                    }
+
+                    override fun onFailure(call: Call<MealCheckListResponse>, t: Throwable) {
+                        Log.e("MealActivity", "API call failed: ${t.message}")
+                    }
+                })
+        } else {
+            Log.e("MealActivity", "Auth token is missing")
+        }
+    }
+
+    private fun setupRecyclerView() {
         viewAdapter = MyAdapter(myDataset, this)
-
         recyclerView = findViewById<RecyclerView>(R.id.wearable_recycler_view_meal).apply {
             setHasFixedSize(true)
-            layoutManager = viewManager
+            layoutManager = LinearLayoutManager(this@MealActivity)
             adapter = viewAdapter
         }
     }
 
-    class MyAdapter(private val myDataset: Array<String>, private val context: MealActivity) :
-        RecyclerView.Adapter<MyAdapter.MyViewHolder>() {
+    class MyAdapter(
+        private val myDataset: MutableList<MealCheckItem>,
+        private val context: MealActivity // 컨텍스트를 Activity로 명확히 지정
+    ) : RecyclerView.Adapter<MyAdapter.MyViewHolder>() {
 
         class MyViewHolder(val checkBox: CheckBox) : RecyclerView.ViewHolder(checkBox)
 
@@ -61,39 +115,87 @@ class MealActivity : ComponentActivity() {
 
         override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
             val item = myDataset[position]
-            holder.checkBox.text = item
+            holder.checkBox.text = when (item.state) {
+                State.식사함, State.건너뜀 -> "${item.title}(완료)"
+                State.상태없음 -> "${item.title}(예정)"
+            }
+            holder.checkBox.isChecked = item.state == State.식사함 || item.state == State.건너뜀
 
-            holder.checkBox.setOnClickListener {
-                if (holder.checkBox.isChecked == true)
-                    context.showDialog()
+            val currentDateTime = LocalDateTime.now()
+            val goalTime = LocalDateTime.parse(item.goalTime, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"))
+
+            if (item.state == State.상태없음) {
+                if (goalTime.isBefore(currentDateTime)) {
+                    holder.checkBox.background = ContextCompat.getDrawable(context, R.drawable.checkbox_selector_red)
+                } else {
+                    holder.checkBox.background = ContextCompat.getDrawable(context, R.drawable.checkbox_selector_yellow)
+                }
+            }
+
+            holder.checkBox.setOnCheckedChangeListener { buttonView, isChecked ->
+                buttonView.isChecked = !isChecked // 상태를 변경하지 않도록 설정
+                showDialog(item)
             }
         }
 
         override fun getItemCount() = myDataset.size
-    }
 
-    fun showDialog() {
-        val builder = AlertDialog.Builder(this)
-        val inflater = layoutInflater
-        val dialogView = inflater.inflate(R.layout.activity_checklist_dialog, null)
-        builder.setView(dialogView)
-        builder.setCancelable(true)
-        with(builder) {
+        private fun showDialog(item: MealCheckItem) {
+            val builder = AlertDialog.Builder(context)
+            val inflater = context.layoutInflater
+            val dialogView = inflater.inflate(R.layout.activity_checklist_dialog, null)
+            builder.setView(dialogView)
+
             val dialog = builder.create()
-
             dialogView.findViewById<Button>(R.id.dialog_button_yes).setOnClickListener {
-                // 현재 시각에 밥을 먹음
+                updateMealStatus(item.id, getCurrentDateTime(), "식사함")
+                item.state = State.식사함
+                notifyItemChanged(myDataset.indexOf(item))
                 dialog.dismiss()
             }
             dialogView.findViewById<Button>(R.id.dialog_button_no).setOnClickListener {
-                // 제시간에 밥을 먹음
+                updateMealStatus(item.id, item.goalTime, "식사함")
+                item.state = State.식사함
+                notifyItemChanged(myDataset.indexOf(item))
                 dialog.dismiss()
             }
             dialogView.findViewById<Button>(R.id.dialog_button_pass).setOnClickListener {
-                // 식사를 건너뜀
+                updateMealStatus(item.id, getCurrentDateTime(), "건너뜀")
+                item.state = State.건너뜀
+                notifyItemChanged(myDataset.indexOf(item))
                 dialog.dismiss()
             }
+
             dialog.show()
+        }
+
+        private fun updateMealStatus(chklistId: Int, time: String, status: String) {
+            val authToken = context.getSharedPreferences("AppPrefs", MODE_PRIVATE).getString("AuthToken", null)
+            if (authToken != null) {
+                val updateInfo = MealUpdateInfo(time, status)
+                context.retrofitService.updateMealStatus(chklistId, "Bearer $authToken", updateInfo)
+                    .enqueue(object : Callback<ApiResponse> {
+                        override fun onResponse(call: Call<ApiResponse>, response: Response<ApiResponse>) {
+                            if (response.isSuccessful) {
+                                Log.d("MealActivity", "Status Updated Successfully: ${response.body()?.message}")
+
+                            } else {
+                                Log.e("MealActivity", "Failed to update status: ${response.errorBody()?.string()}")
+                            }
+                        }
+
+                        override fun onFailure(call: Call<ApiResponse>, t: Throwable) {
+                            Log.e("MealActivity", "API call failed: ${t.message}")
+                        }
+                    })
+            } else {
+                Log.e("MealActivity", "Auth token is missing")
+            }
+        }
+
+        private fun getCurrentDateTime(): String {
+            val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")
+            return LocalDateTime.now().format(formatter)
         }
     }
 }
