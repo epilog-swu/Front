@@ -1,23 +1,26 @@
 package com.epi.epilog
 
-import android.Manifest
-import android.app.*
-import android.content.*
-import android.content.pm.PackageManager
+import android.app.Notification
+import android.app.NotificationChannel
+import android.app.NotificationManager
+import android.app.Service
+import android.content.BroadcastReceiver
+import android.content.Context
+import android.content.Intent
 import android.hardware.Sensor
 import android.hardware.SensorEvent
 import android.hardware.SensorEventListener
 import android.hardware.SensorManager
-import android.location.Location
-import android.location.LocationListener
 import android.location.LocationManager
 import android.media.MediaPlayer
-import android.os.*
-import android.provider.Settings
+import android.os.Build
+import android.os.Handler
+import android.os.IBinder
+import android.os.Looper
+import android.os.PowerManager
 import android.speech.SpeechRecognizer
 import android.speech.tts.TextToSpeech
 import android.util.Log
-import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationCompat
 import com.epi.epilog.presentation.ApiResponse
 import com.epi.epilog.presentation.FallDetectionActivity
@@ -33,6 +36,7 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.util.Timer
 import java.util.TimerTask
+
 
 class FallDetectionService : Service(), SensorEventListener {
 
@@ -53,8 +57,7 @@ class FallDetectionService : Service(), SensorEventListener {
     private lateinit var speechRecognizer: SpeechRecognizer
     private lateinit var textToSpeech: TextToSpeech
 
-    private var isTtsInitialized = false
-    private var isFallDetected = false
+    private var isEmergencyTriggered = false
 
     override fun onCreate() {
         super.onCreate()
@@ -76,21 +79,18 @@ class FallDetectionService : Service(), SensorEventListener {
     }
 
     private fun createNotificationChannel() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            val channel = NotificationChannel(channelId, "Fall Detection Service", NotificationManager.IMPORTANCE_DEFAULT)
-            val manager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-            manager.createNotificationChannel(channel)
-        }
+        val channel = NotificationChannel(channelId, "Dialog", NotificationManager.IMPORTANCE_DEFAULT)
+        val manager = getSystemService(NotificationManager::class.java)
+        manager.createNotificationChannel(channel)
     }
 
     private fun createNotification(contentText: String): Notification {
         return NotificationCompat.Builder(this, channelId)
-            .setContentTitle("Fall Detection Service")
+            .setContentTitle("낙상감지")
             .setContentText(contentText)
             .setSmallIcon(R.mipmap.ic_launcher)
             .build()
     }
-
     private fun initializeRetrofit() {
         val gson: Gson = GsonBuilder().setLenient().create()
         val retrofit = Retrofit.Builder()
@@ -111,17 +111,6 @@ class FallDetectionService : Service(), SensorEventListener {
         wakeLock.acquire()
     }
 
-    private fun releaseWakeLock() {
-        if (wakeLock.isHeld) {
-            wakeLock.release()
-        }
-    }
-
-    private fun releaseScreenWakeLock() {
-        if (screenWakeLock.isHeld) {
-            screenWakeLock.release()
-        }
-    }
 
     private fun initializeLocationManager() {
         locationManager = getSystemService(Context.LOCATION_SERVICE) as LocationManager
@@ -158,33 +147,21 @@ class FallDetectionService : Service(), SensorEventListener {
                 }, 3000)
             }
 
-        }, 2000)
+        }, 3500)
     }
 
     private fun sendEmergencyLocation() {
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
-            ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            // 권한이 없을 경우 빈 body 전송
-            val locationData = LocationData(0.0, 0.0)  // 빈 LocationData 객체
+
+
+            // Hardcoded latitude and longitude
+        val lat = 37.6292514
+        val lon = 127.0904845
+            val locationData = LocationData(lat, lon)
+            Log.d("좌표", "Latitude: $lat, Longitude: $lon")  // 현재 위도와 경도 값을 출력
+
             postLocationData(locationData)
-            return
-        }
 
-        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0L, 0f, object : LocationListener {
-            override fun onLocationChanged(location: Location) {
-                val lat = location.latitude
-                val lon = location.longitude
 
-                val locationData = LocationData(lat, lon)
-                Log.d("좌표", "Latitude: $lat, Longitude: $lon")  // 현재 위도와 경도 값을 출력
-
-                postLocationData(locationData)
-            }
-
-            override fun onStatusChanged(provider: String?, status: Int, extras: Bundle?) {}
-            override fun onProviderEnabled(provider: String) {}
-            override fun onProviderDisabled(provider: String) {}
-        })
     }
 
     private fun postLocationData(locationData: LocationData) {
@@ -196,7 +173,7 @@ class FallDetectionService : Service(), SensorEventListener {
                     if (response.isSuccessful) {
                         val apiResponse = response.body()
                         if (apiResponse != null && apiResponse.success) {
-                            Log.d("Location", "Location sent successfully")
+                            Log.d("Location", "Location sent successfully: " + apiResponse.success)
                         } else {
                             Log.e("Location", "Failed to send location: ${response.errorBody()?.string()}")
                         }
@@ -229,78 +206,81 @@ class FallDetectionService : Service(), SensorEventListener {
     private fun postSensorData(data: List<SensorData>) {
         val token = getTokenFromSession()
         if (token.isNullOrEmpty()) {
-            Log.d("BloodSugarTimeInput", "Auth token is missing.")
+            Log.d("SensorData", "Auth token is missing.")
             return
         }
 
         val call = retrofitService.postSensorData(data, "Bearer $token")
         call.enqueue(object : Callback<Boolean> {
+
             override fun onResponse(call: Call<Boolean>, response: Response<Boolean>) {
                 if (response.isSuccessful) {
-                    val responseBody = response.body()
+
+                    val responseBody = response.body() ?: false
+                    val message = if (responseBody == true) "낙상감지되었습니다" else "낙상 상황이 아닙니다"
+                    updateNotification(message)
+
                     Log.d("SensorData", "Sensor Data Response: $responseBody")
-                    updateNotification("Sensor Data Response: $responseBody")
 
-                    if (responseBody == true) {
-                        //해당 어플 접속하고 있지 않았을 때
-                        startEmergencyProcedures() //사운드 부분
-                        sendEmergencyLocation() //위치 전송 부분(에뮬레이터에서는 동작, 실제 워치에서 X)
-                       //해당 어플 접속 시 (FallDetectionActivity로 이동)
-//                     val intent = Intent(this@FallDetectionService, FallDetectionActivity::class.java)
-//                     intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
-//                       startActivity(intent)
-                        //5초 후 센서 데이터 다시 보내기
+                    if (responseBody == true && !isEmergencyTriggered) {
+                        isEmergencyTriggered = true
+
+
+                            //앱 실행
+//                            val intent = Intent(this@FallDetectionService, FallDetectionActivity::class.java)
+//                            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+//                            startActivity(intent)
+
+                            //앱 실행 X
+                             startEmergencyProcedures()
+//                           sendEmergencyLocation()
+
+
+                        // 15초 후에 낙상 감지 재시작
                         Handler(Looper.getMainLooper()).postDelayed({
-                            postSensorData(data)
-                        }, 5000)
+                            isEmergencyTriggered = false
+                        }, 15000)
                     }
-                    // Wait a bit before posting sensor data again
-
-
-                }  else {
+                } else {
                     val errorBody = response.errorBody()?.string()
-                    Log.e("BloodSugarTimeInput", "Response was not successful: Code ${response.code()}, Error Body: $errorBody")
+                    Log.e("SensorData", "Response was not successful: Code ${response.code()}, Error Body: $errorBody")
                     updateNotification("Response was not successful: ${response.code()}")
                 }
             }
 
             override fun onFailure(call: Call<Boolean>, t: Throwable) {
-                Log.e("BloodSugarTimeInput", "POST failed: ${t.message}")
+                Log.e("SensorData", "POST failed: ${t.message}")
                 updateNotification("POST failed: ${t.message}")
             }
         })
     }
 
     private fun updateNotification(contentText: String) {
-        val notification = createNotification(contentText)
-        val manager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-        manager.notify(notificationId, notification)
-    }
+        try {
+            val notification = NotificationCompat.Builder(this, channelId)
+                .setContentTitle("낙상 감지")
+                .setContentText(contentText)
+                .setSmallIcon(R.drawable.logo)
+                .build()
 
-    private val activityDestroyReceiver = object : BroadcastReceiver() {
-        override fun onReceive(context: Context?, intent: Intent?) {
-            isModalShown = false
+            val manager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+            manager.notify(notificationId, notification)
+            Log.d("Notification", "Notification posted successfully: $contentText")
+        } catch (e: Exception) {
+            Log.e("Notification", "Failed to post notification", e)
         }
     }
+
 
     override fun onAccuracyChanged(sensor: Sensor?, accuracy: Int) {}
 
     override fun onDestroy() {
         super.onDestroy()
         sensorManager.unregisterListener(this)
-        releaseWakeLock()
-        if (::screenWakeLock.isInitialized && screenWakeLock.isHeld) {
-            screenWakeLock.release()
-        }
-        timer.cancel()
-        unregisterReceiver(activityDestroyReceiver)
-        speechRecognizer.destroy()
         if (::mediaPlayer.isInitialized) {
             mediaPlayer.release()
         }
-        if (::textToSpeech.isInitialized) {
-            textToSpeech.shutdown()
-        }
+
     }
 
     override fun onBind(intent: Intent?): IBinder? {
