@@ -12,8 +12,10 @@ import android.hardware.SensorManager
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
+import android.widget.TextView
 import androidx.activity.ComponentActivity
 import com.epi.epilog.FallDetectionService
+import com.epi.epilog.R
 import com.epi.epilog.databinding.ActivityMainBinding
 import com.epi.epilog.presentation.theme.Data
 import com.epi.epilog.presentation.theme.api.RetrofitService
@@ -32,6 +34,7 @@ import retrofit2.Response
 import com.kizitonwose.calendar.view.WeekCalendarView
 import java.time.LocalDate
 
+
 class MainActivity : ComponentActivity() {
 
     private lateinit var binding: ActivityMainBinding
@@ -45,6 +48,7 @@ class MainActivity : ComponentActivity() {
 
     private lateinit var weekCalendarView: WeekCalendarView
     private lateinit var calendarInitializer: CalendarInitializer // 변경된 부분: 변수 선언
+    private lateinit var chartInitializer: ChartInitializer // 변경된 부분: 변수 선언
 
     private lateinit var sensorManager: SensorManager
     private var accelerometer: Sensor? = null
@@ -60,20 +64,32 @@ class MainActivity : ComponentActivity() {
         chart = binding.graphBloodSugarChart
         weekCalendarView = binding.calendarView
 
+        // ChartInitializer 사용
+        chartInitializer = ChartInitializer(chart)
+        chartInitializer.initChart()
+
         // CalendarInitializer 사용
-        calendarInitializer =
-            CalendarInitializer(this, weekCalendarView, this::onDateSelected) // 변경된 부분: 초기화
+        calendarInitializer = CalendarInitializer(this, weekCalendarView, this::onDateSelected)
         calendarInitializer.initWeekCalendarView()
 
-
-        // ChartInitializer 사용
-        ChartInitializer(chart).initChart()
+        // Retrofit 초기화
+        initializeRetrofit()
 
         // 버튼 클릭 리스너 설정
         setButtonListeners()
 
         // FallDetectionService 실행
         startFallDetectionService()
+
+    }
+
+    // Retrofit 초기화 메서드
+    private fun initializeRetrofit() {
+        val retrofit = Retrofit.Builder()
+            .baseUrl("http://epilog-develop-env.eba-imw3vi3g.ap-northeast-2.elasticbeanstalk.com/")
+            .addConverterFactory(GsonConverterFactory.create())
+            .build()
+        retrofitService = retrofit.create(RetrofitService::class.java)
     }
 
     // 버튼 클릭 리스너
@@ -101,7 +117,6 @@ class MainActivity : ComponentActivity() {
         startActivity(intent)
     }
 
-
     private fun startFallDetectionService() {
         val serviceIntent = Intent(this, FallDetectionService::class.java)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -111,8 +126,59 @@ class MainActivity : ComponentActivity() {
         }
     }
 
-
-    private fun onDateSelected(date: LocalDate) {
+    private fun disableButtons() {
+        binding.btnBloodSugarRecord.isEnabled = false
+        binding.btnCheckMedicine.isEnabled = false
+        binding.btnCheckMeals.isEnabled = false
     }
 
+    private fun enableButtons() {
+        binding.btnBloodSugarRecord.isEnabled = true
+        binding.btnCheckMedicine.isEnabled = true
+        binding.btnCheckMeals.isEnabled = true
+    }
+
+    private fun onDateSelected(date: LocalDate) {
+        chartInitializer.updateChart(date) // 날짜 선택 시 ChartInitializer를 통해 차트 업데이트
+        updateBloodSugarRecordCount(date) // 날짜 선택 시 혈당 기록 개수 업데이트
+    }
+
+    private fun updateBloodSugarRecordCount(date: LocalDate) {
+        val token = getTokenFromSession()
+        if (token.isNullOrEmpty()) {
+            Log.d("MainActivity", "Auth token is missing.")
+            return
+        }
+
+        val call = retrofitService.getBloodSugarDatas(date.toString(), "Bearer $token")
+        call.enqueue(object : Callback<BloodSugarDatas> {
+            override fun onResponse(call: Call<BloodSugarDatas>, response: Response<BloodSugarDatas>) {
+                if (response.isSuccessful) {
+                    response.body()?.let {
+                        val recordCount = it.diabetes.size
+                        updateRecordCountTextView(recordCount)
+                    } ?: run {
+                        updateRecordCountTextView(0)
+                    }
+                } else {
+                    updateRecordCountTextView(0)
+                }
+            }
+
+            override fun onFailure(call: Call<BloodSugarDatas>, t: Throwable) {
+                Log.e("MainActivity", "Network error: ${t.message}", t)
+                updateRecordCountTextView(0)
+            }
+        })
+    }
+
+    private fun getTokenFromSession(): String? {
+        val sharedPreferences = getSharedPreferences("AppPrefs", Context.MODE_PRIVATE)
+        return sharedPreferences.getString("AuthToken", null)
+    }
+
+    private fun updateRecordCountTextView(count: Int) {
+        val textView = findViewById<TextView>(R.id.blood_sugar_records_counts)
+        textView.text = "오늘의 혈당 기록: $count"
+    }
 }

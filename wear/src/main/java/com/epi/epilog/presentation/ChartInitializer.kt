@@ -15,6 +15,7 @@ import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.io.IOException
+import java.time.LocalDate
 
 class ChartInitializer(private val chart: LineChart) {
 
@@ -22,9 +23,13 @@ class ChartInitializer(private val chart: LineChart) {
     private lateinit var lineData: LineData
     private lateinit var retrofitService: RetrofitService
 
+
     fun initChart() {
         initializeRetrofit() // Retrofit 초기화
-        fetchChartData()
+    }
+
+    fun updateChart(date: LocalDate) {
+        fetchChartData(date)
     }
 
     private fun initializeRetrofit() {
@@ -35,14 +40,14 @@ class ChartInitializer(private val chart: LineChart) {
         retrofitService = retrofit.create(RetrofitService::class.java)
     }
 
-    private fun fetchChartData() {
+    private fun fetchChartData(date: LocalDate) {
         val token = getTokenFromSession()
         if (token.isNullOrEmpty()) {
             Log.d("ChartInitializer", "Auth token is missing.")
             return
         }
 
-        val call = retrofitService.getBloodSugarDatas("2024-06-04", "Bearer $token")
+        val call = retrofitService.getBloodSugarDatas(date.toString(), "Bearer $token")
         call.enqueue(object : Callback<BloodSugarDatas> {
             override fun onResponse(call: Call<BloodSugarDatas>, response: Response<BloodSugarDatas>) {
                 if (response.isSuccessful) {

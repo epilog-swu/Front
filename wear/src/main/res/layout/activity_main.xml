@@ -43,7 +43,7 @@
                     android:id="@+id/blood_sugar_records_counts"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="오늘의 혈당 기록 : 3"
+                    android:text="오늘의 혈당 기록 : 0"
                     android:textColor="#272727"
                     android:textSize="7sp"
                     android:background="@drawable/round_background"
