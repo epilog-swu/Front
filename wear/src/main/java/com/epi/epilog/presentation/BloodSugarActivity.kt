@@ -4,11 +4,13 @@ import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.widget.RadioGroup
+import android.widget.TextView
 import android.widget.TimePicker
 import androidx.activity.ComponentActivity
 import androidx.appcompat.app.AppCompatActivity
 import com.epi.epilog.R
 import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 
 class BloodSugarActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -25,6 +27,17 @@ class BloodSugarActivity : AppCompatActivity() {
         } else {
             Log.e("BloodSugarActivity", "No date received")
         }
+
+        // 날짜 정보를 "00월 00일 혈당기록" 형태로 변환
+        val formattedDate = selectedDate?.let {
+            it.format(DateTimeFormatter.ofPattern("MM월 dd일"))
+        }
+        val recordTitle = "$formattedDate 혈당기록"
+
+        // TextView 업데이트
+        val textView: TextView = findViewById(R.id.blood_sugar_title)
+        textView.text = recordTitle
+
 
 
         // 프래그먼트에 전달할 번들 생성
