@@ -1,6 +1,7 @@
 package com.epi.epilog.presentation
 
 import CalendarInitializer
+import ChartInitializer
 import android.content.Context
 import android.content.Intent
 import android.graphics.Color
@@ -59,11 +60,11 @@ class MainActivity : ComponentActivity() {
         chart = binding.graphBloodSugarChart
         weekCalendarView = binding.calendarView
 
-        startFallDetectionService()
-
         // CalendarInitializer 사용
-        calendarInitializer = CalendarInitializer(this, weekCalendarView, this::onDateSelected) // 변경된 부분: 초기화
+        calendarInitializer =
+            CalendarInitializer(this, weekCalendarView, this::onDateSelected) // 변경된 부분: 초기화
         calendarInitializer.initWeekCalendarView()
+
 
         // ChartInitializer 사용
         ChartInitializer(chart).initChart()
@@ -71,19 +72,11 @@ class MainActivity : ComponentActivity() {
         // 버튼 클릭 리스너 설정
         setButtonListeners()
 
+        // FallDetectionService 실행
+        startFallDetectionService()
     }
 
-
-    private fun startFallDetectionService() { //낙상감지 포그라운드 서비스 실행
-        val serviceIntent = Intent(this, FallDetectionService::class.java)
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            startForegroundService(serviceIntent)
-        } else {
-            startService(serviceIntent)
-        }
-    }
-
-
+    // 버튼 클릭 리스너
     private fun setButtonListeners() {
         binding.btnBloodSugarRecord.setOnClickListener {
             navigateToActivity(BloodSugarActivity::class.java)
@@ -98,7 +91,7 @@ class MainActivity : ComponentActivity() {
         }
     }
 
-
+    //버튼 클릭 리스너에 포함된 메서드 - 인텐트 적용(날짜 보내기)
     private fun navigateToActivity(activityClass: Class<*>) {
         val intent = Intent(this, activityClass).apply {
             calendarInitializer.getSelectedDate()?.let {
@@ -108,6 +101,18 @@ class MainActivity : ComponentActivity() {
         startActivity(intent)
     }
 
+
+    private fun startFallDetectionService() {
+        val serviceIntent = Intent(this, FallDetectionService::class.java)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            startForegroundService(serviceIntent)
+        } else {
+            startService(serviceIntent)
+        }
+    }
+
+
     private fun onDateSelected(date: LocalDate) {
     }
+
 }

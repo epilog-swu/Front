@@ -12,7 +12,6 @@ import android.util.Log
 import android.widget.Button
 import android.widget.EditText
 import androidx.activity.ComponentActivity
-import com.epi.epilog.FallDetectionService
 import com.epi.epilog.R
 import com.epi.epilog.presentation.theme.Data
 import com.epi.epilog.presentation.theme.api.RetrofitService

@@ -58,6 +58,7 @@ android {
 dependencies {
 
     implementation(libs.androidx.room.common)
+    implementation(libs.generativeai)
     //calendar 라이브러리 사용하려고 추가
     coreLibraryDesugaring ("com.android.tools:desugar_jdk_libs:2.0.4")
     implementation("com.kizitonwose.calendar:compose:2.5.1") // Compose

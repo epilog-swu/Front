@@ -2,23 +2,29 @@ package com.epi.epilog.presentation.theme.api
 
 import com.epi.epilog.presentation.ApiResponse
 import com.epi.epilog.presentation.Blood
+import com.epi.epilog.presentation.BloodSugarDatas
 import com.epi.epilog.presentation.theme.Data
 import retrofit2.Call
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.Body
+import retrofit2.http.GET
 import retrofit2.http.Header
 import retrofit2.http.Headers
+import retrofit2.http.PATCH
 import retrofit2.http.POST
+import retrofit2.http.Path
+import retrofit2.http.Query
 
-public interface RetrofitService {
+interface RetrofitService {
 
     @Headers("Content-Type: application/json")
     @POST("api/auth/login/code")
     fun postData(@Body data: Data): Call<String>
 
     @POST("api/detection/fall")
-    fun postSensorData(@Body data: List<SensorData>, @Header("Authorization") authToken: String): Call<Boolean>
+    fun postSensorData(
+        @Body data: List<SensorData>,
+        @Header("Authorization") authToken: String
+    ): Call<Boolean>
 
     @POST("api/diabetes/bloodsugar")
     fun postBloodSugarData(
@@ -26,12 +32,62 @@ public interface RetrofitService {
         @Header("Authorization") authToken: String
     ): Call<ApiResponse>
 
+    @GET("api/diabetes/bloodsugars")
+    fun getBloodSugarDatas(
+        @Query("date") date: String,
+        @Header("Authorization") authToken: String
+    ): Call<BloodSugarDatas>
+
     @POST("api/detection/emergency")
-    fun postEmergencyContact(@Body data: Map<String, Double>, @Header("Authorization") authToken: String): Call<ApiResponse>
+    fun postLocationData(
+        @Body locationData: LocationData,
+        @Header("Authorization") authToken: String
+    ): Call<ApiResponse>
+
+    @Headers("Content-Type: application/json")
+    @GET("api/meals")
+    fun getMealCheckList(
+        @Query("date") date: String,
+        @Header("Authorization") authToken: String
+    ): Call<MealCheckListResponse>
+
+    @PATCH("api/meals/{chklistId}")
+    fun updateMealStatus(
+        @Path("chklistId") chklistId: Int,
+        @Header("Authorization") authToken: String,
+        @Body updateInfo: MealUpdateInfo
+    ): Call<ApiResponse>
 }
 
 data class SensorData(
     val x: Float,
     val y: Float,
     val z: Float
+)
+
+data class MealUpdateInfo(
+    val time: String,
+    val status: String
+)
+
+data class MealCheckListResponse(
+    val date: String,
+    val checklist: List<MealCheckItem>
+)
+
+data class MealCheckItem(
+    val id: Int,
+    val goalTime: String,
+    val title: String,
+    var isComplete: Boolean,
+    var state: State // Use enum type here
+)
+
+enum class State {
+    식사함, 건너뜀, 상태없음 // Adjust these based on your actual data
+}
+
+data class LocationData(
+    val latitude: Double,
+    val longitude: Double
 )
