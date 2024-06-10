@@ -9,9 +9,11 @@ import android.hardware.Sensor
 import android.hardware.SensorEvent
 import android.hardware.SensorEventListener
 import android.hardware.SensorManager
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import androidx.activity.ComponentActivity
+import com.epi.epilog.FallDetectionService
 import com.epi.epilog.databinding.ActivityMainBinding
 import com.epi.epilog.presentation.theme.Data
 import com.epi.epilog.presentation.theme.api.RetrofitService
@@ -59,7 +61,8 @@ class MainActivity : ComponentActivity() {
         weekCalendarView = binding.calendarView
 
         // CalendarInitializer 사용
-        calendarInitializer = CalendarInitializer(this, weekCalendarView, this::onDateSelected) // 변경된 부분: 초기화
+        calendarInitializer =
+            CalendarInitializer(this, weekCalendarView, this::onDateSelected) // 변경된 부분: 초기화
         calendarInitializer.initWeekCalendarView()
 
 
@@ -69,6 +72,8 @@ class MainActivity : ComponentActivity() {
         // 버튼 클릭 리스너 설정
         setButtonListeners()
 
+        // FallDetectionService 실행
+        startFallDetectionService()
     }
 
     // 버튼 클릭 리스너
@@ -97,16 +102,13 @@ class MainActivity : ComponentActivity() {
     }
 
 
-    private fun disableButtons() {
-        binding.btnBloodSugarRecord.isEnabled = false
-        binding.btnCheckMedicine.isEnabled = false
-        binding.btnCheckMeals.isEnabled = false
-    }
-
-    private fun enableButtons() {
-        binding.btnBloodSugarRecord.isEnabled = true
-        binding.btnCheckMedicine.isEnabled = true
-        binding.btnCheckMeals.isEnabled = true
+    private fun startFallDetectionService() {
+        val serviceIntent = Intent(this, FallDetectionService::class.java)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            startForegroundService(serviceIntent)
+        } else {
+            startService(serviceIntent)
+        }
     }
 
 

@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" >
+
+        <Button
+            android:id="@+id/dialog_fall_button_no"
+            android:layout_width="match_parent"
+            android:layout_height="28dp"
+            android:text="잘못 감지되었습니다"
+            android:textColor="@color/검정색"
+            android:textSize="10sp"
+            android:background="@drawable/checklist_dialog_btn"
+            android:layout_marginTop="70dp"
+            android:layout_marginLeft="32dp"
+            android:layout_marginRight="32dp"/>
+        <Button
+            android:id="@+id/dialog_fall_button_yes"
+            android:layout_width="match_parent"
+            android:layout_height="28dp"
+            android:layout_below="@+id/dialog_fall_button_no"
+            android:text="긴급상황입니다"
+            android:textSize="10sp"
+            android:textColor="@color/검정색"
+            android:background="@drawable/checklist_dialog_btn"
+            android:layout_marginTop="5dp"
+            android:layout_marginLeft="32dp"
+            android:layout_marginRight="32dp"/>
+
+    </RelativeLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>
