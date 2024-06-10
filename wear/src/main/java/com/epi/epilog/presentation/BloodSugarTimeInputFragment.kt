@@ -187,6 +187,9 @@ class BloodSugarTimeInputFragment : Fragment() {
                 commit()
             }
         }
+
+
+
     }
 
     private fun formatDateTime(hour: Int, minute: Int): String {
