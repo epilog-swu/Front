@@ -6,20 +6,7 @@
         <State />
       </entry>
       <entry key="wear">
-        <State>
-          <targetSelectedWithDropDown>
-            <Target>
-              <type value="QUICK_BOOT_TARGET" />
-              <deviceKey>
-                <Key>
-                  <type value="VIRTUAL_DEVICE_PATH" />
-                  <value value="C:\Users\Home\.android\avd\Wear_OS_Small_Round_API_33.avd" />
-                </Key>
-              </deviceKey>
-            </Target>
-          </targetSelectedWithDropDown>
-          <timeTargetWasSelectedWithDropDown value="2024-06-10T10:20:23.537026200Z" />
-        </State>
+        <State />
       </entry>
     </value>
   </component>
