@@ -79,18 +79,21 @@ class FallDetectionService : Service(), SensorEventListener {
     }
 
     private fun createNotificationChannel() {
-        val channel = NotificationChannel(channelId, "Dialog", NotificationManager.IMPORTANCE_DEFAULT)
-        val manager = getSystemService(NotificationManager::class.java)
-        manager.createNotificationChannel(channel)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val channel = NotificationChannel(channelId, "Fall Detection Service", NotificationManager.IMPORTANCE_DEFAULT)
+            val manager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+            manager.createNotificationChannel(channel)
+        }
     }
 
     private fun createNotification(contentText: String): Notification {
         return NotificationCompat.Builder(this, channelId)
-            .setContentTitle("낙상감지")
+            .setContentTitle("Fall Detection Service")
             .setContentText(contentText)
             .setSmallIcon(R.mipmap.ic_launcher)
             .build()
     }
+
     private fun initializeRetrofit() {
         val gson: Gson = GsonBuilder().setLenient().create()
         val retrofit = Retrofit.Builder()
@@ -215,12 +218,9 @@ class FallDetectionService : Service(), SensorEventListener {
 
             override fun onResponse(call: Call<Boolean>, response: Response<Boolean>) {
                 if (response.isSuccessful) {
-
-                    val responseBody = response.body() ?: false
-                    val message = if (responseBody == true) "낙상감지되었습니다" else "낙상 상황이 아닙니다"
-                    updateNotification(message)
-
+                    val responseBody = response.body()
                     Log.d("SensorData", "Sensor Data Response: $responseBody")
+                    updateNotification("Sensor Data Response: $responseBody")
 
                     if (responseBody == true && !isEmergencyTriggered) {
                         isEmergencyTriggered = true
@@ -232,8 +232,8 @@ class FallDetectionService : Service(), SensorEventListener {
 //                            startActivity(intent)
 
                             //앱 실행 X
-                             startEmergencyProcedures()
-//                           sendEmergencyLocation()
+                              startEmergencyProcedures()
+//                            sendEmergencyLocation()
 
 
                         // 15초 후에 낙상 감지 재시작
@@ -258,7 +258,7 @@ class FallDetectionService : Service(), SensorEventListener {
     private fun updateNotification(contentText: String) {
         try {
             val notification = NotificationCompat.Builder(this, channelId)
-                .setContentTitle("낙상 감지")
+                .setContentTitle("Fall Detection Service")
                 .setContentText(contentText)
                 .setSmallIcon(R.drawable.logo)
                 .build()
