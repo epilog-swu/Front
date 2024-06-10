@@ -249,12 +249,13 @@ class FallDetectionService : Service(), SensorEventListener {
 //                     val intent = Intent(this@FallDetectionService, FallDetectionActivity::class.java)
 //                     intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
 //                       startActivity(intent)
+                        //5초 후 센서 데이터 다시 보내기
+                        Handler(Looper.getMainLooper()).postDelayed({
+                            postSensorData(data)
+                        }, 5000)
                     }
                     // Wait a bit before posting sensor data again
-                    Handler(Looper.getMainLooper()).postDelayed({
-                        // Continue posting sensor data
-                        postSensorData(data)
-                    }, 5000)  // Adjust delay as needed
+
 
                 }  else {
                     val errorBody = response.errorBody()?.string()
