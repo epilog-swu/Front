@@ -233,7 +233,7 @@ class FallDetectionService : Service(), SensorEventListener {
 
                             //앱 실행 X
                               startEmergencyProcedures()
-//                            sendEmergencyLocation()
+                              sendEmergencyLocation()
 
 
                         // 15초 후에 낙상 감지 재시작
