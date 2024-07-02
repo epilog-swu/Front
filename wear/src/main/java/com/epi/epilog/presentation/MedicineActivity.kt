@@ -10,6 +10,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.CheckBox
 import androidx.activity.ComponentActivity
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.epi.epilog.R
@@ -53,11 +54,16 @@ class MedicineActivity : ComponentActivity() {
         editor.apply()
     }
 
-    private fun loadChecklistData(): MedicineCheckListDatas? {
+    private fun loadChecklistData(selectedDate: String): MedicineCheckListDatas? {
         val sharedPreferences = getSharedPreferences("AppPrefs", Context.MODE_PRIVATE)
         val checklistJson = sharedPreferences.getString("ChecklistData", null)
         return if (checklistJson != null) {
-            Gson().fromJson(checklistJson, MedicineCheckListDatas::class.java)
+            val data = Gson().fromJson(checklistJson, MedicineCheckListDatas::class.java)
+            if (data.date == selectedDate) { // 날짜 비교
+                data
+            } else {
+                null
+            }
         } else {
             null
         }
@@ -77,8 +83,14 @@ class MedicineActivity : ComponentActivity() {
         // Retrofit 초기화
         initializeRetrofit()
 
-        // 로컬 데이터 로드
-        checklistData = loadChecklistData()
+        // 오늘의 날짜 정보 받기
+        val selectedDate = intent.getStringExtra("SELECTED_DATE")?.let {
+            LocalDate.parse(it)
+        }
+        Log.d("MedicineActivity", selectedDate.toString())
+
+
+        checklistData = loadChecklistData(selectedDate.toString())
 
         if (checklistData != null) {
             // RecyclerView 어댑터 설정
@@ -122,6 +134,7 @@ class MedicineActivity : ComponentActivity() {
                         Log.e("MedicineActivity", "Failed to fetch data", t)
                     }
                 })
+
             } else {
                 Log.e("MedicineActivity", "No date received")
             }
@@ -207,6 +220,17 @@ class MedicineActivity : ComponentActivity() {
             data?.checklist?.get(position)?.let { checklistItem ->
                 holder.checkBox.text = checklistItem.title
                 holder.checkBox.isChecked = checklistItem.isComplete
+
+                //background 설정을 위한 변수 설정
+                val currentDateTime = LocalDateTime.now()
+                val goalTime = LocalDateTime.parse(checklistItem.goalTime, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"))
+
+                if(goalTime.isBefore(currentDateTime)){
+                    holder.checkBox.background = ContextCompat.getDrawable(context, R.drawable.checkbox_selector_red)
+                } else {
+                    holder.checkBox.background = ContextCompat.getDrawable(context, R.drawable.checkbox_selector_yellow)
+                }
+
 
                 holder.checkBox.setOnCheckedChangeListener { buttonView, isChecked ->
                     if (buttonView.isPressed) {  // 사용자가 직접 클릭한 경우에만 처리

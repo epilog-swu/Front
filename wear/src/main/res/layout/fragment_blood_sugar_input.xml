@@ -24,7 +24,6 @@
                 android:layout_weight="3"
                 android:hint="혈당수치 입력"
                 android:textSize="16dp"
-                android:textColor="@color/검정색"
                 android:inputType="numberDecimal"
                 android:gravity="center_horizontal"
                 android:layout_gravity="center"
