@@ -31,6 +31,12 @@ class CalendarInitializer(
         return selectedDate
     }
 
+    fun selectDate(date: LocalDate) {
+        selectedDate = date
+        weekCalendarView.notifyDateChanged(date)
+        Toast.makeText(context, "선택된 날짜: $date", Toast.LENGTH_SHORT).show()
+    }
+
     fun initWeekCalendarView() {
         weekCalendarView.dayBinder = object : WeekDayBinder<DayViewContainer> {
             override fun create(view: View) = DayViewContainer(view)

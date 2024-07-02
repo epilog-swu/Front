@@ -1,7 +1,6 @@
 package com.epi.epilog.presentation
 
 import CalendarInitializer
-import ChartInitializer
 import android.content.Context
 import android.content.Intent
 import android.graphics.Color
@@ -80,6 +79,15 @@ class MainActivity : ComponentActivity() {
 
         // FallDetectionService 실행
         startFallDetectionService()
+
+        // Intent로 전달된 날짜가 있는지 확인하고, 있으면 해당 날짜로 차트를 업데이트
+        val selectedDate = intent.getStringExtra("SELECTED_DATE")?.let {
+            LocalDate.parse(it)
+        }
+        selectedDate?.let {
+            onDateSelected(it)
+            calendarInitializer.selectDate(it)
+        }
 
     }
 

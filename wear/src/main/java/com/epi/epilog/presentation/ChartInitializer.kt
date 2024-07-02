@@ -1,14 +1,15 @@
+package com.epi.epilog.presentation
+
 import android.content.Context
 import android.graphics.Color
 import android.util.Log
-import com.epi.epilog.presentation.BloodSugarDatas
 import com.epi.epilog.presentation.theme.api.RetrofitService
 import com.github.mikephil.charting.charts.LineChart
-import com.github.mikephil.charting.components.XAxis
 import com.github.mikephil.charting.data.Entry
 import com.github.mikephil.charting.data.LineData
 import com.github.mikephil.charting.data.LineDataSet
 import com.github.mikephil.charting.formatter.ValueFormatter
+import com.github.mikephil.charting.components.XAxis
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -22,7 +23,6 @@ class ChartInitializer(private val chart: LineChart) {
     private val bloodSugarChartData = ArrayList<Entry>()
     private lateinit var lineData: LineData
     private lateinit var retrofitService: RetrofitService
-
 
     fun initChart() {
         initializeRetrofit() // Retrofit 초기화
@@ -79,6 +79,9 @@ class ChartInitializer(private val chart: LineChart) {
 
     private fun handleNoData() {
         Log.w("ChartInitializer", "No data available")
+        bloodSugarChartData.clear()
+        chart.clear()
+        chart.invalidate()
     }
 
     private fun handleResponseError(response: Response<BloodSugarDatas>) {
