@@ -1,10 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.wear.widget.WearableRecyclerView
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/wearable_recycler_view_medicine"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:padding="30dp"
-    app:layout_behavior="@string/wearable_layout_scroll_behavior">
-</androidx.wear.widget.WearableRecyclerView>
+    android:layout_height="match_parent">
+
+    <androidx.wear.widget.WearableRecyclerView
+        android:id="@+id/wearable_recycler_view_medicine"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="30dp"
+        app:layout_behavior="@string/wearable_layout_scroll_behavior"
+        android:visibility="gone" /> <!-- 기본적으로 숨김 -->
+
+    <TextView
+        android:id="@+id/no_checklist_message"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="해당 날짜에 데이터가 없습니다."
+        android:textSize="12sp"
+        android:textColor="@android:color/black"
+        android:layout_centerInParent="true"
+        android:visibility="gone" /> <!-- 기본적으로 숨김 -->
+
+</RelativeLayout>
