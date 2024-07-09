@@ -11,6 +11,8 @@ import android.hardware.SensorManager
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
+import android.view.View
+import android.widget.FrameLayout
 import android.widget.TextView
 import androidx.activity.ComponentActivity
 import com.epi.epilog.FallDetectionService
@@ -89,7 +91,10 @@ class MainActivity : ComponentActivity() {
             calendarInitializer.selectDate(it)
         }
 
+
     }
+
+
 
     // Retrofit 초기화 메서드
     private fun initializeRetrofit() {

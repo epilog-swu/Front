@@ -1,9 +1,15 @@
 package com.epi.epilog.presentation
 
+import android.app.AlarmManager
+import android.app.NotificationChannel
+import android.app.NotificationManager
+import android.app.PendingIntent
 import android.widget.Button
 import androidx.appcompat.app.AlertDialog
 import android.content.Context
+import android.content.Intent
 import android.graphics.Color
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -26,7 +32,10 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.time.LocalDate
 import java.time.LocalDateTime
+import java.time.ZoneId
 import java.time.format.DateTimeFormatter
+import android.provider.Settings
+
 
 class MedicineActivity : ComponentActivity() {
 
@@ -35,6 +44,11 @@ class MedicineActivity : ComponentActivity() {
     private lateinit var viewManager: RecyclerView.LayoutManager
     private lateinit var retrofitService: RetrofitService
     private var checklistData: MedicineCheckListDatas? = null
+
+    private val alarmManager: AlarmManager by lazy {
+        getSystemService(Context.ALARM_SERVICE) as AlarmManager
+    }
+
 
     private fun initializeRetrofit() {
         val retrofit = Retrofit.Builder()
@@ -75,6 +89,9 @@ class MedicineActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_medicine)
 
+        // 알림 채널 생성
+        createNotificationChannel()
+
         // RecyclerView와 TextView 참조
         viewManager = LinearLayoutManager(this)
         recyclerView = findViewById<RecyclerView>(R.id.wearable_recycler_view_medicine).apply {
@@ -101,6 +118,12 @@ class MedicineActivity : ComponentActivity() {
             recyclerView.adapter = viewAdapter
             recyclerView.visibility = View.VISIBLE
             noChecklistMessage.visibility = View.GONE
+
+            // 알람 설정 추가
+            checklistData?.checklist?.forEach { item ->
+                scheduleMedicineNotifications(item)
+            }
+
         } else {
             // 체크리스트 데이터가 없을 경우 서버에서 데이터 가져오기
             val authToken = getTokenFromSession()
@@ -124,6 +147,12 @@ class MedicineActivity : ComponentActivity() {
                                     recyclerView.adapter = viewAdapter
                                     recyclerView.visibility = View.VISIBLE
                                     noChecklistMessage.visibility = View.GONE
+
+                                    // 알람 설정 추가
+                                    dataList.checklist.forEach { item ->
+                                        scheduleMedicineNotifications(item)
+                                    }
+
                                 } else {
                                     // 체크리스트 데이터가 없을 경우 TextView 표시
                                     recyclerView.visibility = View.GONE
@@ -144,6 +173,80 @@ class MedicineActivity : ComponentActivity() {
             }
         }
     }
+
+    private fun createNotificationChannel() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val channelId = "MedicineActivityChannel"
+            val channelName = "Medicine Notifications"
+            val channelDescription = "Notifications for medicine reminders"
+            val importance = NotificationManager.IMPORTANCE_DEFAULT
+
+            val channel = NotificationChannel(channelId, channelName, importance).apply {
+                description = channelDescription
+            }
+
+            val notificationManager: NotificationManager =
+                getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+            notificationManager.createNotificationChannel(channel)
+        }
+    }
+
+    private fun requestExactAlarmPermission() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            val intent = Intent(Settings.ACTION_REQUEST_SCHEDULE_EXACT_ALARM)
+            startActivity(intent)
+        }
+    }
+
+    private fun scheduleMedicineNotifications(item: checklist) {
+        try {
+            val goalTime = LocalDateTime.parse(item.goalTime, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"))
+            val notificationTime = goalTime.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli()
+            val currentTime = System.currentTimeMillis()
+
+            if (notificationTime > currentTime) {
+                // 알람 설정
+                scheduleNotification(item.id, notificationTime, "${item.title} 복용 시간입니다.")
+                Log.d("MedicineActivity", "알람 설정 시간: $notificationTime")
+            } else {
+                Log.d("MedicineActivity", "과거의 시간에 대한 알람은 설정되지 않습니다: $notificationTime")
+            }
+        } catch (e: SecurityException) {
+            Log.e("MedicineActivity", "Failed to schedule notifications due to missing permission: ${e.message}", e)
+            // 권한 요청 로직 추가 가능
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                requestExactAlarmPermission()
+            }
+        } catch (e: Exception) {
+            Log.e("MedicineActivity", "Failed to schedule notifications: ${e.message}", e)
+        }
+    }
+
+
+    private fun scheduleNotification(id: Int, time: Long, message: String) {
+        try {
+            val intent = Intent(this, NotificationReceiver::class.java).apply {
+                putExtra("notificationId", id)
+                putExtra("message", message)
+            }
+            val pendingIntent = PendingIntent.getBroadcast(this, id, intent, PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE)
+            alarmManager.setExact(AlarmManager.RTC_WAKEUP, time, pendingIntent)
+
+        } catch (e: SecurityException) {
+            Log.e("MedicineActivity", "Failed to schedule notification due to missing permission: ${e.message}", e)
+            // 권한 요청 로직 추가 가능
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                requestExactAlarmPermission()
+            }
+        } catch (e: Exception) {
+            Log.e("MedicineActivity", "Failed to schedule notification: ${e.message}", e)
+        }
+    }
+
+
+
+
+
 
 
     fun MedicineshowDialog(chklstId: Int, goalTime: String, onStatusChanged: (State, String) -> Unit) {
