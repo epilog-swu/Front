@@ -64,7 +64,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="20dp"
                 android:layout_marginTop="40dp"
-                android:text="이름"
+                android:text="이름*"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/textView3" />
@@ -78,6 +78,7 @@
                 android:layout_marginEnd="20dp"
                 android:ems="10"
                 android:inputType="text"
+                android:hint="환자 성함을 입력해주세요"
                 android:minHeight="48dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -151,7 +152,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="20dp"
                 android:layout_marginTop="16dp"
-                android:background="@drawable/grey_solid_button_shape"
+                android:background="@drawable/gender_grey_solid_button"
                 android:text="여자"
                 app:layout_constraintEnd_toStartOf="@+id/male_button"
                 app:layout_constraintStart_toStartOf="parent"
@@ -164,14 +165,14 @@
                 android:layout_marginStart="10dp"
                 android:layout_marginTop="16dp"
                 android:layout_marginEnd="20dp"
-                android:background="@drawable/grey_solid_button_shape"
+                android:background="@drawable/gender_grey_solid_button"
                 android:text="남자"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/female_button"
                 app:layout_constraintTop_toBottomOf="@+id/textView"/>
 
             <Button
-                android:id="@+id/button5"
+                android:id="@+id/next_button"
                 android:layout_width="0dp"
                 android:layout_height="56dp"
                 android:layout_marginStart="30dp"
