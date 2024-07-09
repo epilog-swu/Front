@@ -16,9 +16,10 @@
     <uses-permission android:name="android.permission.BODY_SENSORS" />
     <uses-feature android:name="android.hardware.type.watch" />
     <uses-permission android:name="android.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS"/>
-    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW"/>
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WIND
     <uses-permission android:name="android.permission.RECORD_AUDIO" /> <!-- 추가된 부분 -->
-    <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM"/> <!--체크리스트 알람보내기 -->
+    <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM"/> <!--체크리스트 알람보내기 -->=======
+    
 
     <application
         android:networkSecurityConfig="@xml/network_secutiry_config"
@@ -52,6 +53,7 @@
         <activity android:name=".presentation.MealActivity"
             android:exported="true"
             android:theme="@style/Theme.AppCompat.DayNight.NoActionBar" />
+        <activity android:name=".presentation.SoundRecognizerActivity" />
 
         <activity android:name=".presentation.FallDetectionActivity"
             android:exported="true">
@@ -64,7 +66,7 @@
             android:name=".FallDetectionService"
             android:enabled="true"
             android:exported="true"
-            android:foregroundServiceType="connectedDevice"
+            android:foregroundServiceType="location"
             tools:ignore="ForegroundServicePermission">
         </service>
 
@@ -88,14 +90,19 @@
             android:name="com.google.android.wearable.standalone"
             android:value="true" />
 
+
+        <receiver android:name=".presentation.NotificationReceiver" />
+
+
         <receiver
             android:name=".PowerButtonReceiver"
             android:enabled="true"
             android:exported="true">
             <intent-filter>
-                <action android:name="android.intent.action.SCREEN_OFF" />
+                <action android:name="android.intent.action.SCREEN_OFF"  />
                 <action android:name="android.intent.action.SCREEN_ON" />
             </intent-filter>
         </receiver>
+
     </application>
 </manifest>

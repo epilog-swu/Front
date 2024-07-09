@@ -54,7 +54,6 @@ interface RetrofitService {
         @Header("Authorization") authToken: String
     ): Call<ResponseBody>
 
-
     @POST("api/detection/emergency")
     fun postLocationData(
         @Body locationData: LocationData,
@@ -97,11 +96,11 @@ data class MealCheckItem(
     val goalTime: String,
     val title: String,
     var isComplete: Boolean,
-    var state: State // Use enum type here
+    var state: State
 )
 
 enum class State {
-    식사함, 건너뜀, 상태없음 // Adjust these based on your actual data
+    식사함, 건너뜀, 상태없음
 }
 
 data class LocationData(

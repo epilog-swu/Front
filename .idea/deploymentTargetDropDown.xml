@@ -20,18 +20,18 @@
       </entry>
       <entry key="wear">
         <State>
-          <runningDeviceTargetSelectedWithDropDown>
+          <targetSelectedWithDropDown>
             <Target>
-              <type value="RUNNING_DEVICE_TARGET" />
+              <type value="QUICK_BOOT_TARGET" />
               <deviceKey>
                 <Key>
-                  <type value="SERIAL_NUMBER" />
-                  <value value="192.168.35.37:39459" />
+                  <type value="VIRTUAL_DEVICE_PATH" />
+                  <value value="C:\Users\hbag7\.android\avd\Copy_of_Copy_2_of_Wear_OS_Small_Round_API_33.avd" />
                 </Key>
               </deviceKey>
             </Target>
-          </runningDeviceTargetSelectedWithDropDown>
-          <timeTargetWasSelectedWithDropDown value="2024-07-09T10:56:39.613631500Z" />
+          </targetSelectedWithDropDown>
+          <timeTargetWasSelectedWithDropDown value="2024-07-07T21:12:08.058365200Z" />
         </State>
       </entry>
     </value>
