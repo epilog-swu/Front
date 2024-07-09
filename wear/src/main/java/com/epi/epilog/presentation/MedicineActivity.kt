@@ -7,9 +7,12 @@ import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import android.widget.CheckBox
+import android.widget.TextView
 import androidx.activity.ComponentActivity
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.epi.epilog.R
@@ -53,11 +56,16 @@ class MedicineActivity : ComponentActivity() {
         editor.apply()
     }
 
-    private fun loadChecklistData(): MedicineCheckListDatas? {
+    private fun loadChecklistData(selectedDate: String): MedicineCheckListDatas? {
         val sharedPreferences = getSharedPreferences("AppPrefs", Context.MODE_PRIVATE)
         val checklistJson = sharedPreferences.getString("ChecklistData", null)
         return if (checklistJson != null) {
-            Gson().fromJson(checklistJson, MedicineCheckListDatas::class.java)
+            val data = Gson().fromJson(checklistJson, MedicineCheckListDatas::class.java)
+            if (data.date == selectedDate) { // 날짜 비교
+                data
+            } else {
+                null
+            }
         } else {
             null
         }
@@ -67,30 +75,34 @@ class MedicineActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_medicine)
 
-        // RecyclerView 설정
+        // RecyclerView와 TextView 참조
         viewManager = LinearLayoutManager(this)
         recyclerView = findViewById<RecyclerView>(R.id.wearable_recycler_view_medicine).apply {
             setHasFixedSize(true)
             layoutManager = viewManager
         }
 
+        val noChecklistMessage: TextView = findViewById(R.id.no_checklist_message)
+
         // Retrofit 초기화
         initializeRetrofit()
 
-        // 로컬 데이터 로드
-        checklistData = loadChecklistData()
+        // 오늘의 날짜 정보 받기
+        val selectedDate = intent.getStringExtra("SELECTED_DATE")?.let {
+            LocalDate.parse(it)
+        }
+        Log.d("MedicineActivity", selectedDate.toString())
+
+        checklistData = loadChecklistData(selectedDate.toString())
 
         if (checklistData != null) {
-            // RecyclerView 어댑터 설정
+            // 체크리스트 데이터가 있을 경우 RecyclerView 어댑터 설정 및 TextView 숨기기
             viewAdapter = MyAdapter(this@MedicineActivity, checklistData)
             recyclerView.adapter = viewAdapter
+            recyclerView.visibility = View.VISIBLE
+            noChecklistMessage.visibility = View.GONE
         } else {
-            // 오늘의 날짜 정보 받기
-            val selectedDate = intent.getStringExtra("SELECTED_DATE")?.let {
-                LocalDate.parse(it)
-            }
-            Log.d("MedicineActivity", selectedDate.toString())
-
+            // 체크리스트 데이터가 없을 경우 서버에서 데이터 가져오기
             val authToken = getTokenFromSession()
             if (authToken.isNullOrEmpty()) {
                 Log.e("MedicineActivity", "Auth token is missing")
@@ -98,20 +110,25 @@ class MedicineActivity : ComponentActivity() {
             }
 
             if (selectedDate != null) {
-                // Retrofit 응답 처리
                 retrofitService.getMedicineChecklist(selectedDate.toString(), "Bearer $authToken").enqueue(object : Callback<MedicineCheckListDatas> {
                     override fun onResponse(call: Call<MedicineCheckListDatas>, response: Response<MedicineCheckListDatas>) {
                         if (response.isSuccessful) {
                             response.body()?.let { dataList ->
                                 checklistData = dataList
                                 saveChecklistData() // 로컬에 데이터 저장
-                                // response.body() 출력하는 로그 추가
                                 Log.d("MedicineActivity", "Fetched data: $dataList")
 
-                                // RecyclerView 어댑터 설정
-                                viewAdapter = MyAdapter(this@MedicineActivity, checklistData)
-                                recyclerView.adapter = viewAdapter
-                                recyclerView.invalidate() // 데이터 변경 후 UI 갱신
+                                if (dataList.checklist.isNotEmpty()) {
+                                    // 체크리스트 데이터가 있을 경우 RecyclerView 어댑터 설정 및 TextView 숨기기
+                                    viewAdapter = MyAdapter(this@MedicineActivity, checklistData)
+                                    recyclerView.adapter = viewAdapter
+                                    recyclerView.visibility = View.VISIBLE
+                                    noChecklistMessage.visibility = View.GONE
+                                } else {
+                                    // 체크리스트 데이터가 없을 경우 TextView 표시
+                                    recyclerView.visibility = View.GONE
+                                    noChecklistMessage.visibility = View.VISIBLE
+                                }
                             }
                         } else {
                             Log.e("MedicineActivity", "Error in fetching data: ${response.code()} - ${response.message()}")
@@ -207,6 +224,17 @@ class MedicineActivity : ComponentActivity() {
             data?.checklist?.get(position)?.let { checklistItem ->
                 holder.checkBox.text = checklistItem.title
                 holder.checkBox.isChecked = checklistItem.isComplete
+
+                //background 설정을 위한 변수 설정
+                val currentDateTime = LocalDateTime.now()
+                val goalTime = LocalDateTime.parse(checklistItem.goalTime, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"))
+
+                if(goalTime.isBefore(currentDateTime)){
+                    holder.checkBox.background = ContextCompat.getDrawable(context, R.drawable.checkbox_selector_red)
+                } else {
+                    holder.checkBox.background = ContextCompat.getDrawable(context, R.drawable.checkbox_selector_yellow)
+                }
+
 
                 holder.checkBox.setOnCheckedChangeListener { buttonView, isChecked ->
                     if (buttonView.isPressed) {  // 사용자가 직접 클릭한 경우에만 처리
