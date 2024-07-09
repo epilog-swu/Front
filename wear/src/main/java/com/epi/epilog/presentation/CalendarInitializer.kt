@@ -46,7 +46,6 @@ class CalendarInitializer(
                 container.textView.setOnClickListener {
                     onDateSelected(data.date)
                 }
-
                 if (data.date == selectedDate) {
                     container.textView.setBackgroundResource(R.drawable.selected_date)
                 } else {

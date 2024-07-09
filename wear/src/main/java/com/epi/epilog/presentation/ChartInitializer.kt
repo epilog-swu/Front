@@ -3,6 +3,7 @@ package com.epi.epilog.presentation
 import android.content.Context
 import android.graphics.Color
 import android.util.Log
+import androidx.compose.ui.text.font.Typeface
 import com.epi.epilog.presentation.theme.api.RetrofitService
 import com.github.mikephil.charting.charts.LineChart
 import com.github.mikephil.charting.data.Entry
@@ -81,6 +82,10 @@ class ChartInitializer(private val chart: LineChart) {
         Log.w("ChartInitializer", "No data available")
         bloodSugarChartData.clear()
         chart.clear()
+        chart.invalidate()
+
+        // 데이터가 없을 때 설정할 속성들
+        chart.setNoDataText("혈당 데이터가 없습니다.")
         chart.invalidate()
     }
 
