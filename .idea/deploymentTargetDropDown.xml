@@ -2,22 +2,6 @@
 <project version="4">
   <component name="deploymentTargetDropDown">
     <value>
-      <entry key="app">
-        <State>
-          <runningDeviceTargetSelectedWithDropDown>
-            <Target>
-              <type value="RUNNING_DEVICE_TARGET" />
-              <deviceKey>
-                <Key>
-                  <type value="SERIAL_NUMBER" />
-                  <value value="adb-RFARC0NZLYT-QmY6nQ._adb-tls-connect._tcp" />
-                </Key>
-              </deviceKey>
-            </Target>
-          </runningDeviceTargetSelectedWithDropDown>
-          <timeTargetWasSelectedWithDropDown value="2024-07-09T13:17:52.813379200Z" />
-        </State>
-      </entry>
       <entry key="wear">
         <State>
           <targetSelectedWithDropDown>
@@ -31,7 +15,7 @@
               </deviceKey>
             </Target>
           </targetSelectedWithDropDown>
-          <timeTargetWasSelectedWithDropDown value="2024-07-09T13:36:52.526464200Z" />
+          <timeTargetWasSelectedWithDropDown value="2024-07-09T13:52:16.068181300Z" />
         </State>
       </entry>
     </value>

@@ -17,7 +17,7 @@
     <uses-feature android:name="android.hardware.type.watch" />
     <uses-permission android:name="android.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS"/>
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW"/>
-    <uses-permission android:name="android.permission.RECORD_AUDIO" />
+    <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM"/>
 
     <application
         android:networkSecurityConfig="@xml/network_secutiry_config"
@@ -77,6 +77,9 @@
             </intent-filter>
         </receiver>
 
+        <receiver android:name=".presentation.MedicineNotificationReceiver" android:exported="true" />
+        <receiver android:name=".presentation.MealNotificationReceiver" android:exported="true" />
+
         <uses-library
             android:name="com.google.android.wearable"
             android:required="true" />
@@ -86,7 +89,7 @@
             android:value="true" />
 
 
-        <receiver android:name=".presentation.NotificationReceiver" />
+        <receiver android:name=".presentation.MealNotificationReceiver" />
 
 
         <receiver

@@ -9,6 +9,7 @@ import android.content.Context
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
+import android.provider.Settings
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -49,6 +50,7 @@ class MealActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_meal)
+        checkAndRequestExactAlarmPermission() // Add this line
         setupRetrofit()
         createNotificationChannel()
 
@@ -57,6 +59,16 @@ class MealActivity : ComponentActivity() {
             getMealCheckList(selectedDate.toString())
         } else {
             Log.e("MealActivity", "No date received")
+        }
+    }
+
+    private fun checkAndRequestExactAlarmPermission() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            val alarmManager = getSystemService(Context.ALARM_SERVICE) as AlarmManager
+            if (!alarmManager.canScheduleExactAlarms()) {
+                val intent = Intent(Settings.ACTION_REQUEST_SCHEDULE_EXACT_ALARM)
+                startActivity(intent)
+            }
         }
     }
 
@@ -135,18 +147,22 @@ class MealActivity : ComponentActivity() {
     private fun scheduleMealNotifications(item: MealCheckItem) {
         try {
             val goalTime = LocalDateTime.parse(item.goalTime, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"))
-            val currentTime = LocalDateTime.now()
             val notificationTime = goalTime.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli()
             val twoHoursAfterGoalTime = goalTime.plusHours(2).atZone(ZoneId.systemDefault()).toInstant().toEpochMilli()
+            val currentTime = System.currentTimeMillis()
 
-            // 현재 시간이 목표 시간과 일치할 때 첫 번째 알림 설정
-            if (currentTime.isEqual(goalTime)) {
+            // 목표 시간에 대한 알림 설정
+            if (notificationTime > currentTime) {
                 scheduleNotification(item.id, notificationTime, "${item.title} 시간입니다.")
+                Log.d("MealActivity", "알람 설정 시간: $notificationTime")
+            } else {
+                Log.d("MealActivity", "과거의 시간에 대한 알람은 설정되지 않습니다: $notificationTime")
             }
 
             // 목표 시간 이후 2시간 후 알림 설정
-            if (currentTime.isEqual(goalTime.plusHours(2))) {
+            if (twoHoursAfterGoalTime > currentTime) {
                 scheduleNotification(item.id + 10000, twoHoursAfterGoalTime, "${item.title} 2시간 지났습니다. 혈당 측정해주세요.")
+                Log.d("MealActivity", "2시간 후 알람 설정 시간: $twoHoursAfterGoalTime")
             }
         } catch (e: Exception) {
             Log.e("MealActivity", "Failed to schedule notifications: ${e.message}", e)
@@ -155,12 +171,16 @@ class MealActivity : ComponentActivity() {
 
     private fun scheduleNotification(id: Int, time: Long, message: String) {
         try {
-            val intent = Intent(this, NotificationReceiver::class.java).apply {
+            val intent = Intent(this, MealNotificationReceiver::class.java).apply {
                 putExtra("notificationId", id)
                 putExtra("message", message)
             }
             val pendingIntent = PendingIntent.getBroadcast(this, id, intent, PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE)
             alarmManager.setExact(AlarmManager.RTC_WAKEUP, time, pendingIntent)
+        } catch (e: SecurityException) {
+            Log.e("MealActivity", "Failed to schedule notification due to missing permission: ${e.message}", e)
+            // Request permission again if it fails
+            checkAndRequestExactAlarmPermission()
         } catch (e: Exception) {
             Log.e("MealActivity", "Failed to schedule notification: ${e.message}", e)
         }
@@ -168,7 +188,7 @@ class MealActivity : ComponentActivity() {
 
     class MyAdapter(
         private val myDataset: MutableList<MealCheckItem>,
-        private val context: MealActivity // 컨텍스트를 Activity로 명확히 지정
+        private val context: MealActivity
     ) : RecyclerView.Adapter<MyAdapter.MyViewHolder>() {
 
         class MyViewHolder(val checkBox: CheckBox) : RecyclerView.ViewHolder(checkBox)
