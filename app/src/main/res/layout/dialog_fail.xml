@@ -35,8 +35,6 @@
         android:layout_marginTop="20dp"
         android:orientation="horizontal">
 
-
-
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/dialog_yes_btn"
             android:layout_width="0dp"
@@ -44,7 +42,5 @@
             android:layout_weight="1"
             android:text="확인"
             android:background="@drawable/seizure_button"/>
-
     </LinearLayout>
-
 </LinearLayout>

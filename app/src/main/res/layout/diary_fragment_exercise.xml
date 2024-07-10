@@ -22,7 +22,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
-                android:layout_marginTop="30dp"
+                android:layout_marginTop="69dp"
                 android:layout_marginBottom="20dp"
                 android:text="오늘 한 신체활동을 선택해주세요"
                 android:textColor="@color/검정색"
@@ -30,168 +30,134 @@
 
             <!-- 걷기 체크박스 -->
             <RelativeLayout
+                android:id="@+id/checkbox_layout_walk"
                 android:layout_width="match_parent"
                 android:layout_height="70dp"
-                android:layout_marginBottom="10dp"
                 android:background="@drawable/seizure_button"
-                android:paddingLeft="20dp"
-                android:paddingRight="20dp">
-
-                <TextView
-                    android:id="@+id/checkbox_text_walk"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:gravity="center_vertical"
-                    android:text="걷기"
-                    android:textColor="@color/검정색"
-                    android:textSize="16dp" />
+                android:layout_marginBottom="10dp"
+                android:paddingStart="20dp"
+                android:paddingEnd="20dp">
 
                 <CheckBox
                     android:id="@+id/checkbox_walk"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentEnd="true"
-                    android:layout_centerVertical="true"
-                    android:button="@drawable/seizure_check_button" />
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:text="걷기"
+                    android:textSize="16dp"
+                    android:textColor="@color/검정색"
+                    android:gravity="center_vertical"
+                    android:button="@null"
+                    android:drawableEnd="@drawable/seizure_check_button"/>
             </RelativeLayout>
 
             <!-- 스트레칭 체크박스 -->
             <RelativeLayout
+                android:id="@+id/checkbox_layout_stretching"
                 android:layout_width="match_parent"
                 android:layout_height="70dp"
-                android:layout_marginBottom="10dp"
                 android:background="@drawable/seizure_button"
-                android:paddingLeft="20dp"
-                android:paddingRight="20dp">
-
-                <TextView
-                    android:id="@+id/checkbox_text_stretching"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:gravity="center_vertical"
-                    android:text="스트레칭"
-                    android:textColor="@color/검정색"
-                    android:textSize="16dp" />
+                android:layout_marginBottom="10dp"
+                android:paddingStart="20dp"
+                android:paddingEnd="20dp">
 
                 <CheckBox
                     android:id="@+id/checkbox_stretching"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentEnd="true"
-                    android:layout_centerVertical="true"
-                    android:button="@drawable/seizure_check_button" />
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:text="스트레칭"
+                    android:textSize="16dp"
+                    android:textColor="@color/검정색"
+                    android:gravity="center_vertical"
+                    android:button="@null"
+                    android:drawableEnd="@drawable/seizure_check_button"/>
             </RelativeLayout>
-
 
             <!-- 요가 체크박스 -->
             <RelativeLayout
+                android:id="@+id/checkbox_layout_yoga"
                 android:layout_width="match_parent"
                 android:layout_height="70dp"
-                android:layout_marginBottom="10dp"
                 android:background="@drawable/seizure_button"
-                android:paddingLeft="20dp"
-                android:paddingRight="20dp">
-
-                <TextView
-                    android:id="@+id/checkbox_text_yoga"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:gravity="center_vertical"
-                    android:text="요가"
-                    android:textColor="@color/검정색"
-                    android:textSize="16dp" />
+                android:layout_marginBottom="10dp"
+                android:paddingStart="20dp"
+                android:paddingEnd="20dp">
 
                 <CheckBox
                     android:id="@+id/checkbox_yoga"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentEnd="true"
-                    android:layout_centerVertical="true"
-                    android:button="@drawable/seizure_check_button" />
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:text="요가"
+                    android:textSize="16dp"
+                    android:textColor="@color/검정색"
+                    android:gravity="center_vertical"
+                    android:button="@null"
+                    android:drawableEnd="@drawable/seizure_check_button"/>
             </RelativeLayout>
 
             <!-- 에어로빅 및 댄스 체크박스 -->
             <RelativeLayout
+                android:id="@+id/checkbox_layout_dance"
                 android:layout_width="match_parent"
                 android:layout_height="70dp"
-                android:layout_marginBottom="10dp"
                 android:background="@drawable/seizure_button"
-                android:paddingLeft="20dp"
-                android:paddingRight="20dp">
-
-                <TextView
-                    android:id="@+id/checkbox_text_dance"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:gravity="center_vertical"
-                    android:text="에어로빅 및 댄스"
-                    android:textColor="@color/검정색"
-                    android:textSize="16dp" />
+                android:layout_marginBottom="10dp"
+                android:paddingStart="20dp"
+                android:paddingEnd="20dp">
 
                 <CheckBox
                     android:id="@+id/checkbox_dance"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentEnd="true"
-                    android:layout_centerVertical="true"
-                    android:button="@drawable/seizure_check_button" />
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:text="에어로빅 및 댄스"
+                    android:textSize="16dp"
+                    android:textColor="@color/검정색"
+                    android:gravity="center_vertical"
+                    android:button="@null"
+                    android:drawableEnd="@drawable/seizure_check_button"/>
             </RelativeLayout>
 
             <!-- 수영 체크박스 -->
             <RelativeLayout
+                android:id="@+id/checkbox_layout_swim"
                 android:layout_width="match_parent"
                 android:layout_height="70dp"
-                android:layout_marginBottom="10dp"
                 android:background="@drawable/seizure_button"
-                android:paddingLeft="20dp"
-                android:paddingRight="20dp">
-
-                <TextView
-                    android:id="@+id/checkbox_text_swim"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:gravity="center_vertical"
-                    android:text="수영"
-                    android:textColor="@color/검정색"
-                    android:textSize="16dp" />
+                android:layout_marginBottom="10dp"
+                android:paddingStart="20dp"
+                android:paddingEnd="20dp">
 
                 <CheckBox
                     android:id="@+id/checkbox_swim"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentEnd="true"
-                    android:layout_centerVertical="true"
-                    android:button="@drawable/seizure_check_button" />
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:text="수영"
+                    android:textSize="16dp"
+                    android:textColor="@color/검정색"
+                    android:gravity="center_vertical"
+                    android:button="@null"
+                    android:drawableEnd="@drawable/seizure_check_button"/>
             </RelativeLayout>
-
-            <!-- 자전거 타기 체크박스 -->
 
             <!-- 직접 입력 체크박스 -->
             <RelativeLayout
+                android:id="@+id/checkbox_layout_direct_input"
                 android:layout_width="match_parent"
                 android:layout_height="70dp"
-                android:layout_marginBottom="10dp"
                 android:background="@drawable/seizure_button"
-                android:paddingLeft="20dp"
-                android:paddingRight="20dp">
-
-                <TextView
-                    android:id="@+id/checkbox_text_direct_input"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:gravity="center_vertical"
-                    android:text="직접 입력"
-                    android:textColor="@color/검정색"
-                    android:textSize="16dp" />
+                android:layout_marginBottom="10dp"
+                android:paddingStart="20dp"
+                android:paddingEnd="20dp">
 
                 <CheckBox
                     android:id="@+id/checkbox_direct_input"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentEnd="true"
-                    android:layout_centerVertical="true"
-                    android:button="@drawable/seizure_check_button"
-                    android:onClick="onCheckboxClicked" />
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:text="직접 입력"
+                    android:textSize="16dp"
+                    android:textColor="@color/검정색"
+                    android:gravity="center_vertical"
+                    android:button="@null"
+                    android:drawableEnd="@drawable/seizure_check_button"/>
             </RelativeLayout>
 
             <!-- 직접 입력 텍스트 -->
@@ -208,17 +174,7 @@
                 android:textColorHint="@color/연한회색"
                 android:textColor="#D3D3D3"
                 android:textSize="16sp"
-                android:visibility="visible" />
-
+                android:visibility="gone" />
         </LinearLayout>
     </ScrollView>
-
-    <Button
-        android:layout_width="match_parent"
-        android:layout_height="56dp"
-        android:background="@drawable/button"
-        android:textColor="@color/하얀색"
-        android:gravity="center"
-        android:textSize="20dp"
-        android:text="다음" />
 </LinearLayout>

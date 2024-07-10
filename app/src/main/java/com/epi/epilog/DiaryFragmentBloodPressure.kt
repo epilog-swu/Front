@@ -12,6 +12,10 @@ class DiaryFragmentBloodPressure : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        return inflater.inflate(R.layout.diary_fragment_blood_pressure, container, false)
+        return inflater.inflate(R.layout.diary_fragment_blood_pressure, null)
+    }
+    fun isFilledOut(): Boolean {
+        // Implement your validation logic here
+        return true
     }
 }

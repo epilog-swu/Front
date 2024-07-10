@@ -7,18 +7,16 @@
     android:layout_height="match_parent"
     android:padding="16dp">
 
-    <!-- Container Layout -->
-
-    <!-- Medication List -->
+    <!-- Container for adding medication items -->
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/constraint"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="25dp"
-        android:layout_marginEnd="25dp"
+        android:layout_height="232dp"
         android:background="@drawable/diary_container_shape"
         android:padding="16dp"
+        android:layout_marginTop="30dp"
+        app:layout_constraintBottom_toTopOf="@+id/medicationList"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
@@ -27,53 +25,60 @@
             android:id="@+id/titleTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp"
             android:layout_marginStart="15dp"
             android:layout_marginTop="15dp"
-            android:text="@string/medicine_name"
+            android:layout_marginBottom="8dp"
+            android:text="약 이름"
             android:textColor="@color/덜진한회색"
             android:textSize="12sp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
         <!-- EditText for medication name -->
-        <EditText
-            android:id="@+id/medicationEditText"
-            android:layout_width="170.32dp"
+        <LinearLayout
+            android:id="@+id/medicine_edit"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="8dp"
-            android:layout_marginStart="15dp"
-            android:textSize="16sp"
-            android:backgroundTint="@color/연한회색"
-            app:layout_constraintEnd_toStartOf="@id/addButton"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/titleTextView"
-            tools:ignore="TouchTargetSizeCheck" />
+            android:orientation="horizontal">
 
-        <!-- Button to add medication -->
-        <Button
-            android:id="@+id/addButton"
-            android:layout_width="70.82dp"
-            android:layout_height="37dp"
-            android:background="@drawable/signup_button_shape"
-            android:text="@string/add_button_text"
-            android:textSize="14sp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/titleTextView" />
+            <!-- EditText for medication name -->
+            <EditText
+                android:id="@+id/medicationEditText"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginEnd="8dp"
+                android:layout_marginStart="10dp"
+                android:backgroundTint="@color/연한회색"
+                android:textSize="16sp"
+                tools:ignore="TouchTargetSizeCheck" />
+
+            <!-- Button to add medication -->
+            <Button
+                android:id="@+id/addButton"
+                android:layout_width="70.82dp"
+                android:layout_height="37dp"
+                android:background="@drawable/signup_button_shape"
+                android:text="추가"
+                android:textSize="14sp" />
+        </LinearLayout>
 
         <!-- Second Title TextView -->
         <TextView
             android:id="@+id/titleTextView2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp"
             android:layout_marginStart="15dp"
             android:layout_marginTop="15dp"
+            android:layout_marginBottom="8dp"
             android:text="복용 중인 약"
             android:textColor="@color/덜진한회색"
             android:textSize="12sp"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/medicationEditText" />
+            app:layout_constraintTop_toBottomOf="@id/medicine_edit" />
 
         <!-- FlexboxLayout for displaying medications -->
         <com.google.android.flexbox.FlexboxLayout
@@ -92,13 +97,13 @@
             <CheckBox
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:layout_marginBottom="10dp"
                 android:background="@drawable/badge"
                 android:button="@null"
                 android:contentDescription="@string/carbamazepine"
-                android:layout_marginStart="20dp"
-                android:layout_marginBottom="10dp"
                 android:gravity="center_vertical"
-                android:text="@string/carbamazepine"
+                android:text="카바마제핀"
                 android:textColor="@color/black"
                 android:textSize="14dp"
                 tools:ignore="TextSizeCheck,TouchTargetSizeCheck" />
@@ -106,200 +111,53 @@
             <CheckBox
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginLeft="7dp"
+                android:layout_marginBottom="10dp"
                 android:background="@drawable/badge"
                 android:button="@null"
                 android:contentDescription="@string/phenytoin"
                 android:gravity="center_vertical"
-                android:layout_marginBottom="10dp"
-                android:layout_marginLeft="7dp"
-                android:text="@string/phenytoin"
+                android:text="페니토인"
                 android:textColor="@color/black"
                 android:textSize="14dp"
-                tools:ignore="TextSizeCheck,TouchTargetSizeCheck"
-                tools:layout_editor_absoluteX="85dp" />
+                tools:ignore="TextSizeCheck,TouchTargetSizeCheck" />
 
             <CheckBox
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginLeft="7dp"
                 android:background="@drawable/badge"
                 android:button="@null"
                 android:contentDescription="@string/insulin"
                 android:gravity="center_vertical"
-                android:text="@string/insulin"
-                android:layout_marginLeft="7dp"
+                android:text="인슐린"
                 android:textColor="@color/black"
                 android:textSize="14dp"
-                tools:ignore="TextSizeCheck,TouchTargetSizeCheck"
-                tools:layout_editor_absoluteX="164dp" />
+                tools:ignore="TextSizeCheck,TouchTargetSizeCheck" />
 
             <CheckBox
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
                 android:background="@drawable/badge"
                 android:button="@null"
                 android:contentDescription="@string/long_medicine_name"
                 android:gravity="center_vertical"
-                android:text="@string/long_medicine_name"
-                android:layout_marginStart="20dp"
+                android:text="긴 약 이름 긴 약 이름"
                 android:textColor="@color/black"
                 android:textSize="14dp"
-                tools:ignore="TextSizeCheck,TouchTargetSizeCheck"
-                tools:layout_editor_absoluteY="23dp" />
+                tools:ignore="TextSizeCheck,TouchTargetSizeCheck" />
         </com.google.android.flexbox.FlexboxLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
 
+    <!-- LinearLayout for Medication List -->
     <LinearLayout
         android:id="@+id/medicationList"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
         android:orientation="vertical"
-        android:layout_marginTop="16dp"
-        app:layout_constraintTop_toBottomOf="@id/medicationFlexbox"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        tools:ignore="NotSibling">
-
-        <!-- Example Medication Item -->
-
-        <!-- Another Medication Item -->
+        app:layout_constraintTop_toBottomOf="@id/constraint">
     </LinearLayout>
-
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:background="@drawable/diary_container_shape"
-        android:padding="8dp"
-        tools:layout_editor_absoluteX="19dp"
-        tools:layout_editor_absoluteY="234dp"
-        tools:ignore="MissingConstraints">
-
-        \
-
-        <TextView
-            android:id="@+id/medicationName"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="35dp"
-            android:text="@string/carbamazepine"
-            android:textSize="16sp"
-            android:textColor="@color/black"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/decreaseButton"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="@+id/removeButton"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <Button
-            android:id="@+id/decreaseButton"
-            android:layout_width="24dp"
-            android:layout_height="24dp"
-            android:layout_marginEnd="4dp"
-            android:background="@drawable/ic_decrease"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/quantityText"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:ignore="SpeakableTextPresentCheck,TouchTargetSizeCheck" />
-
-        <TextView
-            android:id="@+id/quantityText"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="4dp"
-            android:text="@string/one_pill"
-            android:textColor="@color/black"
-            android:textSize="14sp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/increaseButton"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.5" />
-
-        <Button
-            android:id="@+id/increaseButton"
-            android:layout_width="24dp"
-            android:layout_height="24dp"
-            android:layout_marginEnd="8dp"
-            android:background="@drawable/ic_increase"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:ignore="TouchTargetSizeCheck,SpeakableTextPresentCheck" />
-
-        <ImageView
-            android:id="@+id/removeButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:srcCompat="@drawable/ic_remove"
-            tools:layout_editor_absoluteY="9dp" />
-    </androidx.constraintlayout.widget.ConstraintLayout>
-
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:background="@drawable/diary_container_shape"
-        android:padding="8dp"
-        tools:layout_editor_absoluteX="18dp"
-        tools:layout_editor_absoluteY="298dp"
-        tools:ignore="MissingConstraints">
-
-        <TextView
-            android:id="@+id/medicationName2"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="14dp"
-            android:text="@string/phenytoin"
-            android:textColor="@color/black"
-            android:textSize="16sp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/decreaseButton2"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toEndOf="@+id/removeButton2"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <ImageView
-            android:id="@+id/removeButton2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:srcCompat="@drawable/ic_remove"
-            tools:layout_editor_absoluteY="9dp" />
-
-        <Button
-            android:id="@+id/decreaseButton2"
-            android:layout_width="24dp"
-            android:layout_height="24dp"
-            android:layout_marginEnd="4dp"
-            android:background="@drawable/ic_decrease"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/quantityText2"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:ignore="SpeakableTextPresentCheck,TouchTargetSizeCheck" />
-
-        <TextView
-            android:id="@+id/quantityText2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="4dp"
-            android:text="@string/two_pills"
-            android:textColor="@color/black"
-            android:textSize="14sp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/increaseButton2"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.5" />
-
-        <Button
-            android:id="@+id/increaseButton2"
-            android:layout_width="24dp"
-            android:layout_height="24dp"
-            android:layout_marginEnd="8dp"
-            android:background="@drawable/ic_increase"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:ignore="SpeakableTextPresentCheck,TouchTargetSizeCheck" />
-    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
