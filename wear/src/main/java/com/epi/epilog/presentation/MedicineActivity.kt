@@ -224,7 +224,7 @@ class MedicineActivity : ComponentActivity() {
 
     private fun scheduleNotification(id: Int, time: Long, message: String) {
         try {
-            val intent = Intent(this, MealNotificationReceiver::class.java).apply {
+            val intent = Intent(this, MedicineNotificationReceiver::class.java).apply {
                 putExtra("notificationId", id)
                 putExtra("message", message)
             }

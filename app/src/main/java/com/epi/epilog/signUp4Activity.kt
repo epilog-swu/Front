@@ -42,7 +42,7 @@ class signUp4Activity : AppCompatActivity() {
             val badge = TextView(this).apply {
                 text = medicineName
                 setBackgroundResource(R.drawable.badge)
-                setPadding(16, 12, 16, 12)
+                setPadding(16, 8, 16, 8)
                 setTextColor(resources.getColor(R.color.black))
             }
 

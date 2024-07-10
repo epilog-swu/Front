@@ -116,7 +116,7 @@ class MainActivity : ComponentActivity() {
         }
 
         binding.btnCheckMeals.setOnClickListener {
-            navigateToActivity(MealActivity::class.java)
+//            navigateToActivity(MealActivity::class.java)
         }
     }
 

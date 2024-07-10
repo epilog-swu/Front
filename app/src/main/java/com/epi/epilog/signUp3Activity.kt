@@ -34,7 +34,6 @@ class signUp3Activity : AppCompatActivity() {
         confirmButton = findViewById(R.id.confirm_button)
         nextButton = findViewById(R.id.next_button)
         textViewTimer = findViewById(R.id.textViewTimer)
-        textViewError = findViewById(R.id.textViewError)
 
         verifyButton.setOnClickListener {
             val phone = editTextPhone.text.toString().trim()

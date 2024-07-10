@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="16dp"
+    android:background="@drawable/diary_container_shape">
+
+    <!-- Weight Section -->
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/weight_section"
+        android:layout_width="309dp"
+        android:layout_height="221dp"
+        android:layout_marginBottom="30dp"
+        android:background="@drawable/diary_container_shape"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <TextView
+            android:id="@+id/instruction_text_weight"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="몸무게를 입력해주세요"
+            android:textSize="16sp"
+            android:textColor="@color/black"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginTop="39dp"
+            android:gravity="center" />
+
+        <EditText
+            android:id="@+id/input_edit_text_weight"
+            android:layout_width="106dp"
+            android:layout_height="80dp"
+            android:layout_marginStart="104dp"
+            android:layout_marginTop="28dp"
+            android:layout_marginEnd="8dp"
+            android:inputType="numberDecimal"
+            android:text="80"
+            android:textAlignment="center"
+            android:textColor="@color/연한회색"
+            android:textSize="30sp"
+            app:layout_constraintEnd_toStartOf="@id/unit_label_weight"
+            app:layout_constraintHorizontal_bias="0.076"
+            app:layout_constraintHorizontal_chainStyle="spread_inside"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/instruction_text_weight" />
+
+        <TextView
+            android:id="@+id/unit_label_weight"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="88dp"
+            android:layout_marginEnd="88dp"
+            android:text="kg"
+            android:textColor="@color/black"
+            android:textSize="10sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/instruction_text_weight" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <!-- Body Fat Section -->
+
+    <!-- Upload Image Section -->
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/body_fat_section"
+        android:layout_width="309dp"
+        android:layout_height="221dp"
+        android:layout_marginTop="16dp"
+        android:background="@drawable/diary_container_shape"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/weight_section">
+
+        <TextView
+            android:id="@+id/instruction_text_body_fat"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="39dp"
+            android:gravity="center"
+            android:text="체지방률을 입력해주세요"
+            android:textColor="@color/black"
+            android:textSize="16sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <EditText
+            android:id="@+id/input_edit_text_body_fat"
+            android:layout_width="106dp"
+            android:layout_height="80dp"
+            android:layout_marginStart="104dp"
+            android:layout_marginTop="28dp"
+            android:layout_marginEnd="8dp"
+            android:inputType="numberDecimal"
+            android:text="30"
+            android:textAlignment="center"
+            android:textColor="@color/연한회색"
+            android:textSize="30sp"
+            app:layout_constraintEnd_toStartOf="@id/unit_label_body_fat"
+            app:layout_constraintHorizontal_chainStyle="spread_inside"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/instruction_text_body_fat" />
+
+        <TextView
+            android:id="@+id/unit_label_body_fat"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="150dp"
+            android:layout_marginEnd="92dp"
+            android:text="%"
+            android:textColor="@color/black"
+            android:textSize="10sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/upload_image_section"
+        android:layout_width="309dp"
+        android:layout_height="221dp"
+        android:layout_marginTop="16dp"
+        android:background="@drawable/diary_container_shape"
+
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/body_fat_section">
+
+        <ImageView
+            android:id="@+id/upload_image"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:scaleType="centerInside"
+            android:src="@drawable/upload_image"
+            tools:layout_editor_absoluteY="71dp" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

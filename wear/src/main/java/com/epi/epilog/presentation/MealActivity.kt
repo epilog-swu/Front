@@ -179,7 +179,7 @@ class MealActivity : ComponentActivity() {
             alarmManager.setExact(AlarmManager.RTC_WAKEUP, time, pendingIntent)
         } catch (e: SecurityException) {
             Log.e("MealActivity", "Failed to schedule notification due to missing permission: ${e.message}", e)
-            // Request permission again if it fails
+            // Request permissaion again if it fails
             checkAndRequestExactAlarmPermission()
         } catch (e: Exception) {
             Log.e("MealActivity", "Failed to schedule notification: ${e.message}", e)

@@ -89,7 +89,6 @@
             android:value="true" />
 
 
-        <receiver android:name=".presentation.MealNotificationReceiver" />
 
 
         <receiver

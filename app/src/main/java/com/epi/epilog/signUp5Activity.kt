@@ -5,6 +5,9 @@ import android.content.ClipboardManager
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.text.SpannableString
+import android.text.Spanned
+import android.text.style.UnderlineSpan
 import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
@@ -21,6 +24,14 @@ class signUp5Activity : AppCompatActivity() {
 
         completeButton = findViewById(R.id.complete_button)
         textViewCode = findViewById(R.id.textViewCode)
+
+            val textViewCopy = findViewById<TextView>(R.id.textViewCopy)
+            val content = "갤럭시워치에서 연동해주세요"
+            val spannableString = SpannableString(content)
+            spannableString.setSpan(UnderlineSpan(), 0, content.length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+            textViewCopy.text = spannableString
+        }
+
 //로그인 페이지로
 //        completeButton.setOnClickListener {
 //            val intent = Intent(this, LoginPatientActivity::class.java)
@@ -28,10 +39,6 @@ class signUp5Activity : AppCompatActivity() {
 //            finish()
 //        }
 
-        textViewCode.setOnClickListener {
-            copyToClipboard(textViewCode.text.toString())
-        }
-    }
 
     private fun copyToClipboard(text: String) {
         val clipboard = getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
