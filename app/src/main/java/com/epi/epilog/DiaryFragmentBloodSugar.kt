@@ -20,6 +20,8 @@ class DiaryFragmentBloodSugar : Fragment() {
     }
 
     fun isFilledOut(): Boolean {
-        return bloodSugarEditText.text.toString().isNotEmpty()
+        val bloodSugarEditText = bloodSugarEditText?.text?.toString() ?: ""
+        return bloodSugarEditText.isNotEmpty()
     }
+
 }

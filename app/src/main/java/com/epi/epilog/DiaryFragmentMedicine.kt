@@ -71,6 +71,12 @@ class DiaryFragmentMedicine : Fragment() {
     }
 
     fun isFilledOut(): Boolean {
-        return medicationList.childCount > 0
+        return ::medicationList.isInitialized && medicationList.childCount > 0
     }
+
+    fun getMedicationListCount(): Int {
+        return if (::medicationList.isInitialized) medicationList.childCount else 0
+    }
+
+
 }

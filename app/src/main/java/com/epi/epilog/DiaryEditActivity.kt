@@ -14,6 +14,7 @@ class DiaryEditActivity : AppCompatActivity() {
     private lateinit var timePicker: TimePicker
     private var isTimeSelected = false
     private var selectedButton: Button? = null
+    private val buttons = mutableListOf<Button>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -24,17 +25,35 @@ class DiaryEditActivity : AppCompatActivity() {
         val nextButton: Button = findViewById(R.id.button5)
 
         val gridLayout: GridLayout = findViewById(R.id.gridLayout)
-        val buttons = mutableListOf<Button>()
+        for (i in 0 until gridLayout.childCount) {
+            val child = gridLayout.getChildAt(i)
+            if (child is Button) {
+                buttons.add(child)
+                child.setOnClickListener { onButtonClicked(child) }
+            }
+        }
 
+        timeInputButton.setOnClickListener {
+            if (timePicker.visibility == View.GONE) {
+                timePicker.visibility = View.VISIBLE
+            } else {
+                timePicker.visibility = View.GONE
+            }
+        }
 
-
-
-        // 다음으로 버튼 클릭 리스너 설정
         nextButton.setOnClickListener {
+            val intent = Intent(this, DiaryWriteActivity::class.java)
+            startActivity(intent)
+        }
+    }
 
-                val intent = Intent(this, DiaryWriteActivity::class.java)
-                startActivity(intent)
-
+    private fun onButtonClicked(button: Button) {
+        if (button.isSelected) {
+            button.isSelected = false
+            button.setBackgroundResource(R.drawable.seizure_button)
+        } else {
+            button.isSelected = true
+            button.setBackgroundResource(R.drawable.seizure_button)
         }
     }
 }

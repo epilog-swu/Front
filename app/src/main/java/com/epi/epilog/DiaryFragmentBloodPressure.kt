@@ -8,7 +8,6 @@ import android.widget.EditText
 import androidx.fragment.app.Fragment
 
 class DiaryFragmentBloodPressure : Fragment() {
-
     private var systolicEditText: EditText? = null
     private var diastolicEditText: EditText? = null
     private var heartRateEditText: EditText? = null
@@ -25,8 +24,10 @@ class DiaryFragmentBloodPressure : Fragment() {
     }
 
     fun isFilledOut(): Boolean {
-        return systolicEditText?.text.toString().isNotEmpty() &&
-                diastolicEditText?.text.toString().isNotEmpty() &&
-                heartRateEditText?.text.toString().isNotEmpty()
+        val systolic = systolicEditText?.text?.toString() ?: ""
+        val diastolic = diastolicEditText?.text?.toString() ?: ""
+        val heartRate = heartRateEditText?.text?.toString() ?: ""
+        return systolic.isNotEmpty() || diastolic.isNotEmpty() || heartRate.isNotEmpty()
     }
+
 }

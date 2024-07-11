@@ -70,7 +70,8 @@
                     android:layout_columnWeight="1"
                     android:layout_margin="8dp"
                     android:background="@drawable/seizure_button"
-                    android:text="아침식사 전" />
+                    android:text="아침식사 전"/>
+
 
                 <Button
                     android:layout_width="126.51dp"
