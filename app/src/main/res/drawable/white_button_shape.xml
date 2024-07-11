@@ -10,4 +10,8 @@
         android:topLeftRadius="60dp"
         android:topRightRadius="60dp" />
 
+
+    <stroke
+        android:width="2dp"
+        android:color="@color/메인보라" />
 </shape>

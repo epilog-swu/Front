@@ -10,6 +10,8 @@
         android:layout_height="match_parent"
         android:gravity="center"
         android:textSize="16sp"
+        android:background="@drawable/calendar_day_bg"
+        android:textColor="@color/black"
         tools:text="22" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

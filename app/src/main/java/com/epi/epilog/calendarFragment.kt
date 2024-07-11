@@ -1,30 +1,32 @@
 package com.epi.epilog
 
+import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
-import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import android.widget.Toast
 import androidx.annotation.RequiresApi
-import androidx.core.view.children
-import com.kizitonwose.calendar.core.CalendarDay
-import com.kizitonwose.calendar.core.CalendarMonth
-import com.kizitonwose.calendar.core.daysOfWeek
-import com.kizitonwose.calendar.core.firstDayOfWeekFromLocale
+import androidx.fragment.app.Fragment
+import com.kizitonwose.calendar.core.*
 import com.kizitonwose.calendar.view.CalendarView
 import com.kizitonwose.calendar.view.MonthDayBinder
 import com.kizitonwose.calendar.view.MonthHeaderFooterBinder
 import com.kizitonwose.calendar.view.ViewContainer
 import java.time.DayOfWeek
+import java.time.LocalDate
 import java.time.YearMonth
 import java.time.format.DateTimeFormatter
 import java.time.format.TextStyle
-import java.util.Locale
+import java.util.*
 
 class CalendarFragment : Fragment() {
+
+    private var rangeStartDate: LocalDate? = null
+    private var rangeEndDate: LocalDate? = null
+    private lateinit var calendarView: CalendarView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -38,9 +40,10 @@ class CalendarFragment : Fragment() {
         // Inflate the layout for this fragment
         val view = inflater.inflate(R.layout.main_calendar, container, false)
 
-        val calendarView = view.findViewById<CalendarView>(R.id.calendarView)
+        calendarView = view.findViewById(R.id.calendarView)
         val titlesContainer = view.findViewById<ViewGroup>(R.id.MonthYear)
         val monthYearTextView = titlesContainer.findViewById<TextView>(R.id.calendarMonthYearText)
+        val pdfDownloadButton = view.findViewById<View>(R.id.pdf_download_btn)
 
         val currentMonth = YearMonth.now()
         val startMonth = currentMonth.minusMonths(100)  // Adjust as needed
@@ -49,15 +52,12 @@ class CalendarFragment : Fragment() {
 
         val daysOfWeek = daysOfWeek(firstDayOfWeek = DayOfWeek.SUNDAY)
 
-
         // MonthScrollListener를 통해 년/월 정보 업데이트
         calendarView.monthScrollListener = { month ->
             val yearMonth = month.yearMonth
             val formatter = DateTimeFormatter.ofPattern("yyyy년 M월", Locale.getDefault())
             monthYearTextView.text = yearMonth.format(formatter)
         }
-
-
 
         calendarView.setup(startMonth, endMonth, firstDayOfWeek)
         calendarView.scrollToMonth(currentMonth)
@@ -66,8 +66,34 @@ class CalendarFragment : Fragment() {
         calendarView.dayBinder = object : MonthDayBinder<DayViewContainer> {
             override fun create(view: View) = DayViewContainer(view)
             override fun bind(container: DayViewContainer, day: CalendarDay) {
-                // Bind your data here
                 container.textView.text = day.date.dayOfMonth.toString()
+
+                // Apply original background here
+                container.textView.setBackgroundResource(R.drawable.calendar_day_bg)
+
+                if (day.position == DayPosition.MonthDate) {
+                    when {
+                        day.date == rangeStartDate || day.date == rangeEndDate -> {
+                            container.textView.setBackgroundResource(R.drawable.calendar_selectday_bg)
+                            container.textView.setTextColor(Color.BLACK)
+                        }
+                        rangeStartDate != null && rangeEndDate != null && (day.date > rangeStartDate && day.date < rangeEndDate) -> {
+                            container.textView.setBackgroundResource(R.drawable.calendar_rangeday_bg)
+                            container.textView.setTextColor(Color.BLACK)
+                        }
+                        else -> {
+                            container.textView.setBackgroundResource(R.drawable.calendar_day_bg)
+                            container.textView.setTextColor(Color.BLACK)
+                        }
+                    }
+                    container.textView.setOnClickListener {
+                        onDateSelected(day.date)
+                    }
+                } else {
+                    container.textView.setTextColor(Color.GRAY)
+                    //container.textView.setBackgroundColor(Color.TRANSPARENT)
+                    container.textView.setOnClickListener(null)
+                }
             }
         }
 
@@ -84,15 +110,41 @@ class CalendarFragment : Fragment() {
                 container.textViewFriday.text = daysOfWeek[5].getDisplayName(TextStyle.SHORT, Locale.getDefault())
                 container.textViewSaturday.text = daysOfWeek[6].getDisplayName(TextStyle.SHORT, Locale.getDefault())
             }
-            }
+        }
 
+        pdfDownloadButton.setOnClickListener {
+            // Show selected date range when button is clicked
+            if (rangeStartDate != null && rangeEndDate != null) {
+                Toast.makeText(context, "Selected range: $rangeStartDate to $rangeEndDate", Toast.LENGTH_SHORT).show()
+                // Add your PDF generation logic here
+            } else {
+                Toast.makeText(context, "No range selected", Toast.LENGTH_SHORT).show()
+            }
+        }
 
         return view
+    }
+
+    private fun onDateSelected(date: LocalDate) {
+        if (rangeStartDate == null) {
+            rangeStartDate = date
+        } else if (rangeEndDate == null) {
+            if (date.isBefore(rangeStartDate)) {
+                rangeEndDate = rangeStartDate
+                rangeStartDate = date
+            } else {
+                rangeEndDate = date
+            }
+        } else {
+            rangeStartDate = date
+            rangeEndDate = null
+        }
+        calendarView.notifyCalendarChanged()
     }
 }
 
 class DayViewContainer(view: View) : ViewContainer(view) {
-    val textView = view.findViewById<TextView>(R.id.calendarDayText)
+    val textView: TextView = view.findViewById(R.id.calendarDayText)
 }
 
 class MonthViewContainer(view: View) : ViewContainer(view) {
