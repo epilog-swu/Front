@@ -66,6 +66,7 @@ dependencies {
     //implementation ("com.github.kizitonwose:CalendarView:2.5.1")
 
     //그래프 라이브러리 사용하려고 추가
+    implementation ("com.google.android.gms:play-services-location:21.0.1")
     implementation ("com.github.PhilJay:MPAndroidChart:v3.1.0")
     implementation(libs.play.services.wearable)
     implementation(platform(libs.androidx.compose.bom))

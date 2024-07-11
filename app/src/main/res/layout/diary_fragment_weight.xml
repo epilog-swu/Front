@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="16dp">
+
+    <!-- Systolic Blood Pressure Section -->
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/pressure_1"
+        android:layout_width="match_parent"
+        android:layout_height="221dp"
+        android:layout_marginBottom="30dp"
+        android:layout_marginTop="30dp"
+        android:background="@drawable/diary_container_shape"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <TextView
+            android:id="@+id/instruction_text_systolic"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="몸무게를 입력해주세요"
+            android:textSize="16sp"
+            android:textColor="@color/black"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginTop="39dp"
+            android:gravity="center" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@id/instruction_text_systolic"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:gravity="center"
+            android:layout_marginTop="64dp">
+
+            <EditText
+                android:id="@+id/weightEditText"
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                android:text="80"
+                android:gravity="center"
+                android:textAlignment="center"
+                android:textSize="30sp"
+                android:textColor="@color/연한회색"
+                android:backgroundTint="@color/연한회색" />
+
+            <TextView
+                android:id="@+id/unit_label_systolic"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="10dp"
+                android:text="kg"
+                android:textColor="@color/black"
+                android:textSize="12sp"
+                android:gravity="center" />
+        </LinearLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <!-- Diastolic Blood Pressure Section -->
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/pressure_2"
+        android:layout_width="match_parent"
+        android:layout_height="221dp"
+        android:layout_marginTop="16dp"
+        android:background="@drawable/diary_container_shape"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/pressure_1">
+
+        <TextView
+            android:id="@+id/instruction_text_diastolic"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="39dp"
+            android:gravity="center"
+            android:text="체지방률을 입력해주세요"
+            android:textColor="@color/black"
+            android:textSize="16sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@id/instruction_text_diastolic"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:gravity="center"
+            android:layout_marginTop="64dp">
+
+            <EditText
+                android:id="@+id/bodyFatEditText"
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                android:text="30"
+                android:gravity="center"
+                android:textAlignment="center"
+                android:textSize="30sp"
+                android:textColor="@color/연한회색"
+                android:backgroundTint="@color/연한회색" />
+
+            <TextView
+                android:id="@+id/unit_label_diastolic"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="10dp"
+                android:text="%"
+                android:textColor="@color/black"
+                android:textSize="16sp"
+                android:gravity="center" />
+        </LinearLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <!-- Heart Rate Section -->
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/pressure_3"
+        android:layout_width="match_parent"
+        android:layout_height="221dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="30dp"
+        android:background="@drawable/diary_container_shape"
+        app:layout_constraintTop_toBottomOf="@+id/pressure_2"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <EditText
+            android:id="@+id/uploadImageView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="0dp"
+            android:layout_marginTop="0dp"
+            android:layout_marginEnd="0dp"
+            android:background="@drawable/upload_image"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintVertical_bias="0.5" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

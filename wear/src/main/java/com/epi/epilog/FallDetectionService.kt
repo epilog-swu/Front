@@ -1,5 +1,6 @@
 package com.epi.epilog
 
+import android.Manifest
 import android.annotation.SuppressLint
 import android.app.Notification
 import android.app.NotificationChannel
@@ -22,8 +23,6 @@ import android.os.Handler
 import android.os.IBinder
 import android.os.Looper
 import android.os.PowerManager
-import android.speech.SpeechRecognizer
-import android.speech.tts.TextToSpeech
 import android.util.Log
 import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationCompat
@@ -52,12 +51,7 @@ class FallDetectionService : Service(), SensorEventListener, LocationListener {
     private val notificationId = 1
 
     private lateinit var wakeLock: PowerManager.WakeLock
-    private lateinit var screenWakeLock: PowerManager.WakeLock
     private val timer = Timer()
-
-    private var isModalShown = false
-    private lateinit var speechRecognizer: SpeechRecognizer
-    private lateinit var textToSpeech: TextToSpeech
 
     private var isEmergencyTriggered = false
     private var currentLocation: Location? = null
@@ -123,7 +117,9 @@ class FallDetectionService : Service(), SensorEventListener, LocationListener {
     @SuppressLint("MissingPermission")
     private fun initializeLocationManager() {
         locationManager = getSystemService(Context.LOCATION_SERVICE) as LocationManager
-        if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
+            ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            Log.e("Location", "Location permission not granted")
             return
         }
         val providers = locationManager.allProviders
@@ -137,6 +133,7 @@ class FallDetectionService : Service(), SensorEventListener, LocationListener {
 
     override fun onLocationChanged(location: Location) {
         currentLocation = location
+        Log.d("LocationUpdate", "New Location: Latitude ${location.latitude}, Longitude ${location.longitude}")
     }
 
     override fun onStatusChanged(provider: String?, status: Int, extras: Bundle?) {}
@@ -165,8 +162,8 @@ class FallDetectionService : Service(), SensorEventListener, LocationListener {
         Handler(Looper.getMainLooper()).postDelayed({
             mediaPlayer.stop()
             if (mediaPlayer.isPlaying) {
+                mediaPlayer.release()
             }
-            mediaPlayer.release()
 
             val fallQSound = MediaPlayer.create(applicationContext, R.raw.fall_q)
             fallQSound.start()
@@ -187,7 +184,8 @@ class FallDetectionService : Service(), SensorEventListener, LocationListener {
     }
 
     private fun sendEmergencyLocation() {
-        if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
+            ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             Log.d("Location", "Permission not granted, sending empty body")
             postLocationData(LocationData(0.0, 0.0), true)
             return
@@ -213,7 +211,7 @@ class FallDetectionService : Service(), SensorEventListener, LocationListener {
                             if (isPermissionDenied) {
                                 Log.d("Location", "Location permission denied, sent empty body successfully.")
                             } else {
-                                Log.d("Location", "Location sent successfully: ${apiResponse.success} Latitude: ${locationData.latitude}, Longitude: ${locationData.longitude}")
+                                Log.d("LocationData", "Location sent successfully: ${apiResponse.success} Latitude: ${locationData.latitude}, Longitude: ${locationData.longitude}")
                             }
                         } else {
                             Log.e("Location", "Failed to send location: ${response.errorBody()?.string()}")
@@ -254,10 +252,9 @@ class FallDetectionService : Service(), SensorEventListener, LocationListener {
         val call = retrofitService.postSensorData(data, "Bearer $token")
         call.enqueue(object : Callback<Boolean> {
 
-            @SuppressLint("SuspiciousIndentation")
             override fun onResponse(call: Call<Boolean>, response: Response<Boolean>) {
                 if (response.isSuccessful) {
-                    val responseBody = response.body()
+                    val responseBody = true
                     Log.d("SensorData", "Sensor Data Response: $responseBody")
                     updateNotification(responseBody == true)
 
@@ -310,6 +307,9 @@ class FallDetectionService : Service(), SensorEventListener, LocationListener {
         sensorManager.unregisterListener(this)
         if (::mediaPlayer.isInitialized) {
             mediaPlayer.release()
+        }
+        if (::wakeLock.isInitialized) {
+            wakeLock.release()
         }
     }
 

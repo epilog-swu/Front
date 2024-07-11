@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="16dp">
+
+    <!-- Container for adding medication items -->
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/constraint"
+        android:layout_width="match_parent"
+        android:layout_height="232dp"
+        android:background="@drawable/diary_container_shape"
+        android:padding="16dp"
+        android:layout_marginTop="30dp"
+        app:layout_constraintBottom_toTopOf="@+id/medicationList"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <!-- Title TextView -->
+        <TextView
+            android:id="@+id/titleTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="15dp"
+            android:layout_marginTop="15dp"
+            android:layout_marginBottom="8dp"
+            android:text="약 이름"
+            android:textColor="@color/덜진한회색"
+            android:textSize="12sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <!-- EditText for medication name -->
+        <LinearLayout
+            android:id="@+id/medicine_edit"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/titleTextView"
+            android:orientation="horizontal">
+
+            <!-- EditText for medication name -->
+            <EditText
+                android:id="@+id/medicationEditText"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginEnd="8dp"
+                android:layout_marginStart="10dp"
+                android:backgroundTint="@color/연한회색"
+                android:textSize="16sp"
+                tools:ignore="TouchTargetSizeCheck" />
+
+            <!-- Button to add medication -->
+            <Button
+                android:id="@+id/addButton"
+                android:layout_width="70.82dp"
+                android:layout_height="37dp"
+                android:background="@drawable/grey_solid_button_shape"
+                android:text="추가"
+                android:textSize="14sp"
+                android:layout_marginRight="2dp"/>
+        </LinearLayout>
+
+        <!-- Second Title TextView -->
+        <TextView
+            android:id="@+id/titleTextView2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="15dp"
+            android:layout_marginTop="15dp"
+            android:layout_marginBottom="8dp"
+            android:text="복용 중인 약"
+            android:textColor="@color/덜진한회색"
+            android:textSize="12sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/medicine_edit" />
+
+        <!-- FlexboxLayout for displaying medications -->
+        <com.google.android.flexbox.FlexboxLayout
+            android:id="@+id/medicationFlexbox"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            app:alignContent="flex_start"
+            app:alignItems="flex_start"
+            app:flexWrap="wrap"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/titleTextView2">
+
+            <!-- Example Chip Items -->
+            <CheckBox
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:layout_marginBottom="10dp"
+                android:background="@drawable/badge"
+                android:button="@null"
+                android:contentDescription="@string/carbamazepine"
+                android:gravity="center_vertical"
+                android:text="카바마제핀"
+                android:textColor="@color/black"
+                android:textSize="14dp"
+                tools:ignore="TextSizeCheck,TouchTargetSizeCheck" />
+
+            <CheckBox
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="7dp"
+                android:layout_marginBottom="10dp"
+                android:background="@drawable/badge"
+                android:button="@null"
+                android:contentDescription="@string/phenytoin"
+                android:gravity="center_vertical"
+                android:text="페니토인"
+                android:textColor="@color/black"
+                android:textSize="14dp"
+                tools:ignore="TextSizeCheck,TouchTargetSizeCheck" />
+
+            <CheckBox
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="7dp"
+                android:background="@drawable/badge"
+                android:button="@null"
+                android:contentDescription="@string/insulin"
+                android:gravity="center_vertical"
+                android:text="인슐린"
+                android:textColor="@color/black"
+                android:textSize="14dp"
+                tools:ignore="TextSizeCheck,TouchTargetSizeCheck" />
+
+            <CheckBox
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:background="@drawable/badge"
+                android:button="@null"
+                android:contentDescription="@string/long_medicine_name"
+                android:gravity="center_vertical"
+                android:text="긴 약 이름 긴 약 이름"
+                android:textColor="@color/black"
+                android:textSize="14dp"
+                tools:ignore="TextSizeCheck,TouchTargetSizeCheck" />
+        </com.google.android.flexbox.FlexboxLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <!-- LinearLayout for Medication List -->
+    <LinearLayout
+        android:id="@+id/medicationList"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:orientation="vertical"
+        app:layout_constraintTop_toBottomOf="@id/constraint">
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
