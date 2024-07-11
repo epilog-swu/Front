@@ -53,16 +53,14 @@ android {
 }
 
 dependencies {
-<<<<<<< HEAD
+
     implementation ("com.google.android.gms:play-services-location:21.0.1")
-=======
+
 
     //메인 달력 위해서 추가
     implementation("com.kizitonwose.calendar:view:2.5.1") // View
     coreLibraryDesugaring ("com.android.tools:desugar_jdk_libs:2.0.4")
 
-
->>>>>>> origin/main
     implementation ("androidx.core:core:1.10.1")
     implementation ("androidx.appcompat:appcompat:1.7.0")
     implementation ("cz.msebera.android:httpclient:4.4.1.2")

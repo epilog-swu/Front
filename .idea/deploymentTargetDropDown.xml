@@ -13,12 +13,12 @@
               <deviceKey>
                 <Key>
                   <type value="VIRTUAL_DEVICE_PATH" />
-                  <value value="C:\Users\hbag7\.android\avd\Copy_of_Copy_2_of_Wear_OS_Small_Round_API_33.avd" />
+                  <value value="C:\Users\hbag7\.android\avd\S8_API_34.avd" />
                 </Key>
               </deviceKey>
             </Target>
           </targetSelectedWithDropDown>
-          <timeTargetWasSelectedWithDropDown value="2024-07-11T23:18:57.173355300Z" />
+          <timeTargetWasSelectedWithDropDown value="2024-07-11T23:23:17.898136600Z" />
         </State>
       </entry>
     </value>

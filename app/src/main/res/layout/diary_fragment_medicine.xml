@@ -61,9 +61,10 @@
                 android:id="@+id/addButton"
                 android:layout_width="70.82dp"
                 android:layout_height="37dp"
-                android:background="@drawable/signup_button_shape"
+                android:background="@drawable/grey_solid_button_shape"
                 android:text="추가"
-                android:textSize="14sp" />
+                android:textSize="14sp"
+                android:layout_marginRight="2dp"/>
         </LinearLayout>
 
         <!-- Second Title TextView -->
