@@ -1,59 +1,158 @@
 package com.epi.epilog
 
+import android.graphics.Color
+import android.os.Build
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
+import android.widget.Toast
+import androidx.annotation.RequiresApi
+import androidx.fragment.app.Fragment
+import com.kizitonwose.calendar.core.*
+import com.kizitonwose.calendar.view.CalendarView
+import com.kizitonwose.calendar.view.MonthDayBinder
+import com.kizitonwose.calendar.view.MonthHeaderFooterBinder
+import com.kizitonwose.calendar.view.ViewContainer
+import java.time.DayOfWeek
+import java.time.LocalDate
+import java.time.YearMonth
+import java.time.format.DateTimeFormatter
+import java.time.format.TextStyle
+import java.util.*
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
+class CalendarFragment : Fragment() {
 
-/**
- * A simple [Fragment] subclass.
- * Use the [graphFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
-class calendarFragment : Fragment() {
-    // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
+    private var rangeStartDate: LocalDate? = null
+    private var rangeEndDate: LocalDate? = null
+    private lateinit var calendarView: CalendarView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
-        }
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_graph, container, false)
-    }
+        val view = inflater.inflate(R.layout.main_calendar, container, false)
 
-    companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment graphFragment.
-         */
-        // TODO: Rename and change types and number of parameters
-        @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            graphFragment().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
+        calendarView = view.findViewById(R.id.calendarView)
+        val titlesContainer = view.findViewById<ViewGroup>(R.id.MonthYear)
+        val monthYearTextView = titlesContainer.findViewById<TextView>(R.id.calendarMonthYearText)
+        val pdfDownloadButton = view.findViewById<View>(R.id.pdf_download_btn)
+
+        val currentMonth = YearMonth.now()
+        val startMonth = currentMonth.minusMonths(100)  // Adjust as needed
+        val endMonth = currentMonth.plusMonths(100)  // Adjust as needed
+        val firstDayOfWeek = firstDayOfWeekFromLocale() // Available from the library
+
+        val daysOfWeek = daysOfWeek(firstDayOfWeek = DayOfWeek.SUNDAY)
+
+        // MonthScrollListener를 통해 년/월 정보 업데이트
+        calendarView.monthScrollListener = { month ->
+            val yearMonth = month.yearMonth
+            val formatter = DateTimeFormatter.ofPattern("yyyy년 M월", Locale.getDefault())
+            monthYearTextView.text = yearMonth.format(formatter)
+        }
+
+        calendarView.setup(startMonth, endMonth, firstDayOfWeek)
+        calendarView.scrollToMonth(currentMonth)
+
+        // Setting the DayBinder
+        calendarView.dayBinder = object : MonthDayBinder<DayViewContainer> {
+            override fun create(view: View) = DayViewContainer(view)
+            override fun bind(container: DayViewContainer, day: CalendarDay) {
+                container.textView.text = day.date.dayOfMonth.toString()
+
+                // Apply original background here
+                container.textView.setBackgroundResource(R.drawable.calendar_day_bg)
+
+                if (day.position == DayPosition.MonthDate) {
+                    when {
+                        day.date == rangeStartDate || day.date == rangeEndDate -> {
+                            container.textView.setBackgroundResource(R.drawable.calendar_selectday_bg)
+                            container.textView.setTextColor(Color.BLACK)
+                        }
+                        rangeStartDate != null && rangeEndDate != null && (day.date > rangeStartDate && day.date < rangeEndDate) -> {
+                            container.textView.setBackgroundResource(R.drawable.calendar_rangeday_bg)
+                            container.textView.setTextColor(Color.BLACK)
+                        }
+                        else -> {
+                            container.textView.setBackgroundResource(R.drawable.calendar_day_bg)
+                            container.textView.setTextColor(Color.BLACK)
+                        }
+                    }
+                    container.textView.setOnClickListener {
+                        onDateSelected(day.date)
+                    }
+                } else {
+                    container.textView.setTextColor(Color.GRAY)
+                    //container.textView.setBackgroundColor(Color.TRANSPARENT)
+                    container.textView.setOnClickListener(null)
                 }
             }
+        }
+
+        // MonthHeaderBinder를 통해 년, 월 정보 바인딩
+        calendarView.monthHeaderBinder = object : MonthHeaderFooterBinder<MonthViewContainer> {
+            override fun create(view: View) = MonthViewContainer(view)
+            override fun bind(container: MonthViewContainer, month: CalendarMonth) {
+                val daysOfWeek = daysOfWeek(firstDayOfWeek = firstDayOfWeekFromLocale())
+                container.textViewSunday.text = daysOfWeek[0].getDisplayName(TextStyle.SHORT, Locale.getDefault())
+                container.textViewMonday.text = daysOfWeek[1].getDisplayName(TextStyle.SHORT, Locale.getDefault())
+                container.textViewTuesday.text = daysOfWeek[2].getDisplayName(TextStyle.SHORT, Locale.getDefault())
+                container.textViewWednesday.text = daysOfWeek[3].getDisplayName(TextStyle.SHORT, Locale.getDefault())
+                container.textViewThursday.text = daysOfWeek[4].getDisplayName(TextStyle.SHORT, Locale.getDefault())
+                container.textViewFriday.text = daysOfWeek[5].getDisplayName(TextStyle.SHORT, Locale.getDefault())
+                container.textViewSaturday.text = daysOfWeek[6].getDisplayName(TextStyle.SHORT, Locale.getDefault())
+            }
+        }
+
+        pdfDownloadButton.setOnClickListener {
+            // Show selected date range when button is clicked
+            if (rangeStartDate != null && rangeEndDate != null) {
+                Toast.makeText(context, "Selected range: $rangeStartDate to $rangeEndDate", Toast.LENGTH_SHORT).show()
+                // Add your PDF generation logic here
+            } else {
+                Toast.makeText(context, "No range selected", Toast.LENGTH_SHORT).show()
+            }
+        }
+
+        return view
     }
+
+    private fun onDateSelected(date: LocalDate) {
+        if (rangeStartDate == null) {
+            rangeStartDate = date
+        } else if (rangeEndDate == null) {
+            if (date.isBefore(rangeStartDate)) {
+                rangeEndDate = rangeStartDate
+                rangeStartDate = date
+            } else {
+                rangeEndDate = date
+            }
+        } else {
+            rangeStartDate = date
+            rangeEndDate = null
+        }
+        calendarView.notifyCalendarChanged()
+    }
+}
+
+class DayViewContainer(view: View) : ViewContainer(view) {
+    val textView: TextView = view.findViewById(R.id.calendarDayText)
+}
+
+class MonthViewContainer(view: View) : ViewContainer(view) {
+    val textViewSunday: TextView = view.findViewById(R.id.sunday)
+    val textViewMonday: TextView = view.findViewById(R.id.monday)
+    val textViewTuesday: TextView = view.findViewById(R.id.tuesday)
+    val textViewWednesday: TextView = view.findViewById(R.id.wednesday)
+    val textViewThursday: TextView = view.findViewById(R.id.thursday)
+    val textViewFriday: TextView = view.findViewById(R.id.friday)
+    val textViewSaturday: TextView = view.findViewById(R.id.saturday)
 }
