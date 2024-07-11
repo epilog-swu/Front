@@ -1,38 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/main_calender_layout"
-    android:background="#ffffff"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
-    <com.google.android.material.tabs.TabLayout
-        android:id="@+id/tabs"
+
+    <!-- 요일 헤더 -->
+    <include
+        android:id="@+id/MonthYear"
+        layout="@layout/calendar_month_year" />
+
+    <!-- CalendarView -->
+    <com.kizitonwose.calendar.view.CalendarView
+        android:id="@+id/calendarView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:tabBackground="@drawable/main_tab"
-        app:tabIndicatorColor="@color/light_purple"
-        app:tabIndicatorHeight="0dp"
-        app:tabTextColor="@color/black">
-
-        <com.google.android.material.tabs.TabItem
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="캘린더"
-            />
-        <com.google.android.material.tabs.TabItem
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="그래프"/>
-
-    </com.google.android.material.tabs.TabLayout>
-
-
-    <androidx.viewpager2.widget.ViewPager2
-        android:id="@+id/calender_graph_viewpager"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
-
+        app:cv_dayViewResource="@layout/calendar_day_layout"
+        app:cv_monthHeaderResource="@layout/calendar_day_titles_container">
+    </com.kizitonwose.calendar.view.CalendarView>
 
 </LinearLayout>
+
+

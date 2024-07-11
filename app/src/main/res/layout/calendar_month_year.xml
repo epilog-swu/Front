@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <Button
+        android:id="@+id/calendarMonthBackBtn"
+        android:layout_width="14dp"
+        android:layout_height="22dp"
+        android:background="@drawable/maincalendar_back"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/calendarMonthYearText"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <!-- 년, 월 표시 텍스트뷰 -->
+    <TextView
+        app:layout_constraintStart_toEndOf="@id/calendarMonthBackBtn"
+        app:layout_constraintEnd_toStartOf="@id/calendarMonthNextBtn"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:id="@+id/calendarMonthYearText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:layout_marginBottom="20dp"
+        android:gravity="center"
+        android:textSize="18sp"
+        android:text="22"
+        android:textColor="@color/black" />
+
+    <Button
+        android:id="@+id/calendarMonthNextBtn"
+        android:layout_width="14dp"
+        android:layout_height="22dp"
+        android:background="@drawable/maincalendar_next"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/calendarMonthYearText"
+        app:layout_constraintTop_toTopOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
