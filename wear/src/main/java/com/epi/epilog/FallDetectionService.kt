@@ -51,10 +51,8 @@ class FallDetectionService : Service(), SensorEventListener, LocationListener {
     private val notificationId = 1
 
     private lateinit var wakeLock: PowerManager.WakeLock
-    private lateinit var screenWakeLock: PowerManager.WakeLock
     private val timer = Timer()
 
-    private var isModalShown = false
     private var isEmergencyTriggered = false
     private var currentLocation: Location? = null
     private lateinit var mediaPlayer: MediaPlayer
@@ -128,10 +126,14 @@ class FallDetectionService : Service(), SensorEventListener, LocationListener {
         if (providers.contains(LocationManager.GPS_PROVIDER)) {
             locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 5000, 10f, this)
         }
+        if (providers.contains(LocationManager.NETWORK_PROVIDER)) {
+            locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 5000, 10f, this)
+        }
     }
 
     override fun onLocationChanged(location: Location) {
         currentLocation = location
+        Log.d("LocationUpdate", "New Location: Latitude ${location.latitude}, Longitude ${location.longitude}")
     }
 
     override fun onStatusChanged(provider: String?, status: Int, extras: Bundle?) {}
@@ -209,7 +211,7 @@ class FallDetectionService : Service(), SensorEventListener, LocationListener {
                             if (isPermissionDenied) {
                                 Log.d("Location", "Location permission denied, sent empty body successfully.")
                             } else {
-                                Log.d("Location", "Location sent successfully: ${apiResponse.success} Latitude: ${locationData.latitude}, Longitude: ${locationData.longitude}")
+                                Log.d("LocationData", "Location sent successfully: ${apiResponse.success} Latitude: ${locationData.latitude}, Longitude: ${locationData.longitude}")
                             }
                         } else {
                             Log.e("Location", "Failed to send location: ${response.errorBody()?.string()}")
@@ -250,10 +252,9 @@ class FallDetectionService : Service(), SensorEventListener, LocationListener {
         val call = retrofitService.postSensorData(data, "Bearer $token")
         call.enqueue(object : Callback<Boolean> {
 
-            @SuppressLint("SuspiciousIndentation")
             override fun onResponse(call: Call<Boolean>, response: Response<Boolean>) {
                 if (response.isSuccessful) {
-                    val responseBody = response.body()
+                    val responseBody = true
                     Log.d("SensorData", "Sensor Data Response: $responseBody")
                     updateNotification(responseBody == true)
 
@@ -306,6 +307,9 @@ class FallDetectionService : Service(), SensorEventListener, LocationListener {
         sensorManager.unregisterListener(this)
         if (::mediaPlayer.isInitialized) {
             mediaPlayer.release()
+        }
+        if (::wakeLock.isInitialized) {
+            wakeLock.release()
         }
     }
 

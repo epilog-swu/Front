@@ -21,5 +21,7 @@ class MealNotificationReceiver : BroadcastReceiver() {
             .setSmallIcon(R.mipmap.ic_launcher)
             .setPriority(NotificationCompat.PRIORITY_DEFAULT)
             .build()
+        notificationManager.notify(notificationId, notification)
+
     }
 }

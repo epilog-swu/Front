@@ -25,25 +25,15 @@ class signUp5Activity : AppCompatActivity() {
         completeButton = findViewById(R.id.complete_button)
         textViewCode = findViewById(R.id.textViewCode)
 
-            val textViewCopy = findViewById<TextView>(R.id.textViewCopy)
-            val content = "갤럭시워치에서 연동해주세요"
-            val spannableString = SpannableString(content)
-            spannableString.setSpan(UnderlineSpan(), 0, content.length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
-            textViewCopy.text = spannableString
+        val textViewCopy = findViewById<TextView>(R.id.textViewCopy)
+        val content = "갤럭시워치에서 연동해주세요"
+        val spannableString = SpannableString(content)
+        spannableString.setSpan(UnderlineSpan(), 0, content.length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+        textViewCopy.text = spannableString
+
+        completeButton.setOnClickListener {
+            val intent = Intent(this, startActivity::class.java)
+            startActivity(intent)
         }
-
-//로그인 페이지로
-//        completeButton.setOnClickListener {
-//            val intent = Intent(this, LoginPatientActivity::class.java)
-//            startActivity(intent)
-//            finish()
-//        }
-
-
-    private fun copyToClipboard(text: String) {
-        val clipboard = getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
-        val clip = ClipData.newPlainText("Copied Code", text)
-        clipboard.setPrimaryClip(clip)
-        Toast.makeText(this, "코드가 클립보드에 복사되었습니다.", Toast.LENGTH_SHORT).show()
     }
 }

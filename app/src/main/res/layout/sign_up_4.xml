@@ -6,7 +6,6 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-
     <Button
         android:id="@+id/button"
         android:layout_width="match_parent"
@@ -64,7 +63,6 @@
         app:layout_constraintTop_toBottomOf="@+id/textView4"
         tools:ignore="SpeakableTextPresentCheck"/>
 
-
     <Button
         android:id="@+id/male_button"
         android:layout_width="79dp"
@@ -78,62 +76,15 @@
         app:layout_constraintStart_toEndOf="@+id/editTextText"
         app:layout_constraintTop_toTopOf="@+id/editTextText"
         app:layout_constraintEnd_toEndOf="parent"/>
-    <TextView
-        android:id="@+id/textView5"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="20dp"
-        android:layout_marginTop="100dp"
-        android:text="복용 중인 약"
-        android:textSize="12sp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editTextText" />
-    <ImageView
-        android:id="@+id/infoIcon"
-        android:layout_width="12dp"
-        android:layout_height="12dp"
-        android:layout_marginStart="8dp"
-        android:src="@drawable/info_btn"
-        app:layout_constraintBottom_toBottomOf="@+id/textView5"
-        app:layout_constraintStart_toEndOf="@+id/textView5"
-        app:layout_constraintTop_toTopOf="@+id/textView5" />
 
     <LinearLayout
-        android:id="@+id/layoutMedicines"
+        android:id="@+id/medication_list"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="22dp"
-        android:orientation="horizontal"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
+        android:orientation="vertical"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/infoIcon"
-        app:layout_constraintVertical_bias="0.0">
-
-        <TextView
-            android:id="@+id/badgeCavamazepine"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="26dp"
-            android:background="@drawable/badge"
-           android:height="22dp"
-            android:text="카바마제빈"
-            android:textSize="12sp"
-            android:textColor="#000"/>
-
-
-        <TextView
-            android:id="@+id/badgePhenytoin"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="26dp"
-            android:background="@drawable/badge"
-            android:height="22dp"
-            android:text="페니토인"
-            android:textSize="12sp"
-            android:textColor="#000"/>
-    </LinearLayout>
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/editTextText" />
 
     <Button
         android:id="@+id/next_button"
@@ -149,6 +100,5 @@
         android:textSize="18dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        />
+        app:layout_constraintStart_toStartOf="parent"/>
 </androidx.constraintlayout.widget.ConstraintLayout>
