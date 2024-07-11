@@ -5,34 +5,25 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.CheckBox
-import android.widget.EditText
 import androidx.fragment.app.Fragment
 
 class DiaryFragmentMood : Fragment() {
+    private lateinit var checkBoxes: List<CheckBox>
 
-    private lateinit var directInputCheckBox: CheckBox
-    private lateinit var directInputText: EditText
-    fun isFilledOut(): Boolean {
-        // Implement your validation logic here
-        return true
-    }
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         val view = inflater.inflate(R.layout.diary_fragment_mood, container, false)
-
-        directInputCheckBox = view.findViewById(R.id.checkbox_direct_input)
-        directInputText = view.findViewById(R.id.direct_input_text)
-
-        directInputCheckBox.setOnCheckedChangeListener { _, isChecked ->
-            if (isChecked) {
-                directInputText.visibility = View.VISIBLE
-            } else {
-                directInputText.visibility = View.GONE
-            }
-        }
-
+        checkBoxes = listOf(
+            view.findViewById(R.id.mood_1),
+            view.findViewById(R.id.mood_2),
+            view.findViewById(R.id.checkbox_direct_input)
+        )
         return view
+    }
+
+    fun isFilledOut(): Boolean {
+        return this::checkBoxes.isInitialized && checkBoxes.any { it.isChecked }
     }
 }

@@ -11,27 +11,27 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
-import android.widget.ImageView
 import androidx.fragment.app.Fragment
 import java.io.IOException
 
 class DiaryFragmentWeight : Fragment() {
 
-    private lateinit var uploadImageView: EditText
+    private var weightEditText: EditText? = null
+    private var bodyFatEditText: EditText? = null
+    private var uploadImageView: EditText? = null
     private val PICK_IMAGE_REQUEST = 1
-    fun isFilledOut(): Boolean {
-        // Implement your validation logic here
-        return true
-    }
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         val view = inflater.inflate(R.layout.diary_fragment_weight, container, false)
 
+        weightEditText = view.findViewById(R.id.weightEditText)
+        bodyFatEditText = view.findViewById(R.id.bodyFatEditText)
         uploadImageView = view.findViewById(R.id.uploadImageView)
 
-        uploadImageView.setOnClickListener {
+        uploadImageView?.setOnClickListener {
             val intent = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
             startActivityForResult(intent, PICK_IMAGE_REQUEST)
         }
@@ -45,10 +45,18 @@ class DiaryFragmentWeight : Fragment() {
             val selectedImageUri: Uri? = data.data
             try {
                 val bitmap: Bitmap = MediaStore.Images.Media.getBitmap(activity?.contentResolver, selectedImageUri)
-                uploadImageView.background = BitmapDrawable(resources, bitmap)
+                uploadImageView?.background = BitmapDrawable(resources, bitmap)
             } catch (e: IOException) {
                 e.printStackTrace()
             }
         }
+    }
+
+    fun isFilledOut(): Boolean {
+        val defaultWeight = "80"
+        val defaultBodyFat = "30"
+
+        return weightEditText?.text.toString() != defaultWeight &&
+                bodyFatEditText?.text.toString() != defaultBodyFat
     }
 }

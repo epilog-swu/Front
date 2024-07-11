@@ -41,7 +41,7 @@
             android:layout_marginEnd="70dp"
             android:backgroundTint="@color/연한회색"
             app:layout_constraintEnd_toStartOf="@id/unit_label_systolic"
-            app:layout_constraintHorizontal_bias="0.714"
+            app:layout_constraintHorizontal_bias="0.066"
             app:layout_constraintHorizontal_chainStyle="spread_inside"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/instruction_text_systolic" />

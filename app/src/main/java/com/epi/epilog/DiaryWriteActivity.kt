@@ -3,9 +3,9 @@ package com.epi.epilog
 import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
-import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.tabs.TabLayout
 
 class DiaryWriteActivity : AppCompatActivity() {
@@ -48,12 +48,19 @@ class DiaryWriteActivity : AppCompatActivity() {
         })
 
         saveButton.setOnClickListener {
-            showAppropriateDialog()
+            if (isAnyFragmentFilledOut()) {
+                val intent = Intent(this, ActivityShowFailDialog::class.java)
+                startActivity(intent)
+                overridePendingTransition(0, 0)
+            } else {
+                val intent = Intent(this, ActivityShowSuccessDialog::class.java)
+                startActivity(intent)
+                overridePendingTransition(0, 0)
+            }
         }
 
         editButton.setOnClickListener {
-            val intent = Intent(this, DiaryEditActivity::class.java)
-            startActivity(intent)
+            Toast.makeText(getApplicationContext(), "수정되었습니다.", Toast.LENGTH_SHORT).show()
         }
     }
 
@@ -61,14 +68,6 @@ class DiaryWriteActivity : AppCompatActivity() {
         supportFragmentManager.beginTransaction()
             .replace(R.id.tab_content, fragment)
             .commit()
-    }
-
-    private fun showAppropriateDialog() {
-        if (isAnyFragmentFilledOut()) {
-            showCustomDialog(R.layout.dialog_success)
-        } else {
-            showCustomDialog(R.layout.dialog_fail)
-        }
     }
 
     private fun isAnyFragmentFilledOut(): Boolean {
@@ -83,11 +82,5 @@ class DiaryWriteActivity : AppCompatActivity() {
                 else -> false
             }
         }
-    }
-
-    private fun showCustomDialog(layoutId: Int) {
-        MaterialAlertDialogBuilder(this)
-            .setView(layoutId)
-            .show()
     }
 }

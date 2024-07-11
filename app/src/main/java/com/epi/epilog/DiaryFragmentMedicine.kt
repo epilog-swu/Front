@@ -14,10 +14,6 @@ class DiaryFragmentMedicine : Fragment() {
     private lateinit var addButton: Button
     private lateinit var medicationList: LinearLayout
 
-    fun isFilledOut(): Boolean {
-        return medicationList.childCount > 0
-    }
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -72,5 +68,9 @@ class DiaryFragmentMedicine : Fragment() {
         } else {
             Toast.makeText(requireContext(), "약 이름을 입력해주세요.", Toast.LENGTH_SHORT).show()
         }
+    }
+
+    fun isFilledOut(): Boolean {
+        return medicationList.childCount > 0
     }
 }

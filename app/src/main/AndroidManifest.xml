@@ -31,6 +31,10 @@
       <activity android:name=".startActivity"/>
         <activity
             android:name=".MainActivity"/>
+        <activity android:name=".ActivityShowSuccessDialog"
+            android:theme="@style/TransparentTheme" />
+        <activity android:name=".ActivityShowFailDialog"
+            android:theme="@style/TransparentTheme" />
     </application>
 
 </manifest>
