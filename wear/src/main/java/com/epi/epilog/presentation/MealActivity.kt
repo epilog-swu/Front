@@ -50,7 +50,6 @@ class MealActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_meal)
-        requestExactAlarmPermission()
         setupRetrofit()
         createNotificationChannel()  // Ensure channel is created here
 
