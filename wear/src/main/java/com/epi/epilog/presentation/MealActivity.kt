@@ -41,7 +41,7 @@ class MealActivity : ComponentActivity() {
     private lateinit var recyclerView: RecyclerView
     private lateinit var viewAdapter: MyAdapter
     private lateinit var retrofitService: RetrofitService
-    private val channelId = "MealActivityChannel"
+    private val channelId = "MealActivityChannel"  // Consistent channel ID
     private val alarmManager: AlarmManager by lazy {
         getSystemService(Context.ALARM_SERVICE) as AlarmManager
     }
@@ -50,9 +50,9 @@ class MealActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_meal)
-        checkAndRequestExactAlarmPermission() // Add this line
+        requestExactAlarmPermission()
         setupRetrofit()
-        createNotificationChannel()
+        createNotificationChannel()  // Ensure channel is created here
 
         val selectedDate = intent.getStringExtra("SELECTED_DATE")?.let { LocalDate.parse(it) }
         if (selectedDate != null) {
@@ -61,32 +61,29 @@ class MealActivity : ComponentActivity() {
             Log.e("MealActivity", "No date received")
         }
     }
-
-    private fun checkAndRequestExactAlarmPermission() {
+    private fun requestExactAlarmPermission() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-            val alarmManager = getSystemService(Context.ALARM_SERVICE) as AlarmManager
-            if (!alarmManager.canScheduleExactAlarms()) {
-                val intent = Intent(Settings.ACTION_REQUEST_SCHEDULE_EXACT_ALARM)
-                startActivity(intent)
-            }
+            val intent = Intent(Settings.ACTION_REQUEST_SCHEDULE_EXACT_ALARM)
+            startActivity(intent)
         }
     }
-
     private fun createNotificationChannel() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            val channel = NotificationChannel(channelId, "Meal Activity Channel", NotificationManager.IMPORTANCE_DEFAULT)
-            val manager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-            manager.createNotificationChannel(channel)
+            val channelName = "Meal Notifications"
+            val channelDescription = "Notifications for Meal reminders"
+            val importance = NotificationManager.IMPORTANCE_DEFAULT
+
+            val channel = NotificationChannel(channelId, channelName, importance).apply {
+                description = channelDescription
+            }
+
+            val notificationManager: NotificationManager =
+                getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+            notificationManager.createNotificationChannel(channel)
         }
     }
 
-    private fun createNotification(contentText: String): Notification {
-        return NotificationCompat.Builder(this, channelId)
-            .setContentTitle("Meal Reminder")
-            .setContentText(contentText)
-            .setSmallIcon(R.mipmap.ic_launcher)
-            .build()
-    }
+
 
     private fun setupRetrofit() {
         val baseUrl = "http://epilog-develop-env.eba-imw3vi3g.ap-northeast-2.elasticbeanstalk.com/"
@@ -118,6 +115,7 @@ class MealActivity : ComponentActivity() {
                                 )
                                 scheduleMealNotifications(item)
                             }
+
                         } else {
                             Log.e(
                                 "MealActivity",
@@ -171,20 +169,24 @@ class MealActivity : ComponentActivity() {
 
     private fun scheduleNotification(id: Int, time: Long, message: String) {
         try {
-            val intent = Intent(this, MealNotificationReceiver::class.java).apply {
+            val intent = Intent(this, MedicineNotificationReceiver::class.java).apply {
                 putExtra("notificationId", id)
                 putExtra("message", message)
             }
             val pendingIntent = PendingIntent.getBroadcast(this, id, intent, PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE)
             alarmManager.setExact(AlarmManager.RTC_WAKEUP, time, pendingIntent)
+
         } catch (e: SecurityException) {
             Log.e("MealActivity", "Failed to schedule notification due to missing permission: ${e.message}", e)
-            // Request permissaion again if it fails
-            checkAndRequestExactAlarmPermission()
+            // 권한 요청 로직 추가 가능
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                requestExactAlarmPermission()
+            }
         } catch (e: Exception) {
             Log.e("MealActivity", "Failed to schedule notification: ${e.message}", e)
         }
     }
+
 
     class MyAdapter(
         private val myDataset: MutableList<MealCheckItem>,
