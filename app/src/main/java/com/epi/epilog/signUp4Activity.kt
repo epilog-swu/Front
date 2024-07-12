@@ -2,6 +2,7 @@ package com.epi.epilog
 
 import android.content.Intent
 import android.os.Bundle
+import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -45,13 +46,18 @@ class signUp4Activity : AppCompatActivity() {
     private fun addMedicationButton(medicationName: String) {
         val button = Button(this).apply {
             text = medicationName
+
             setBackgroundResource(R.drawable.signup_button_shape)
             layoutParams = LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT,
                 resources.getDimensionPixelSize(R.dimen.button_height)
             ).apply {
-                setMargins(25, 0, 25, 16)
+                setMargins(30, 0, 25, 16)
+                setPadding(15, 0, 0, 0)
+
             }
+
+            setGravity( Gravity.CENTER_VERTICAL)
             setOnClickListener {
                 toggleMedicationDetailVisibility(this)
             }

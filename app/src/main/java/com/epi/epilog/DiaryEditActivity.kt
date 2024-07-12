@@ -6,13 +6,11 @@ import android.view.View
 import android.widget.Button
 import android.widget.GridLayout
 import android.widget.TimePicker
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 
 class DiaryEditActivity : AppCompatActivity() {
 
     private lateinit var timePicker: TimePicker
-    private var isTimeSelected = false
     private var selectedButton: Button? = null
     private val buttons = mutableListOf<Button>()
 
@@ -36,6 +34,7 @@ class DiaryEditActivity : AppCompatActivity() {
         timeInputButton.setOnClickListener {
             if (timePicker.visibility == View.GONE) {
                 timePicker.visibility = View.VISIBLE
+                onButtonClicked(timeInputButton) // 시간 입력 버튼 선택 처리
             } else {
                 timePicker.visibility = View.GONE
             }
@@ -48,12 +47,8 @@ class DiaryEditActivity : AppCompatActivity() {
     }
 
     private fun onButtonClicked(button: Button) {
-        if (button.isSelected) {
-            button.isSelected = false
-            button.setBackgroundResource(R.drawable.seizure_button)
-        } else {
-            button.isSelected = true
-            button.setBackgroundResource(R.drawable.seizure_button)
-        }
+        selectedButton?.isSelected = false
+        button.isSelected = true
+        selectedButton = button
     }
 }
