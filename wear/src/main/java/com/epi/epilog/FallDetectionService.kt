@@ -256,7 +256,7 @@ class FallDetectionService : Service(), SensorEventListener, LocationListener {
 
             override fun onResponse(call: Call<Boolean>, response: Response<Boolean>) {
                 if (response.isSuccessful) {
-                    val responseBody = true
+                    val responseBody = response.body()
                     Log.d("SensorData", "Sensor Data Response: $responseBody")
                     updateNotification(responseBody == true)
 

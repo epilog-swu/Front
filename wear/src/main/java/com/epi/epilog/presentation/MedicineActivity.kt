@@ -176,7 +176,7 @@ class MedicineActivity : ComponentActivity() {
 
     private fun createNotificationChannel() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            val channelId = "MedicineActivityChannel"
+            val channelId = "Medicine Activity Channel"
             val channelName = "Medicine Notifications"
             val channelDescription = "Notifications for medicine reminders"
             val importance = NotificationManager.IMPORTANCE_DEFAULT
