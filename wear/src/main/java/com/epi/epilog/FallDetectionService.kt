@@ -122,12 +122,12 @@ class FallDetectionService : Service(), SensorEventListener, LocationListener {
             Log.e("Location", "Location permission not granted")
             return
         }
-        val providers = locationManager.allProviders
-        if (providers.contains(LocationManager.GPS_PROVIDER)) {
+        // Only use GPS provider
+        if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
             locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 5000, 10f, this)
-        }
-        if (providers.contains(LocationManager.NETWORK_PROVIDER)) {
-            locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 5000, 10f, this)
+            Log.d("Location", "GPS Provider requested")
+        } else {
+            Log.e("Location", "GPS Provider not enabled")
         }
     }
 
@@ -315,5 +315,23 @@ class FallDetectionService : Service(), SensorEventListener, LocationListener {
 
     override fun onBind(intent: Intent?): IBinder? {
         return null
+    }
+
+    private fun checkLocationPermissions(): Boolean {
+        val fineLocationPermission = ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
+        val coarseLocationPermission = ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED
+        return fineLocationPermission && coarseLocationPermission
+    }
+
+    private fun requestLocationPermissions() {
+        ActivityCompat.requestPermissions(
+            this,
+            arrayOf(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION),
+            LOCATION_PERMISSION_REQUEST_CODE
+        )
+    }
+
+    companion object {
+        private const val LOCATION_PERMISSION_REQUEST_CODE = 1
     }
 }

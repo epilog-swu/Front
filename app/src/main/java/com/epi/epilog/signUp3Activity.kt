@@ -40,7 +40,7 @@ class signUp3Activity : AppCompatActivity() {
 
         verifyButton.setOnClickListener {
             val phone = editTextPhone.text.toString().trim()
-            if (phone.matches(Regex("^010-\\d{4}-\\d{4}\$"))) {
+            if (phone.matches(Regex("^\\d{3}-\\d{4}-\\d{4}\$"))) {
                 isVerificationSent = true
                 textNameError.visibility = View.GONE
                 textPhoneNumberError.visibility = View.GONE
