@@ -1,63 +1,85 @@
 package com.epi.epilog
 
-import android.content.Intent
+import android.R
+import android.content.res.ColorStateList
+import android.graphics.Color
 import android.os.Bundle
+import android.view.View
+import android.view.ViewGroup
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
-
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentManager
-import androidx.fragment.app.FragmentTransaction
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import androidx.viewpager2.widget.ViewPager2
-import com.epi.epilog.databinding.ActivityMainNavBinding
-import com.epi.epilog.databinding.ActivityModeSelectBinding
-import com.epi.epilog.databinding.ActivitySeizureEditBinding
-import com.epi.epilog.databinding.ActivityStartBinding
-import com.epi.epilog.databinding.FragmentSeizureEdit9Binding
-import com.epi.epilog.databinding.MainCalendarBinding
 import com.epi.epilog.databinding.ActivityMainBinding
-import com.epi.epilog.databinding.SignUp1Binding
-import com.epi.epilog.databinding.SignUp2Binding
-import com.epi.epilog.databinding.SignUp3Binding
-import com.epi.epilog.databinding.SignUp4Binding
-import com.epi.epilog.databinding.SignUp5Binding
-import com.epi.epilog.databinding.MedicineAddModifyBinding
-import com.epi.epilog.databinding.MedicineDetailBinding
-import com.epi.epilog.databinding.MedicineChecklistBinding
-import com.google.android.material.tabs.TabLayoutMediator
+import com.ismaeldivita.chipnavigation.ChipNavigationBar
 
 
 class MainActivity : AppCompatActivity() {
+    private val binding by lazy { ActivityMainBinding.inflate(layoutInflater) }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-
         // StartActivity를 시작하고 현재 액티비티를 종료합니다.
-        val intent = Intent(this, startActivity::class.java)
-        startActivity(intent)
-        finish()
+//        val intent = Intent(this, startActivity::class.java)
+//        startActivity(intent)
+//        finish()
 
-        val binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        // ViewPager2와 Adapter 설정
-        val viewPager = binding.calenderGraphViewpager
-        val adapter = CalendarPagerAdapter(this)
-        viewPager.adapter = adapter
+        with(binding) {
+            val buttonBackgroundColor = ColorStateList(
+                arrayOf(intArrayOf(android.R.attr.state_selected), intArrayOf()),
+                intArrayOf(Color.WHITE, Color.TRANSPARENT)
+            )
 
-        // TabLayout과 ViewPager2 연결
-        val tabLayout = binding.tabs
-        TabLayoutMediator(tabLayout, viewPager) { tab, position ->
-            tab.text = when (position) {
-                0 -> "캘린더"
-                1 -> "그래프"
-                else -> null
+            calendarButton.setCardBackgroundColor(buttonBackgroundColor)
+            graphButton.setCardBackgroundColor(buttonBackgroundColor)
+
+            calendarButton.setOnClickListener { calenderGraphViewpager.currentItem = 0 }
+            graphButton.setOnClickListener { calenderGraphViewpager.currentItem = 1 }
+
+            val adapter = CalendarPagerAdapter(this@MainActivity)
+            with(calenderGraphViewpager) {
+                this.adapter = adapter
+                this.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
+                    override fun onPageSelected(position: Int) {
+                        super.onPageSelected(position)
+
+                        if (position == 0) {
+                            calendarButton.isSelected = true
+                            graphButton.isSelected = false
+                        } else {
+                            calendarButton.isSelected = false
+                            graphButton.isSelected = true
+                        }
+                    }
+                })
             }
-        }.attach()
+
+            calenderGraphViewpager.adapter = adapter
+
+        }
 
         // 기본 프래그먼트 설정
         if (savedInstanceState == null) {
-            viewPager.currentItem = 0 // 첫 번째 페이지로 설정
+            binding.calenderGraphViewpager.currentItem = 0 // 첫 번째 페이지로 설정
+        }
+        // 텍스트 숨기기
+        hideChipNavigationBarText(binding.mainLayoutBottomNavigation)
+    }
+
+    private fun hideChipNavigationBarText(chipNavigationBar: ChipNavigationBar) {
+        val menuView = chipNavigationBar.getChildAt(0) as ViewGroup
+        for (i in 0 until menuView.childCount) {
+            val itemView = menuView.getChildAt(i) as ViewGroup
+            for (j in 0 until itemView.childCount) {
+                val innerView = itemView.getChildAt(j)
+                if (innerView is TextView) {
+                    innerView.visibility = View.GONE  // 텍스트 뷰 숨기기
+                }
+            }
         }
     }
 }

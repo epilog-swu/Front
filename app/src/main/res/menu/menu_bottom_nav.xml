@@ -1,19 +1,34 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    app:cnb_unselectedColor="#666666">
     <item
         android:id="@+id/fragment_home"
-        android:title="홈"
-        android:icon="@drawable/bottom_nav_calender"/>
+        android:title=""
+        android:icon="@drawable/bottom_nav_calender"
+        app:cnb_iconColor="@color/navigation_color_add"
+        app:cnb_textAppearance = "@style/BottomNavigationView.TextAppearance"
+        style="@style/BottomNavigationView"/>
     <item
         android:id="@+id/fragment_search"
-        android:title="복약"
-        android:icon="@drawable/bottom_nav_capsule"/>
+        android:title=""
+        android:icon="@drawable/bottom_nav_capsule"
+        app:cnb_iconColor="@color/navigation_color_add"
+        app:cnb_textAppearance = "@style/BottomNavigationView.TextAppearance"
+        style="@style/BottomNavigationView"/>
     <item
         android:id="@+id/fragment_favorite"
-        android:title="연동"
-        android:icon="@drawable/bottom_nav_watch"/>
+        android:title=""
+        android:icon="@drawable/bottom_nav_watch"
+        app:cnb_iconColor="@color/navigation_color_add"
+        app:cnb_textAppearance = "@style/BottomNavigationView.TextAppearance"
+        style="@style/BottomNavigationView"/>
     <item
         android:id="@+id/fragment_settings"
-        android:title="내정보"
-        android:icon="@drawable/bottom_nav_my"/>
+        android:title=""
+        android:icon="@drawable/bottom_nav_my"
+        app:cnb_iconColor="@color/navigation_color_add"
+        app:cnb_textAppearance = "@style/BottomNavigationView.TextAppearance"
+        app:cnb_minExpandedWidth="0dp"
+        style="@style/BottomNavigationView"/>
 </menu>
