@@ -61,6 +61,9 @@ dependencies {
     implementation("com.kizitonwose.calendar:view:2.5.1") // View
     coreLibraryDesugaring ("com.android.tools:desugar_jdk_libs:2.0.4")
 
+    //바텀네비게이션추가
+    implementation ("com.github.ismaeldivita:chip-navigation-bar:1.4.0")
+
     implementation ("androidx.core:core:1.10.1")
     implementation ("androidx.appcompat:appcompat:1.7.0")
     implementation ("cz.msebera.android:httpclient:4.4.1.2")

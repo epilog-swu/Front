@@ -1,0 +1,12 @@
+<resources>
+    <!-- 기존 스타일이 여기에 있을 수 있습니다 -->
+
+    <style name="BottomNavigationView" parent="Widget.MaterialComponents.BottomNavigationView">
+        <item name="itemTextAppearanceInactive">@style/BottomNavigationView.TextAppearance</item>
+        <item name="itemTextAppearanceActive">@style/BottomNavigationView.TextAppearance</item>
+    </style>
+
+    <style name="BottomNavigationView.TextAppearance" parent="TextAppearance.AppCompat.Caption">
+        <item name="android:textSize">0sp</item>
+    </style>
+</resources>

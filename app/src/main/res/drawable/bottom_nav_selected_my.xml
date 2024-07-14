@@ -1,0 +1,27 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="40dp"
+    android:height="40dp"
+    android:viewportWidth="40"
+    android:viewportHeight="40">
+
+    <!-- Rectangle with rounded corners -->
+    <path
+        android:fillColor="#E3E0F6"
+        android:pathData="M0 15C0 6.71573 6.71573 0 15 0H25C33.2843 0 40 6.71573 40 15V25C40 33.2843 33.2843 40 25 40H15C6.71573 40 0 33.2843 0 25V15Z"/>
+
+    <!-- Circle path -->
+    <path
+        android:strokeColor="#8377D8"
+        android:strokeWidth="2.08333"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round"
+        android:pathData="M20 21C22.7614 21 25 18.7614 25 16C25 13.2386 22.7614 11 20 11C17.2386 11 15 13.2386 15 16C15 18.7614 17.2386 21 20 21Z"/>
+
+    <!-- Bottom curve path -->
+    <path
+        android:strokeColor="#8377D8"
+        android:strokeWidth="2.08333"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round"
+        android:pathData="M28 29C28 26.8783 27.1571 24.8434 25.6569 23.3431C24.1566 21.8429 22.1217 21 20 21C17.8783 21 15.8434 21.8429 14.3431 23.3431C12.8429 24.8434 12 26.8783 12 29"/>
+</vector>

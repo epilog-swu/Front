@@ -10,4 +10,10 @@
     <color name="main_purple">#8377D8</color>
     <color name="light_purple">#F6F5FA</color>
     <color name="grey">@color/덜진한회색</color>
+
+
+    <color name="navigation_color">#E3E0F6</color>
+    <color name="navigation_color_add">#6200EE</color>
+
+
 </resources>
