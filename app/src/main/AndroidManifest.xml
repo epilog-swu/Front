@@ -13,25 +13,24 @@
         android:theme="@style/Theme.AppCompat.DayNight.NoActionBar"
         tools:targetApi="31">
         <activity android:name=".signUp1Activity"/>
+
         <activity android:name=".signUp2Activity"/>
-        <activity android:name=".signUp3Activity"/>
+        <activity android:name=".signUp3Activity"
+            android:exported="true"
+            android:label="@string/signup"
+            android:theme="@style/Theme.Epilog">
+        <intent-filter>
+            <action android:name="android.intent.action.MAIN" />
+            <category android:name="android.intent.category.LAUNCHER" />
+        </intent-filter>
+        </activity>
         <activity android:name=".signUp4Activity"/>
 
         <activity android:name=".signUp5Activity"/>
         <activity android:name=".DiaryWriteActivity"/>
 
 
-        <activity android:name=".DiaryEditActivity"
-
-            android:exported="true"
-            android:label="@string/app_name"
-            android:theme="@style/Theme.Epilog">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
+        <activity android:name=".DiaryEditActivity"/>
       <activity android:name=".startActivity"/>
         <activity
             android:name=".MainActivity"/>

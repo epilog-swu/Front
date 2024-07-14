@@ -9,7 +9,7 @@ import com.epi.epilog.R
 
 class MealNotificationReceiver : BroadcastReceiver() {
     override fun onReceive(context: Context, intent: Intent) {
-        val notificationId = intent.getIntExtra("notificationId", 0)
+        val notificationId = intent.getIntExtra("notificationId", 2)
         val message = intent.getStringExtra("message")
 
         val notificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager

@@ -9,6 +9,7 @@ import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.Toolbar
 
 class signUp3Activity : AppCompatActivity() {
 
@@ -28,6 +29,16 @@ class signUp3Activity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.sign_up_3)
 
+        // Toolbar 설정
+        val toolbar: Toolbar = findViewById(R.id.toolbar)
+        setSupportActionBar(toolbar)
+
+        // 기본 타이틀 숨기기
+        supportActionBar?.setDisplayShowTitleEnabled(false)
+
+        // Custom TextView 설정
+        val toolbarTitle: TextView = findViewById(R.id.toolbar_title)
+        toolbarTitle.text = getString(R.string.signup)
         editTextName = findViewById(R.id.editTextText)
         editTextPhone = findViewById(R.id.editTextText2)
         editTextVerification = findViewById(R.id.editTextText3)

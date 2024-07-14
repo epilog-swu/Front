@@ -6,8 +6,8 @@
     android:gravity="center">
 
     <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_width="295dp"
+        android:layout_height="208dp"
         android:background="@drawable/dialog_background"
         android:gravity="center"
         android:minWidth="315dp"
@@ -43,20 +43,20 @@
             <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/dialog_no_btn"
                 android:layout_width="0dp"
-                android:layout_height="45dp"
+                android:layout_height="50dp"
                 android:layout_marginEnd="8dp"
                 android:layout_weight="1"
                 android:text="취소"
                 android:textStyle="bold"
-                android:background="@drawable/seizure_button" />
+                android:background="@drawable/main_light_purple_shape"/>
 
             <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/dialog_yes_btn"
                 android:layout_width="0dp"
-                android:layout_height="45dp"
+                android:layout_height="50dp"
                 android:layout_weight="1"
                 android:text="확인"
-                android:background="@drawable/seizure_button" />
+                android:background="@drawable/main_light_purple_shape"/>
         </LinearLayout>
     </LinearLayout>
 </RelativeLayout>

@@ -50,7 +50,6 @@ class MealActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_meal)
-        requestExactAlarmPermission()
         setupRetrofit()
         createNotificationChannel()  // Ensure channel is created here
 
@@ -169,7 +168,7 @@ class MealActivity : ComponentActivity() {
 
     private fun scheduleNotification(id: Int, time: Long, message: String) {
         try {
-            val intent = Intent(this, MedicineNotificationReceiver::class.java).apply {
+            val intent = Intent(this, MealNotificationReceiver::class.java).apply {
                 putExtra("notificationId", id)
                 putExtra("message", message)
             }
