@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.Toolbar
 import androidx.core.view.setMargins
 
 class signUp4Activity : AppCompatActivity() {
@@ -21,10 +22,20 @@ class signUp4Activity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.sign_up_4)
+        // Toolbar 설정
+        val toolbar: Toolbar = findViewById(R.id.toolbar)
+        setSupportActionBar(toolbar)
+
+        // 기본 타이틀 숨기기
+        supportActionBar?.setDisplayShowTitleEnabled(false)
+
+        // Custom TextView 설정
+        val toolbarTitle: TextView = findViewById(R.id.toolbar_title)
+        toolbarTitle.text = getString(R.string.signup)
 
         editText = findViewById(R.id.editTextText)
         addButton = findViewById(R.id.male_button)
-        nextButton = findViewById(R.id.next_button)
+        nextButton = findViewById(R.id.button5)
         medicationList = findViewById(R.id.medication_list)
 
         addButton.setOnClickListener {
@@ -52,8 +63,8 @@ class signUp4Activity : AppCompatActivity() {
                 LinearLayout.LayoutParams.MATCH_PARENT,
                 resources.getDimensionPixelSize(R.dimen.button_height)
             ).apply {
-                setMargins(30, 0, 25, 16)
-                setPadding(15, 0, 0, 0)
+                setMargins(50, 0, 50, 16)
+                setPadding(50, 0, 0, 0)
 
             }
 

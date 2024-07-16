@@ -44,7 +44,7 @@ class signUp3Activity : AppCompatActivity() {
         editTextVerification = findViewById(R.id.editTextText3)
         verifyButton = findViewById(R.id.verify_button)
         confirmButton = findViewById(R.id.confirm_button)
-        nextButton = findViewById(R.id.next_button)
+        nextButton = findViewById(R.id.button5)
         textViewTimer = findViewById(R.id.textView6)
         textNameError = findViewById(R.id.textName)
         textPhoneNumberError = findViewById(R.id.textPhoneNumber)

@@ -11,6 +11,18 @@
         <string name="please_fill_all">모든 항목을 작성해주세요</string>
         <string name="next">다음</string>
 
+\
+        <string name="diary_edit_title">일지 작성</string>
+        <string name="enter_time_period">*시간대를 입력해주세요</string>
+        <string name="before_breakfast">아침식사 전</string>
+        <string name="after_breakfast">아침식사 후</string>
+        <string name="before_lunch">점심식사 전</string>
+        <string name="after_lunch">점심식사 후</string>
+        <string name="before_dinner">저녁식사 전</string>
+        <string name="after_dinner">저녁식사 후</string>
+        <string name="before_sleep">자기 전</string>
+        <string name="enter_time">시간 입력</string>
+
 
     <string name="medicine_name">약 이름</string>
     <string name="medicine_hint">약 이름을 입력하세요</string>

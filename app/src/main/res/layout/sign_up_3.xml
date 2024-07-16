@@ -17,7 +17,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
 
-        <!-- Custom TextView for Toolbar Title -->
         <TextView
             android:id="@+id/toolbar_title"
             android:layout_width="wrap_content"

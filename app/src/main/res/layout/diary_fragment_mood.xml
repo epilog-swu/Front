@@ -12,7 +12,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="오늘의 기분 혹은 분위기를 선택해주세요"
-        android:textSize="18sp"
+        android:textSize="16sp"
         android:textColor="@color/검정색"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"

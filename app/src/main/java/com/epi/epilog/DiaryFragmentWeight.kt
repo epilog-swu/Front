@@ -71,7 +71,7 @@ class DiaryFragmentWeight : Fragment() {
     fun isFilledOut(): Boolean {
         val weight = weightEditText?.text?.toString() ?: ""
         val bodyFat = bodyFatEditText?.text?.toString() ?: ""
-        return (weight.isNotEmpty() && weight != "80") || (bodyFat.isNotEmpty() && bodyFat != "30")
+        return weight.isNotEmpty()  || bodyFat.isNotEmpty()
     }
 
 }

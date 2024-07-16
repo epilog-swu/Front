@@ -9,5 +9,4 @@
     <color name="white">#FFFFFFFF</color>
     <color name="main_purple">#8377D8</color>
     <color name="light_purple">#F6F5FA</color>
-    <color name="grey">@color/덜진한회색</color>
 </resources>
