@@ -1,62 +1,78 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:background="#80000000"
-    android:gravity="center">
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="295dp"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center"
+    android:background="@drawable/dialog_background"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <LinearLayout
-        android:layout_width="match_parent"
+    <TextView
+        android:id="@+id/dialogThemeTV"
+        android:text="일지를 저장하시겠습니까?"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="@drawable/dialog_background"
+        android:textColor="@color/black"
+        android:textSize="16sp"
+        android:layout_marginTop="20dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/dialogline"/>
+
+    <ImageView
+        android:id="@+id/dialogline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/dialog_line"
+        android:layout_marginTop="10dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/dialogThemeTV"
+        app:layout_constraintBottom_toTopOf="@+id/dialogMessageTV"/>
+
+    <TextView
+        android:id="@+id/dialogMessageTV"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:gravity="center"
-        android:minWidth="315dp"
-        android:orientation="vertical"
-        android:padding="20dp">
+        android:textColor="@color/black"
+        android:textSize="14sp"
+        android:text="저장하지 않으면 기록한 데이터가\n
+         보관되지 않습니다"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/dialogline"
+        app:layout_constraintBottom_toTopOf="@+id/dialogCancleBtn"/>
 
-        <TextView
-            android:id="@+id/dialog_title_tv"
-            android:layout_width="match_parent"
-            android:layout_height="40dp"
-            android:layout_marginTop="8dp"
-            android:gravity="center"
-            android:textColor="@color/검정색"
-            android:textSize="16dp"
-            android:text="일지를 저장하시겠습니까?" />
 
-        <TextView
-            android:id="@+id/dialog_desc_tv"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:gravity="center"
-            android:textSize="14sp"
-            android:textColor="@color/검정색"
-            android:text="저장하지 않으면 기록한 데이터가\n보관되지 않습니다" />
+    <Button
+        android:id="@+id/dialogCancleBtn"
+        android:layout_width="114dp"
+        android:layout_height="50dp"
+        android:background="@drawable/epi_dialog_btn"
+        android:text="취소"
+        android:layout_marginStart="20dp"
+        android:layout_marginBottom="10dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/dialogOkBtn"
+        app:layout_constraintTop_toBottomOf="@id/dialogMessageTV"
+        app:layout_constraintBottom_toBottomOf="parent"/>
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:orientation="horizontal">
 
-            <androidx.appcompat.widget.AppCompatButton
-                android:id="@+id/dialog_no_btn"
-                android:layout_width="0dp"
-                android:layout_height="45dp"
-                android:layout_marginEnd="8dp"
-                android:layout_weight="1"
-                android:text="취소"
-                android:textStyle="bold"
-                android:background="@drawable/seizure_button" />
+    <Button
+        android:id="@+id/dialogOkBtn"
+        android:layout_width="114dp"
+        android:layout_height="50dp"
+        android:background="@drawable/epi_dialog_btn"
+        android:text="확인"
+        android:layout_marginEnd="20dp"
+        app:layout_constraintStart_toEndOf="@+id/dialogCancleBtn"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/dialogMessageTV"
+        app:layout_constraintBottom_toBottomOf="parent"/>
 
-            <androidx.appcompat.widget.AppCompatButton
-                android:id="@+id/dialog_yes_btn"
-                android:layout_width="0dp"
-                android:layout_height="45dp"
-                android:layout_weight="1"
-                android:text="확인"
-                android:background="@drawable/seizure_button" />
-        </LinearLayout>
-    </LinearLayout>
-</RelativeLayout>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

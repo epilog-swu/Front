@@ -6,8 +6,10 @@ import android.text.InputType
 import android.view.MotionEvent
 import android.widget.Button
 import android.widget.EditText
+import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.Toolbar
 
 class signUp1Activity : AppCompatActivity() {
 
@@ -19,6 +21,17 @@ class signUp1Activity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.sign_up_1)
+
+        // Toolbar 설정
+        val toolbar: Toolbar = findViewById(R.id.toolbar)
+        setSupportActionBar(toolbar)
+
+        // 기본 타이틀 숨기기
+        supportActionBar?.setDisplayShowTitleEnabled(false)
+
+        // Custom TextView 설정
+        val toolbarTitle: TextView = findViewById(R.id.toolbar_title)
+        toolbarTitle.text = getString(R.string.signup)
 
         editTextText = findViewById(R.id.editTextText)
         editTextText2 = findViewById(R.id.editTextText2)

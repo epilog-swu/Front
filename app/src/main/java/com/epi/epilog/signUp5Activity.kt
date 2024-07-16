@@ -22,7 +22,7 @@ class signUp5Activity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.sign_up_5)
 
-        completeButton = findViewById(R.id.complete_button)
+        completeButton = findViewById(R.id.button5)
         textViewCode = findViewById(R.id.textViewCode)
 
         val textViewCopy = findViewById<TextView>(R.id.textViewCopy)

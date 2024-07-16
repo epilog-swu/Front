@@ -5,8 +5,8 @@
     android:layout_weight="1"
     android:orientation="horizontal"
     android:gravity="center_vertical"
-    android:padding="5dp"
-    android:layout_marginTop="20dp"
+    android:padding="10dp"
+    android:layout_marginBottom="30dp"
     android:background="@drawable/diary_container_shape"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 

@@ -45,12 +45,14 @@
                 android:id="@+id/weightEditText"
                 android:layout_width="100dp"
                 android:layout_height="wrap_content"
-                android:text="80"
+                android:hint="80"
                 android:gravity="center"
                 android:textAlignment="center"
                 android:textSize="30sp"
-                android:textColor="@color/연한회색"
+                android:textColor="@android:color/black"
                 android:backgroundTint="@color/연한회색" />
+
+
 
             <TextView
                 android:id="@+id/unit_label_systolic"
@@ -98,15 +100,16 @@
             android:gravity="center"
             android:layout_marginTop="64dp">
 
+
             <EditText
                 android:id="@+id/bodyFatEditText"
                 android:layout_width="100dp"
                 android:layout_height="wrap_content"
-                android:text="30"
+                android:hint="30"
                 android:gravity="center"
                 android:textAlignment="center"
                 android:textSize="30sp"
-                android:textColor="@color/연한회색"
+                android:textColor="@android:color/black"
                 android:backgroundTint="@color/연한회색" />
 
             <TextView

@@ -5,8 +5,10 @@ import android.graphics.Color
 import android.os.Bundle
 import android.widget.Button
 import android.widget.EditText
+import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.Toolbar
 import androidx.core.content.ContextCompat
 
 class signUp2Activity : AppCompatActivity() {
@@ -19,11 +21,21 @@ class signUp2Activity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.sign_up_2)
+        // Toolbar 설정
+        val toolbar: Toolbar = findViewById(R.id.toolbar)
+        setSupportActionBar(toolbar)
 
-        // findViewById로 뷰를 찾습니다.
+        // 기본 타이틀 숨기기
+        supportActionBar?.setDisplayShowTitleEnabled(false)
+
+        // Custom TextView 설정
+        val toolbarTitle: TextView = findViewById(R.id.toolbar_title)
+        toolbarTitle.text = getString(R.string.signup)
+
+
         femaleButton = findViewById(R.id.female_button)
         maleButton = findViewById(R.id.male_button)
-        nextButton = findViewById(R.id.next_button)
+        nextButton = findViewById(R.id.button5)
         nameEditText = findViewById(R.id.editTextText) // 이름 입력 EditText
 
         femaleButton.setOnClickListener {

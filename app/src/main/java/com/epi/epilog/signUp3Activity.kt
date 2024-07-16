@@ -3,12 +3,15 @@ package com.epi.epilog
 import android.content.Intent
 import android.os.Bundle
 import android.os.CountDownTimer
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.View
 import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.Toolbar
 
 class signUp3Activity : AppCompatActivity() {
 
@@ -28,15 +31,67 @@ class signUp3Activity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.sign_up_3)
 
+        // Toolbar 설정
+        val toolbar: Toolbar = findViewById(R.id.toolbar)
+        setSupportActionBar(toolbar)
+
+        // 기본 타이틀 숨기기
+        supportActionBar?.setDisplayShowTitleEnabled(false)
+
+        // Custom TextView 설정
+        val toolbarTitle: TextView = findViewById(R.id.toolbar_title)
+        toolbarTitle.text = getString(R.string.signup)
         editTextName = findViewById(R.id.editTextText)
         editTextPhone = findViewById(R.id.editTextText2)
         editTextVerification = findViewById(R.id.editTextText3)
         verifyButton = findViewById(R.id.verify_button)
         confirmButton = findViewById(R.id.confirm_button)
-        nextButton = findViewById(R.id.next_button)
+        nextButton = findViewById(R.id.button5)
         textViewTimer = findViewById(R.id.textView6)
         textNameError = findViewById(R.id.textName)
         textPhoneNumberError = findViewById(R.id.textPhoneNumber)
+
+        // 전화번호 입력 중 하이픈 자동 추가 TextWatcher
+        editTextPhone.addTextChangedListener(object : TextWatcher {
+            private var isFormatting = false
+            private var deleteChar = false
+            private var lastFormattedText = ""
+
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+                if (count > 0 && after == 0) {
+                    deleteChar = true
+                }
+            }
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                if (!isFormatting) {
+                    formatPhoneNumber()
+                }
+            }
+
+            override fun afterTextChanged(s: Editable?) {}
+
+            private fun formatPhoneNumber() {
+                isFormatting = true
+                val text = editTextPhone.text.toString().replace("-", "")
+                val length = text.length
+
+                val formatted = when {
+                    length > 6 -> text.substring(0, 3) + "-" + text.substring(3, 7) + "-" + text.substring(7)
+                    length > 3 -> text.substring(0, 3) + "-" + text.substring(3)
+                    else -> text
+                }
+
+                if (formatted != lastFormattedText) {
+                    editTextPhone.setText(formatted)
+                    editTextPhone.setSelection(formatted.length)
+                    lastFormattedText = formatted
+                }
+
+                deleteChar = false
+                isFormatting = false
+            }
+        })
 
         verifyButton.setOnClickListener {
             val phone = editTextPhone.text.toString().trim()

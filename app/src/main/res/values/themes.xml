@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <style name="Theme.Epilog" parent="@style/Theme.AppCompat.DayNight.NoActionBar" />
 
     <color name="메인보라">#8377D8</color>
     <color name="연보라3">#A798E5</color>
@@ -15,13 +14,37 @@
     <color name="연한회색">#C9C8C8</color>
     <color name="완전연한회색">#F4F4F4</color>
     <color name="하얀색">#FFFFFF</color>
+
     <!-- Transparent Activity Theme -->
+
+        <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
+            <item name="windowActionBar">false</item>
+            <item name="windowNoTitle">true</item>
+            <item name="colorPrimary">@color/main_purple</item>
+            <item name="colorPrimaryDark">@color/main_purple</item>
+            <item name="colorAccent">@color/main_purple</item>
+        </style>
+
+        <style name="Theme.Epilog" parent="Theme.AppCompat.DayNight.NoActionBar">
+            <item name="windowActionBar">false</item>
+            <item name="windowNoTitle">true</item>
+            <item name="colorPrimary">@color/main_purple</item>
+            <item name="colorPrimaryDark">@color/main_purple</item>
+            <item name="colorAccent">@color/main_purple</item>
+        </style>
+
     <style name="TransparentTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="android:windowIsTranslucent">true</item>
         <item name="android:windowBackground">@android:color/transparent</item>
         <item name="android:windowContentOverlay">@null</item>
         <item name="android:backgroundDimEnabled">true</item>
     </style>
+
+
+
+
+
+
 
     <style name="RoundCornerBottomSheetDialogTheme" parent="Theme.Design.Light.BottomSheetDialog">
         <item name="bottomSheetStyle">@style/RoundCornerModalStyle</item>
