@@ -8,7 +8,7 @@
 
     <TextView
         android:id="@+id/dialogThemeTV"
-        android:text="일지를 저장하시겠습니까?"
+        android:text="일지를 변환하시겠습니까?"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textColor="@color/black"
@@ -37,8 +37,8 @@
         android:gravity="center"
         android:textColor="@color/black"
         android:textSize="14sp"
-        android:text="저장하지 않으면 기록한 데이터가\n
-         보관되지 않습니다"
+        android:text="2024년 4월 11일부터 2024년 4월 14일\n
+까지의 일지를 PDF로 변환하시겠습니까?"
         android:layout_marginTop="10dp"
         android:layout_marginBottom="10dp"
         app:layout_constraintStart_toStartOf="parent"

@@ -1,4 +1,3 @@
-// ActivityShowFailDialog.kt
 package com.epi.epilog
 
 import android.os.Bundle
@@ -10,14 +9,16 @@ class ActivityShowFailDialog : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        overridePendingTransition(0, 0)
+
         setContentView(R.layout.dialog_fail)
 
-        // Set the layout parameters to match parent for the root view
         window.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
 
-        val dialogYesBtn: Button = findViewById(R.id.dialog_yes_btn)
+        val dialogYesBtn: Button = findViewById(R.id.dialogOkBtn)
 
-        // Confirm action when the "확인" button is clicked
+
         dialogYesBtn.setOnClickListener {
             finish()
         }
@@ -25,6 +26,6 @@ class ActivityShowFailDialog : AppCompatActivity() {
 
     override fun finish() {
         super.finish()
-        overridePendingTransition(0, 0) // No animation on exit
+        overridePendingTransition(0, 0)
     }
 }

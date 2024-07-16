@@ -1,18 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <color name = "메인보라">#8377D8</color>
-    <color name = "연보라3">#A798E5</color>
-    <color name = "연보라2">#BBB0E9</color>
-    <color name = "메인연보라">#E3E0F6</color>
-    <color name = "제일연한보라">#F6F5FA</color>
-    <color name = "메인주황">#EEAE4A</color>
-    <color name = "메인연주황">#FAECD3</color>
-    <color name = "검정색">#000000</color>
-    <color name = "덜진한회색">#808080</color>
-    <color name = "연한회색">#C9C8C8</color>
-    <color name = "완전연한회색">#F4F4F4</color>
-    <color name = "하얀색">#FFFFFF</color>
+
+    <color name="메인보라">#8377D8</color>
+    <color name="연보라3">#A798E5</color>
+    <color name="연보라2">#BBB0E9</color>
+    <color name="메인연보라">#E3E0F6</color>
+    <color name="제일연한보라">#F6F5FA</color>
+    <color name="메인주황">#EEAE4A</color>
+    <color name="메인연주황">#FAECD3</color>
+    <color name="검정색">#000000</color>
+    <color name="덜진한회색">#808080</color>
+    <color name="연한회색">#C9C8C8</color>
+    <color name="완전연한회색">#F4F4F4</color>
+    <color name="하얀색">#FFFFFF</color>
+
     <!-- Transparent Activity Theme -->
 
         <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
@@ -38,12 +40,22 @@
         <item name="android:backgroundDimEnabled">true</item>
     </style>
 
-        <style name="RoundCornerBottomSheetDialogTheme" parent="Theme.Design.Light.BottomSheetDialog">
-            <item name="bottomSheetStyle">@style/RoundCornerModalStyle</item>
-        </style>
 
-        <style name="RoundCornerModalStyle" parent="Widget.Design.BottomSheet.Modal">
-            <item name="android:background">@drawable/main_bottom</item>
-        </style>
+
+
+
+
+
+    <style name="RoundCornerBottomSheetDialogTheme" parent="Theme.Design.Light.BottomSheetDialog">
+        <item name="bottomSheetStyle">@style/RoundCornerModalStyle</item>
+    </style>
+
+    <style name="RoundCornerModalStyle" parent="Widget.Design.BottomSheet.Modal">
+        <item name="android:background">@drawable/main_bottom</item>
+    </style>
+
+    <style name="RoundCornerDialogStyle" parent="Theme.AppCompat.Dialog.Alert">
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:windowMinWidthMinor">85%</item>
+    </style>
 </resources>
-
