@@ -1,4 +1,5 @@
 <resources>
+    <string name="msg_token_fmt">FCM Token: %s</string>
     <string name="app_name">wear</string>
     <!--
     This string is used for square devices and overridden by hello_world in

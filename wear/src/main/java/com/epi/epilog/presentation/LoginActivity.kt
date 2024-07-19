@@ -11,10 +11,13 @@ import android.provider.Settings
 import android.util.Log
 import android.widget.Button
 import android.widget.EditText
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import com.epi.epilog.R
 import com.epi.epilog.presentation.theme.Data
 import com.epi.epilog.presentation.theme.api.RetrofitService
+import com.epi.epilog.presentation.theme.api.TokenData
+import com.google.firebase.messaging.FirebaseMessaging
 import com.google.gson.GsonBuilder
 import retrofit2.Call
 import retrofit2.Callback
@@ -29,15 +32,14 @@ class LoginActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        initializeRetrofit()
+
         if (isLoggedIn()) { //로그인한 상태일 경우
-            navigateToMainActivity()
-            finish()
+            getTokenAndNavigate()
             return
         }
 
         setContentView(R.layout.login)
-
-        initializeRetrofit()
 
         val codeInput = findViewById<EditText>(R.id.editTextText)
         val loginButton = findViewById<Button>(R.id.button)
@@ -71,7 +73,7 @@ class LoginActivity : ComponentActivity() {
                         Log.d("LoginActivity", "Server Response: $it")
                         saveTokenToSession(it) //토큰 저장
                         setLoggedIn(true)
-                        navigateToMainActivity() //메인 액티비티로 이동
+                        getTokenAndNavigate() //FCM 토큰 가져와서 출력 및 메인 액티비티로 이동
                         disableBatteryOptimization()
                     }
                 } else {
@@ -101,12 +103,63 @@ class LoginActivity : ComponentActivity() {
         return sharedPreferences.getBoolean("LoggedIn", false)
     }
 
+    private fun getTokenAndNavigate() {
+        FirebaseMessaging.getInstance().token.addOnCompleteListener { task ->
+            if (!task.isSuccessful) {
+                Log.w("FCM", "Fetching FCM registration token failed", task.exception)
+                return@addOnCompleteListener
+            }
+
+            // FCM 토큰
+            val token = task.result
+            Log.d("FCM", "FCM Token: $token")
+
+            // FCM 토큰 서버로 보내기
+            sendTokenToServer(token)
+
+            navigateToMainActivity()
+            finish()
+        }
+    }
+
+    private fun sendTokenToServer(token: String) {
+        val sharedPreferences = getSharedPreferences("AppPrefs", Context.MODE_PRIVATE)
+        val authToken = sharedPreferences.getString("AuthToken", null)
+
+        if (authToken.isNullOrEmpty()) {
+            Log.d("FCM", "Auth token is missing")
+            return
+        }
+
+        val tokenData = TokenData(token = token)
+        val call = retrofitService.postToken("Bearer $authToken", tokenData)
+        call.enqueue(object : Callback<ApiResponse> {
+            override fun onResponse(call: Call<ApiResponse>, response: Response<ApiResponse>) {
+                if (response.isSuccessful) {
+                    val tokenResponse = response.body()
+                    if (tokenResponse?.success == true) {
+                        Log.d("FCM", "Token saved successfully on the server: ${tokenResponse.message}")
+                    } else {
+                        Log.d("FCM", "Failed to save token on the server: ${tokenResponse?.message}")
+                    }
+                } else {
+                    Log.d("FCM", "Error saving token on the server: ${response.errorBody()?.string()}")
+                }
+            }
+
+            override fun onFailure(call: Call<ApiResponse>, t: Throwable) {
+                Log.d("LoginActivity", "Failed to send token to server: ${t.message}")
+            }
+        })
+    }
+
+
+
     private fun navigateToMainActivity() {
         val intent = Intent(this, MainActivity::class.java)
         startActivity(intent)
         finish()
     }
-
 
     private fun disableBatteryOptimization() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
@@ -135,5 +188,9 @@ class LoginActivity : ComponentActivity() {
         }
 
         dialog.show()
+    }
+
+    companion object {
+        private const val TAG = "LoginActivity"
     }
 }

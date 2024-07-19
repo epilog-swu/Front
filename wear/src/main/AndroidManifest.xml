@@ -11,17 +11,17 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
-    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
     <uses-permission android:name="android.permission.HIGH_SAMPLING_RATE_SENSORS" />
     <uses-permission android:name="android.permission.BODY_SENSORS" />
-    <uses-feature android:name="android.hardware.type.watch" />
     <uses-permission android:name="android.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS"/>
-    <uses-permission android:name="android.permission.SYSTEM_ALERT_WIND"/>
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW"/>
     <uses-permission android:name="android.permission.RECORD_AUDIO" /> <!-- 추가된 부분 -->
-    <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM"/> <!--체크리스트 알람보내기 -->=======
+    <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM"/> <!--체크리스트 알람보내기 -->
 
+    <uses-feature android:name="android.hardware.type.watch" />
 
     <application
+        android:name=".presentation.MyApplication"
         android:networkSecurityConfig="@xml/network_secutiry_config"
         android:allowBackup="true"
         android:icon="@drawable/logo"
@@ -33,6 +33,14 @@
             android:exported="true"
             android:theme="@style/Theme.AppCompat.DayNight.NoActionBar" >
         </activity>
+
+        <service
+            android:name=".presentation.MyFirebaseMessagingService"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT"/>
+            </intent-filter>
+        </service>
 
         <activity android:name=".presentation.LoginActivity"
             android:exported="true">
@@ -53,6 +61,7 @@
         <activity android:name=".presentation.MealActivity"
             android:exported="true"
             android:theme="@style/Theme.AppCompat.DayNight.NoActionBar" />
+
         <activity android:name=".presentation.SoundRecognizerActivity" />
 
         <activity android:name=".presentation.FallDetectionActivity"
@@ -79,8 +88,6 @@
             </intent-filter>
         </receiver>
 
-
-
         <uses-library
             android:name="com.google.android.wearable"
             android:required="true" />
@@ -91,8 +98,6 @@
 
         <receiver android:name=".presentation.MealNotificationReceiver" />
         <receiver android:name=".presentation.MedicineNotificationReceiver" />
-
-
 
     </application>
 </manifest>
