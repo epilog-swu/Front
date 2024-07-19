@@ -1,6 +1,7 @@
 plugins {
     alias(libs.plugins.androidApplication)
     alias(libs.plugins.jetbrainsKotlinAndroid)
+    id("com.google.gms.google-services") // Google services Gradle plugin 추가
 }
 
 android {
@@ -94,4 +95,15 @@ dependencies {
 
     implementation ("com.google.android.gms:play-services-location:21.0.1")
 
+
+    // Firebase 메시징 서비스
+    implementation("com.google.firebase:firebase-messaging:23.0.5")
+    implementation(platform("com.google.firebase:firebase-bom:33.1.2"))
+    implementation("com.google.firebase:firebase-analytics")
+
+    //웹 소켓
+    implementation("org.java-websocket:Java-WebSocket:1.5.2")
 }
+
+// Google 서비스 플러그인을 적용
+apply(plugin = "com.google.gms.google-services")

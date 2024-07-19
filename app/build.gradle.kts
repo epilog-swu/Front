@@ -1,6 +1,7 @@
 plugins {
     alias(libs.plugins.androidApplication)
     alias(libs.plugins.jetbrainsKotlinAndroid)
+    id("com.google.gms.google-services") // Google services Gradle plugin 추가
 }
 
 android {
@@ -58,7 +59,9 @@ dependencies {
 
 
     //메인 달력 위해서 추가
-    implementation("com.kizitonwose.calendar:view:2.5.1") // View
+    implementation("com.kizitonwose.calendar:view:2.5.1")
+    implementation(libs.androidx.legacy.support.v4)
+    implementation(libs.androidx.recyclerview) // View
     coreLibraryDesugaring ("com.android.tools:desugar_jdk_libs:2.0.4")
 
     //바텀네비게이션추가
@@ -92,4 +95,11 @@ dependencies {
     androidTestImplementation(libs.androidx.ui.test.junit4)
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
+    // Firebase 메시징 서비스
+    implementation(platform("com.google.firebase:firebase-bom:33.1.2"))
+    implementation("com.google.firebase:firebase-analytics")
+    implementation("com.google.firebase:firebase-messaging:23.0.5")
 }
+
+// Google 서비스 플러그인을 적용합니다
+apply(plugin = "com.google.gms.google-services")

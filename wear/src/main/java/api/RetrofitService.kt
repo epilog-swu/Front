@@ -17,6 +17,7 @@ import retrofit2.http.POST
 import retrofit2.http.Path
 import retrofit2.http.Query
 
+
 interface RetrofitService {
 
     @Headers("Content-Type: application/json")
@@ -73,7 +74,16 @@ interface RetrofitService {
         @Header("Authorization") authToken: String,
         @Body updateInfo: MealUpdateInfo
     ): Call<ApiResponse>
+
+
+        @POST("/api/fcm/token")
+        fun postToken(
+            @Header("Authorization") authToken: String,
+            @Body tokenData: TokenData
+        ): Call<ApiResponse>
 }
+
+data class TokenData(val token: String)
 
 data class SensorData(
     val x: Float,
