@@ -6,12 +6,14 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
+import com.epi.epilog.databinding.CalendarMonthYearBinding
+import com.epi.epilog.databinding.MainCalendarBinding
+import com.epi.epilog.databinding.EpiDialogCustomBinding
 import com.kizitonwose.calendar.core.CalendarDay
 import com.kizitonwose.calendar.core.CalendarMonth
 import com.kizitonwose.calendar.core.DayPosition
@@ -30,9 +32,13 @@ import java.util.Locale
 
 class CalendarFragment : Fragment() {
 
+
+    private var _binding: MainCalendarBinding? = null
+    private val binding get() = _binding!!
+    //기간 선택 (비)활성화 변수
+    private var isDateSelectionEnabled: Boolean = false
     private var rangeStartDate: LocalDate? = null
     private var rangeEndDate: LocalDate? = null
-    private lateinit var calendarView: CalendarView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -44,17 +50,14 @@ class CalendarFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        val view = inflater.inflate(R.layout.main_calendar, container, false)
+        _binding = MainCalendarBinding.inflate(inflater, container, false)
+        val view = binding.root
 
         // 커스텀 대화상자 생성
-        val dialogView = LayoutInflater.from(context).inflate(R.layout.epi_dialog_custom, null)
+        val dialogBinding = EpiDialogCustomBinding.inflate(inflater, container, false)
 
-        calendarView = view.findViewById(R.id.calendarView)
-        val titlesContainer = view.findViewById<ViewGroup>(R.id.MonthYear)
-        val monthYearTextView = titlesContainer.findViewById<TextView>(R.id.calendarMonthYearText)
-        val pdfCancleButton = view.findViewById<View>(R.id.pdf_cancel_btn)
-        val pdfRangeButton = view.findViewById<View>(R.id.pdf_range_btn)
-        val pdfDownloadButton = view.findViewById<View>(R.id.pdf_download_btn)
+        // 포함된 레이아웃의 바인딩 초기화
+        val monthYearBinding = CalendarMonthYearBinding.bind(binding.MonthYear.root)
 
         val currentMonth = YearMonth.now()
         val startMonth = currentMonth.minusMonths(100)  // Adjust as needed
@@ -64,17 +67,17 @@ class CalendarFragment : Fragment() {
         val daysOfWeek = daysOfWeek(firstDayOfWeek = DayOfWeek.SUNDAY)
 
         // MonthScrollListener를 통해 년/월 정보 업데이트
-        calendarView.monthScrollListener = { month ->
+        binding.calendarView.monthScrollListener = { month ->
             val yearMonth = month.yearMonth
             val formatter = DateTimeFormatter.ofPattern("yyyy년 M월", Locale.getDefault())
-            monthYearTextView.text = yearMonth.format(formatter)
+            monthYearBinding.calendarMonthYearText.text = yearMonth.format(formatter)
         }
 
-        calendarView.setup(startMonth, endMonth, firstDayOfWeek)
-        calendarView.scrollToMonth(currentMonth)
+        binding.calendarView.setup(startMonth, endMonth, firstDayOfWeek)
+        binding.calendarView.scrollToMonth(currentMonth)
 
         // Setting the DayBinder
-        calendarView.dayBinder = object : MonthDayBinder<DayViewContainer> {
+        binding.calendarView.dayBinder = object : MonthDayBinder<DayViewContainer> {
             override fun create(view: View) = DayViewContainer(view)
             override fun bind(container: DayViewContainer, day: CalendarDay) {
                 container.textView.text = day.date.dayOfMonth.toString()
@@ -101,6 +104,14 @@ class CalendarFragment : Fragment() {
                     }
                     container.textView.setOnClickListener {
                         onDateSelected(day.date)
+
+                        if(isDateSelectionEnabled){
+                            //바텀시트2 보이기
+                        }
+                        else{
+                            //바텀시트1보이기
+                            showBottomSheet(day.date.toString())
+                        }
                     }
                 } else {
                     container.textView.setTextColor(Color.GRAY)
@@ -111,7 +122,7 @@ class CalendarFragment : Fragment() {
         }
 
         // MonthHeaderBinder를 통해 요일 정보 바인딩
-        calendarView.monthHeaderBinder = object : MonthHeaderFooterBinder<MonthViewContainer> {
+        binding.calendarView.monthHeaderBinder = object : MonthHeaderFooterBinder<MonthViewContainer> {
             override fun create(view: View) = MonthViewContainer(view)
             override fun bind(container: MonthViewContainer, month: CalendarMonth) {
                 val daysOfWeek = daysOfWeek(firstDayOfWeek = firstDayOfWeekFromLocale())
@@ -132,7 +143,11 @@ class CalendarFragment : Fragment() {
             }
         }
 
-        pdfRangeButton.setOnClickListener {
+
+        //기간선택하기를 누르면, 활성화해주고, 범위선택
+        binding.pdfRangeBtn.setOnClickListener {
+
+            isDateSelectionEnabled = true
 
             // 기간선택 끝났는지 확인
             if (rangeStartDate != null && rangeEndDate != null) {
@@ -147,40 +162,33 @@ class CalendarFragment : Fragment() {
             }
 
             //버튼 활성화
-            if (pdfRangeButton.visibility == View.VISIBLE) {
-                pdfDownloadButton.visibility = View.VISIBLE
-                pdfCancleButton.visibility = View.VISIBLE
-                pdfRangeButton.visibility = View.INVISIBLE
+            if (binding.pdfRangeBtn.visibility == View.VISIBLE) {
+                binding.pdfDownloadBtn.visibility = View.VISIBLE
+                binding.pdfCancelBtn.visibility = View.VISIBLE
+                binding.pdfRangeBtn.visibility = View.INVISIBLE
             }
         }
 
-        pdfDownloadButton.setOnClickListener {
+        //PDF 변환하기를 누르면, 기간 선택하고 대화상자 생성
+        binding.pdfDownloadBtn.setOnClickListener {
             // rangeStartDate와 rangeEndDate를 이용하여 날짜 범위 문자열 생성
             if (rangeStartDate != null && rangeEndDate != null) {
                 val dateFormatter = DateTimeFormatter.ofPattern("yyyy년 M월 d일", Locale.getDefault())
 
-                // 커스텀 대화상자 생성//현아 대화상자 적용, epi_dialog_custom 레이아웃으로 적용하기
-                val dialogView =
-                    LayoutInflater.from(context).inflate(R.layout.epi_dialog_custom, null)
+                // 커스텀 대화상자 생성
+                val dialogBinding = EpiDialogCustomBinding.inflate(inflater, container, false)
 
-                //현아 대화상자 적용!!! 여기 확인
-                val dialogBuilder =
-                    AlertDialog.Builder(requireContext(), R.style.RoundCornerDialogStyle)
-                dialogBuilder.setView(dialogView)
+                // 대화상자 빌더 설정
+                val dialogBuilder = AlertDialog.Builder(requireContext(), R.style.RoundCornerDialogStyle)
+                dialogBuilder.setView(dialogBinding.root)
 
-
-                //현아 대화상자 적용 //바인딩 변수명 바꿔주기
-                val dialogMessage = dialogView.findViewById<TextView>(R.id.dialogMessageTV)
-                val cancelButton = dialogView.findViewById<Button>(R.id.dialogCancleBtn)
-                val confirmButton = dialogView.findViewById<Button>(R.id.dialogOkBtn)
-
-                // 날짜 범위 문자열 설정
-                dialogMessage.text = "$rangeStartDate 부터 $rangeEndDate \n 까지의 일지를 PDF로 변환하시겠습니까?"
+                // 대화상자 메시지 설정
+                dialogBinding.dialogMessageTV.text = "$rangeStartDate 부터 $rangeEndDate \n 까지의 일지를 PDF로 변환하시겠습니까?"
 
                 val alertDialog = dialogBuilder.create()
 
-                cancelButton.setOnClickListener { alertDialog.dismiss() }
-                confirmButton.setOnClickListener {
+                dialogBinding.dialogCancleBtn.setOnClickListener { alertDialog.dismiss() }
+                dialogBinding.dialogOkBtn.setOnClickListener {
                     // PDF 변환 로직 추가
                     Toast.makeText(context, "PDF로 변환 중...", Toast.LENGTH_SHORT).show()
                     alertDialog.dismiss()
@@ -192,25 +200,69 @@ class CalendarFragment : Fragment() {
             }
         }
 
+        //취소하기를 누르면
+        binding.pdfCancelBtn.setOnClickListener {
+            isDateSelectionEnabled = false
+
+            //버튼 (비)활성화
+            if (binding.pdfCancelBtn.visibility == View.VISIBLE) {
+                binding.pdfDownloadBtn.visibility = View.INVISIBLE
+                binding.pdfCancelBtn.visibility = View.INVISIBLE
+                binding.pdfRangeBtn.visibility = View.VISIBLE
+            }
+
+            rangeStartDate = null
+            rangeEndDate = null
+
+            // CalendarView를 업데이트하여 모든 날짜의 배경을 초기화
+            binding.calendarView.notifyCalendarChanged()
+
+        }
 
         return view
     }
 
+
+    fun setDateSelectionEnabled(enabled: Boolean) {
+        isDateSelectionEnabled = enabled
+    }
+
     private fun onDateSelected(date: LocalDate) {
-        if (rangeStartDate == null) {
-            rangeStartDate = date
-        } else if (rangeEndDate == null) {
-            if (date.isBefore(rangeStartDate)) {
-                rangeEndDate = rangeStartDate
-                rangeStartDate = date
-            } else {
-                rangeEndDate = date
-            }
-        } else {
-            rangeStartDate = date
-            rangeEndDate = null
+        if (!isDateSelectionEnabled) {
+            //Toast.makeText(context, "기간 선택이 비활성화되어 있습니다.", Toast.LENGTH_SHORT).show()
+            return
         }
-        calendarView.notifyCalendarChanged()
+        else{
+            if (rangeStartDate == null) {
+                rangeStartDate = date
+            } else if (rangeEndDate == null) {
+                if (date.isBefore(rangeStartDate)) {
+                    rangeEndDate = rangeStartDate
+                    rangeStartDate = date
+                } else {
+                    rangeEndDate = date
+                }
+            } else {
+                rangeStartDate = date
+                rangeEndDate = null
+            }
+        }
+
+        binding.calendarView.notifyCalendarChanged()
+    }
+
+    private fun showBottomSheet(date: String) {
+        val bottomSheetFragment = BottomSheetFragment().apply {
+            arguments = Bundle().apply {
+                putString("date", date)
+            }
+        }
+        bottomSheetFragment.show(parentFragmentManager, bottomSheetFragment.tag)
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 }
 
