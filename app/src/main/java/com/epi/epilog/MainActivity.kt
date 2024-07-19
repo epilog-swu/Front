@@ -18,6 +18,10 @@ import com.ismaeldivita.chipnavigation.ChipNavigationBar
 class MainActivity : AppCompatActivity() {
     private val binding by lazy { ActivityMainBinding.inflate(layoutInflater) }
 
+    // Assume you have initialized the fragment correctly
+    private lateinit var calendarFragment: CalendarFragment
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -60,7 +64,9 @@ class MainActivity : AppCompatActivity() {
 
             calenderGraphViewpager.adapter = adapter
 
+
         }
+
 
         // 기본 프래그먼트 설정
         if (savedInstanceState == null) {
@@ -68,6 +74,14 @@ class MainActivity : AppCompatActivity() {
         }
         // 텍스트 숨기기
         hideChipNavigationBarText(binding.mainLayoutBottomNavigation)
+    }
+
+    private fun setDateSelectionEnabled(enabled: Boolean) {
+        // CalendarFragment가 현재 ViewPager에 로드되어 있는지 확인
+        val currentFragment = supportFragmentManager.findFragmentByTag("f${binding.calenderGraphViewpager.currentItem}")
+        if (currentFragment is CalendarFragment) {
+            currentFragment.setDateSelectionEnabled(enabled)
+        }
     }
 
     private fun hideChipNavigationBarText(chipNavigationBar: ChipNavigationBar) {
