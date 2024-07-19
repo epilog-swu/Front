@@ -32,10 +32,13 @@ import java.util.Locale
 
 class CalendarFragment : Fragment() {
 
-    private var rangeStartDate: LocalDate? = null
-    private var rangeEndDate: LocalDate? = null
+
     private var _binding: MainCalendarBinding? = null
     private val binding get() = _binding!!
+    //기간 선택 (비)활성화 변수
+    private var isDateSelectionEnabled: Boolean = false
+    private var rangeStartDate: LocalDate? = null
+    private var rangeEndDate: LocalDate? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -101,7 +104,14 @@ class CalendarFragment : Fragment() {
                     }
                     container.textView.setOnClickListener {
                         onDateSelected(day.date)
-                        showBottomSheet(day.date.toString())
+
+                        if(isDateSelectionEnabled){
+                            //바텀시트2 보이기
+                        }
+                        else{
+                            //바텀시트1보이기
+                            showBottomSheet(day.date.toString())
+                        }
                     }
                 } else {
                     container.textView.setTextColor(Color.GRAY)
@@ -133,7 +143,11 @@ class CalendarFragment : Fragment() {
             }
         }
 
+
+        //기간선택하기를 누르면, 활성화해주고, 범위선택
         binding.pdfRangeBtn.setOnClickListener {
+
+            isDateSelectionEnabled = true
 
             // 기간선택 끝났는지 확인
             if (rangeStartDate != null && rangeEndDate != null) {
@@ -155,6 +169,7 @@ class CalendarFragment : Fragment() {
             }
         }
 
+        //PDF 변환하기를 누르면, 기간 선택하고 대화상자 생성
         binding.pdfDownloadBtn.setOnClickListener {
             // rangeStartDate와 rangeEndDate를 이용하여 날짜 범위 문자열 생성
             if (rangeStartDate != null && rangeEndDate != null) {
@@ -185,23 +200,54 @@ class CalendarFragment : Fragment() {
             }
         }
 
+        //취소하기를 누르면
+        binding.pdfCancelBtn.setOnClickListener {
+            isDateSelectionEnabled = false
+
+            //버튼 (비)활성화
+            if (binding.pdfCancelBtn.visibility == View.VISIBLE) {
+                binding.pdfDownloadBtn.visibility = View.INVISIBLE
+                binding.pdfCancelBtn.visibility = View.INVISIBLE
+                binding.pdfRangeBtn.visibility = View.VISIBLE
+            }
+
+            rangeStartDate = null
+            rangeEndDate = null
+
+            // CalendarView를 업데이트하여 모든 날짜의 배경을 초기화
+            binding.calendarView.notifyCalendarChanged()
+
+        }
+
         return view
     }
 
+
+    fun setDateSelectionEnabled(enabled: Boolean) {
+        isDateSelectionEnabled = enabled
+    }
+
     private fun onDateSelected(date: LocalDate) {
-        if (rangeStartDate == null) {
-            rangeStartDate = date
-        } else if (rangeEndDate == null) {
-            if (date.isBefore(rangeStartDate)) {
-                rangeEndDate = rangeStartDate
-                rangeStartDate = date
-            } else {
-                rangeEndDate = date
-            }
-        } else {
-            rangeStartDate = date
-            rangeEndDate = null
+        if (!isDateSelectionEnabled) {
+            //Toast.makeText(context, "기간 선택이 비활성화되어 있습니다.", Toast.LENGTH_SHORT).show()
+            return
         }
+        else{
+            if (rangeStartDate == null) {
+                rangeStartDate = date
+            } else if (rangeEndDate == null) {
+                if (date.isBefore(rangeStartDate)) {
+                    rangeEndDate = rangeStartDate
+                    rangeStartDate = date
+                } else {
+                    rangeEndDate = date
+                }
+            } else {
+                rangeStartDate = date
+                rangeEndDate = null
+            }
+        }
+
         binding.calendarView.notifyCalendarChanged()
     }
 
