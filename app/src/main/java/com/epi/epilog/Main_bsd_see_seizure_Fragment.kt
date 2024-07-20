@@ -34,7 +34,7 @@ class Main_bsd_see_seizure_Fragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_main_bsd_see_seizure_, container, false)
+        return inflater.inflate(R.layout.fragment_main_bsd_existdiary, container, false)
     }
 
     companion object {

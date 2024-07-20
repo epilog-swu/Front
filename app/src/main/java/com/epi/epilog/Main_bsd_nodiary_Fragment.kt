@@ -35,6 +35,7 @@ class BottomSheetFragment : BottomSheetDialogFragment() {
         // 추가적인 설정과 클릭 리스너 등 설정
         binding.writeDiaryBtn.setOnClickListener {
             // 일지 추가 버튼 클릭 처리
+
             dismiss() // 바텀시트 닫기
         }
 
