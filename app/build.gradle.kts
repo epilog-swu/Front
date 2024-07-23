@@ -10,7 +10,7 @@ android {
 
     defaultConfig {
         applicationId = "com.epi.epilog"
-        minSdk = 24
+        minSdk = 25
         targetSdk = 34
         versionCode = 1
         versionName = "1.0"
@@ -54,6 +54,7 @@ android {
 }
 
 dependencies {
+
 
     implementation ("com.google.android.gms:play-services-location:21.0.1")
 
@@ -99,6 +100,28 @@ dependencies {
     implementation(platform("com.google.firebase:firebase-bom:33.1.2"))
     implementation("com.google.firebase:firebase-analytics")
     implementation("com.google.firebase:firebase-messaging:23.0.5")
+
+    //그래프 라이브러리 사용하려고 추가
+    implementation ("com.google.android.gms:play-services-location:21.0.1")
+    implementation ("com.github.PhilJay:MPAndroidChart:v3.1.0")
+    implementation(libs.play.services.wearable)
+    implementation(platform(libs.androidx.compose.bom))
+    implementation(libs.androidx.ui)
+    implementation(libs.androidx.ui.tooling.preview)
+    implementation(libs.androidx.compose.material)
+    implementation(libs.androidx.compose.foundation)
+    implementation(libs.androidx.activity.compose)
+    implementation(libs.androidx.core.splashscreen)
+    implementation("androidx.wear:wear:1.2.0")
+    implementation("androidx.recyclerview:recyclerview:1.2.1")
+    implementation("com.google.android.material:material:1.4.0")
+    implementation ("androidx.navigation:navigation-fragment-ktx:2.3.5")
+    implementation ("androidx.navigation:navigation-ui-ktx:2.3.5")
+    implementation(libs.androidx.wear)
+    androidTestImplementation(platform(libs.androidx.compose.bom))
+    androidTestImplementation(libs.androidx.ui.test.junit4)
+    debugImplementation(libs.androidx.ui.tooling)
+    debugImplementation(libs.androidx.ui.test.manifest)
 }
 
 // Google 서비스 플러그인을 적용합니다

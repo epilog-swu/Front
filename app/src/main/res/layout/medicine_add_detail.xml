@@ -1,0 +1,371 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="16dp">
+
+    <!-- Container for medication period -->
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/constraint_1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/diary_container_shape"
+        android:padding="16dp"
+        android:textSize="12sp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <!-- Title TextView -->
+        <TextView
+            android:id="@+id/titleTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="복용 기간"
+            android:textColor="@android:color/black"
+            android:layout_marginTop="10dp"
+            android:textSize="16sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <!-- Checkbox for no end date -->
+        <TextView
+            android:id="@+id/textViewNoEndDate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="종료일 없음"
+            android:layout_marginTop="10dp"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/checkBox"
+            app:layout_constraintBaseline_toBaselineOf="@id/checkBox" />
+
+        <CheckBox
+            android:id="@+id/checkBox"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <!-- Start date TextView -->
+        <TextView
+            android:id="@+id/textViewStartDate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:text="시작일"
+            android:textSize="12sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/titleTextView" />
+
+        <!-- Start date Icon and Text -->
+        <ImageView
+            android:id="@+id/startDateIcon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:src="@drawable/calendar"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/textViewStartDate" />
+
+        <TextView
+            android:id="@+id/startDateText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:text="2024.03.28"
+            android:textColor="@color/black"
+            android:textSize="12sp"
+            android:background="@drawable/bottom_stroke_grey"
+            app:layout_constraintBottom_toBottomOf="@id/startDateIcon"
+            app:layout_constraintStart_toEndOf="@id/startDateIcon"
+            app:layout_constraintTop_toTopOf="@id/startDateIcon"
+            app:layout_constraintVertical_bias="0.0" />
+
+        <!-- End date TextView -->
+        <TextView
+            android:id="@+id/textViewEndDate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="82dp"
+            android:layout_marginTop="20dp"
+            android:text="종료일"
+            android:textSize="12sp"
+            app:layout_constraintStart_toEndOf="@id/startDateText"
+            app:layout_constraintTop_toBottomOf="@id/titleTextView" />
+
+        <!-- End date Icon and Text -->
+        <ImageView
+            android:id="@+id/endDateIcon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:src="@drawable/calendar"
+            app:layout_constraintStart_toStartOf="@id/textViewEndDate"
+            app:layout_constraintTop_toBottomOf="@id/textViewEndDate" />
+
+        <TextView
+            android:id="@+id/endDateText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:text="2024.05.28"
+            android:textColor="@color/black"
+            android:textSize="12sp"
+            android:background="@drawable/bottom_stroke_grey"
+            app:layout_constraintBottom_toBottomOf="@id/endDateIcon"
+            app:layout_constraintStart_toEndOf="@id/endDateIcon"
+            app:layout_constraintTop_toTopOf="@id/endDateIcon"
+            app:layout_constraintVertical_bias="0.0" />
+
+        <!-- Repeat TextView -->
+        <TextView
+            android:id="@+id/textViewRepeat"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="반복"
+            android:textSize="12sp"
+            android:layout_marginTop="30dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/startDateIcon" />
+
+        <!-- Days of week -->
+        <LinearLayout
+            android:id="@+id/linearLayoutDaysOfWeek"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:layout_marginTop="4dp"
+            android:orientation="horizontal"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/textViewRepeat">
+
+            <TextView
+                android:id="@+id/textViewMon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="10dp"
+                android:gravity="center"
+                android:background="@drawable/light_purple_shape"
+                android:padding="5dp"
+                android:textSize="13sp"
+                android:textColor="@color/black"
+                android:text="월" />
+
+            <TextView
+                android:id="@+id/textViewTue"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="10dp"
+                android:background="@drawable/light_purple_shape"
+                android:padding="5dp"
+                android:textSize="13sp"
+                android:textColor="@color/black"
+                android:text="화" />
+
+            <TextView
+                android:id="@+id/textViewWed"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="10dp"
+                android:background="@drawable/light_purple_shape"
+                android:padding="5dp"
+                android:textSize="13sp"
+                android:textColor="@color/black"
+                android:text="수" />
+
+            <TextView
+                android:id="@+id/textViewThu"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="10dp"
+                android:background="@drawable/light_purple_shape"
+                android:padding="5dp"
+                android:textSize="13sp"
+                android:textColor="@color/black"
+                android:text="목" />
+
+            <TextView
+                android:id="@+id/textViewFri"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="10dp"
+                android:background="@drawable/light_purple_shape"
+                android:padding="5dp"
+                android:textSize="13sp"
+                android:textColor="@color/black"
+                android:text="금" />
+
+            <TextView
+                android:id="@+id/textViewSat"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="10dp"
+                android:background="@drawable/light_purple_shape"
+                android:padding="5dp"
+                android:textSize="13sp"
+                android:textColor="@color/black"
+                android:text="토" />
+
+            <TextView
+                android:id="@+id/textViewSun"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/light_purple_shape"
+                android:padding="5dp"
+                android:textSize="13sp"
+                android:textColor="@color/black"
+                android:text="일" />
+        </LinearLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <!-- Alarm setting switch -->
+    <LinearLayout
+        android:id="@+id/linearLayoutAlarm"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="16dp"
+        android:background="@drawable/diary_container_shape"
+        android:layout_marginTop="16dp"
+        app:layout_constraintTop_toBottomOf="@id/constraint_1"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <TextView
+            android:id="@+id/textViewAlarm"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="알람 설정"
+            android:layout_weight="1"
+            android:textColor="@android:color/black"
+            android:textSize="16sp" />
+
+        <Switch
+            android:id="@+id/switchAlarm"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:thumb="@drawable/thumb"
+            app:track="@drawable/track"
+            app:thumbTextPadding="24dp"
+            app:switchMinWidth="0dp" />
+    </LinearLayout>
+
+    <!-- Notes TextViews and EditTexts -->
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/constraint_notes"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/diary_container_shape"
+        android:padding="16dp"
+        android:layout_marginTop="16dp"
+        app:layout_constraintTop_toBottomOf="@id/linearLayoutAlarm"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <TextView
+            android:id="@+id/textViewNotes"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="주의사항"
+            android:textColor="@android:color/black"
+            android:textSize="16sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <EditText
+            android:id="@+id/direct_input_text2"
+            android:layout_width="match_parent"
+            android:layout_height="147dp"
+            android:backgroundTint="@android:color/transparent"
+            android:gravity="top|start"
+            android:layout_marginTop="8dp"
+            android:hint="여기에 입력해주세요"
+            android:textColor="@android:color/black"
+            android:textColorHint="@color/연한회색"
+            android:textSize="16sp"
+            app:layout_constraintTop_toBottomOf="@id/textViewNotes"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <!-- Storage method section -->
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/constraint_storage"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/diary_container_shape"
+        android:padding="16dp"
+        android:layout_marginTop="16dp"
+        app:layout_constraintTop_toBottomOf="@id/constraint_notes"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <TextView
+            android:id="@+id/textViewStorage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="보관방법"
+            android:textColor="@android:color/black"
+            android:textSize="16sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <EditText
+            android:id="@+id/direct_input_text3"
+            android:layout_width="match_parent"
+            android:layout_height="147dp"
+            android:backgroundTint="@android:color/transparent"
+            android:gravity="top|start"
+            android:layout_marginTop="8dp"
+            android:hint="여기에 입력해주세요"
+            android:textColor="@android:color/black"
+            android:textColorHint="@color/연한회색"
+            android:textSize="16sp"
+            app:layout_constraintTop_toBottomOf="@id/textViewStorage"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <!-- Effect section -->
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/constraint_effect"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/diary_container_shape"
+        android:padding="16dp"
+        android:layout_marginTop="16dp"
+        app:layout_constraintTop_toBottomOf="@id/constraint_storage"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <TextView
+            android:id="@+id/textViewEffect"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="효능"
+            android:textColor="@android:color/black"
+            android:textSize="16sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <EditText
+            android:id="@+id/direct_input_text"
+            android:layout_width="match_parent"
+            android:layout_height="147dp"
+            android:backgroundTint="@android:color/transparent"
+            android:gravity="top|start"
+            android:layout_marginTop="8dp"
+            android:hint="여기에 입력해주세요"
+            android:textColor="@android:color/black"
+            android:textColorHint="@color/연한회색"
+            android:textSize="16sp"
+            app:layout_constraintTop_toBottomOf="@id/textViewEffect"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
