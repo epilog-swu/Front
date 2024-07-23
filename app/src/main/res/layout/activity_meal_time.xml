@@ -32,7 +32,7 @@
             android:layout_height="wrap_content"
             android:text="저장"
             android:textSize="14dp"
-            android:background="transparent"
+            android:background="@android:color/transparent"
             android:layout_gravity="right"/>
 
     </androidx.appcompat.widget.Toolbar>

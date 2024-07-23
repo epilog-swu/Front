@@ -3,28 +3,28 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     app:cnb_unselectedColor="#666666">
     <item
-        android:id="@+id/fragment_home"
+        android:id="@+id/btm_menu_cal"
         android:title=""
-        android:icon="@drawable/bottom_nav_calender"
+        android:icon="@drawable/bottom_nav_calendar"
         app:cnb_iconColor="@color/navigation_color_add"
         app:cnb_textAppearance = "@style/BottomNavigationView.TextAppearance"
         style="@style/BottomNavigationView"/>
     <item
-        android:id="@+id/fragment_search"
+        android:id="@+id/btm_menu_medicine"
         android:title=""
         android:icon="@drawable/bottom_nav_capsule"
         app:cnb_iconColor="@color/navigation_color_add"
         app:cnb_textAppearance = "@style/BottomNavigationView.TextAppearance"
         style="@style/BottomNavigationView"/>
     <item
-        android:id="@+id/fragment_favorite"
+        android:id="@+id/btm_menu_food"
         android:title=""
-        android:icon="@drawable/bottom_nav_watch"
+        android:icon="@drawable/bottom_nav_food"
         app:cnb_iconColor="@color/navigation_color_add"
         app:cnb_textAppearance = "@style/BottomNavigationView.TextAppearance"
         style="@style/BottomNavigationView"/>
     <item
-        android:id="@+id/fragment_settings"
+        android:id="@+id/btm_menu_my"
         android:title=""
         android:icon="@drawable/bottom_nav_my"
         app:cnb_iconColor="@color/navigation_color_add"
