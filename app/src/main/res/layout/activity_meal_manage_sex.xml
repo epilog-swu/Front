@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--칼로리계산 2 (권장칼로리계산)-->
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="@drawable/bottom_stroke_light_purple"
+        app:popupTheme="@style/ThemeOverlay.AppCompat.DayNight.ActionBar"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <!-- Custom TextView for Toolbar Title -->
+        <TextView
+            android:id="@+id/toolbar_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="식사 관리"
+            android:textColor="@android:color/black"
+            android:textSize="18sp"
+            android:textStyle="bold"/>
+
+    </androidx.appcompat.widget.Toolbar>
+
+        <LinearLayout
+            android:id="@+id/meal_manage_sex"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:padding="16dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="69dp"
+                android:layout_marginBottom="60dp"
+                android:text="* 성별을 선택해주세요"
+                android:textColor="@color/검정색"
+                android:textSize="16dp" />
+
+            <!-- 남자 체크박스 -->
+            <RelativeLayout
+                android:id="@+id/checkbox_layout_male"
+                android:layout_width="match_parent"
+                android:layout_height="70dp"
+                android:background="@drawable/seizure_button"
+                android:layout_marginBottom="10dp"
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="10dp"
+                android:paddingStart="20dp"
+                android:paddingEnd="20dp">
+
+                <CheckBox
+                    android:id="@+id/checkbox_male"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:text="남자"
+                    android:textSize="16dp"
+                    android:textColor="@color/검정색"
+                    android:gravity="center_vertical"
+                    android:button="@null"
+                    android:drawableEnd="@drawable/seizure_check_button"/>
+            </RelativeLayout>
+
+            <!-- 여자 체크박스 -->
+            <RelativeLayout
+                android:id="@+id/checkbox_layout_female"
+                android:layout_width="match_parent"
+                android:layout_height="70dp"
+                android:background="@drawable/seizure_button"
+                android:layout_marginBottom="10dp"
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="10dp"
+                android:paddingStart="20dp"
+                android:paddingEnd="20dp">
+
+                <CheckBox
+                    android:id="@+id/checkbox_female"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:text="여자"
+                    android:textSize="16dp"
+                    android:textColor="@color/검정색"
+                    android:gravity="center_vertical"
+                    android:button="@null"
+                    android:drawableEnd="@drawable/seizure_check_button"/>
+            </RelativeLayout>
+        </LinearLayout>
+
+
+    <Button
+        android:id="@+id/meal_manage_sex_nextBtn"
+        android:layout_width="310dp"
+        android:layout_height="56dp"
+        android:layout_gravity="bottom"
+        android:background="@drawable/purple_button_shape"
+        android:text="다음으로"
+        android:textColor="@color/white"
+        android:textSize="18dp"
+        android:layout_marginBottom="50dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+    </Button>
+</androidx.constraintlayout.widget.ConstraintLayout>

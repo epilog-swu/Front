@@ -36,4 +36,14 @@
     <string name="two_pills">2 정</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+
+
+    <string-array name="meal_types">
+        <item>아침식사</item>
+        <item>점심식사</item>
+        <item>저녁식사</item>
+        <item>간식</item>
+    </string-array>
+
 </resources>
+

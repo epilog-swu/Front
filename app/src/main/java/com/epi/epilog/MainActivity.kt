@@ -22,13 +22,12 @@ class MainActivity : AppCompatActivity() {
     private lateinit var calendarFragment: CalendarFragment
 
 
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        // StartActivity를 시작하고 현재 액티비티를 종료합니다.
-//        val intent = Intent(this, startActivity::class.java)
-//        startActivity(intent)
-//        finish()
+        val cardAdapter = CardPagerAdapter(this)
+        val bottomNavAdapter = BottomNavPagerAdapter(this)
 
         setContentView(binding.root)
 
@@ -41,10 +40,29 @@ class MainActivity : AppCompatActivity() {
             calendarButton.setCardBackgroundColor(buttonBackgroundColor)
             graphButton.setCardBackgroundColor(buttonBackgroundColor)
 
-            calendarButton.setOnClickListener { calenderGraphViewpager.currentItem = 0 }
-            graphButton.setOnClickListener { calenderGraphViewpager.currentItem = 1 }
+            //카드 어댑터 연결
+            calendarButton.setOnClickListener {
+                calenderGraphViewpager.adapter = cardAdapter
+                calenderGraphViewpager.currentItem = 0
+            }
+            graphButton.setOnClickListener {
+                calenderGraphViewpager.adapter = cardAdapter
+                calenderGraphViewpager.currentItem = 1
+            }
 
-            val adapter = CalendarPagerAdapter(this@MainActivity)
+            mainLayoutBottomNavigation.setOnItemSelectedListener { id ->
+                calenderGraphViewpager.adapter = bottomNavAdapter
+                when (id) {
+                    com.epi.epilog.R.id.btm_menu_cal-> calenderGraphViewpager.currentItem = 0
+                    com.epi.epilog.R.id.btm_menu_medicine-> calenderGraphViewpager.currentItem = 1
+                    com.epi.epilog.R.id.btm_menu_food-> calenderGraphViewpager.currentItem = 2
+                    com.epi.epilog.R.id.btm_menu_my-> calenderGraphViewpager.currentItem = 3
+                }
+            }
+
+
+
+            val adapter = CardPagerAdapter(this@MainActivity)
             with(calenderGraphViewpager) {
                 this.adapter = adapter
                 this.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
@@ -76,14 +94,6 @@ class MainActivity : AppCompatActivity() {
         hideChipNavigationBarText(binding.mainLayoutBottomNavigation)
     }
 
-    private fun setDateSelectionEnabled(enabled: Boolean) {
-        // CalendarFragment가 현재 ViewPager에 로드되어 있는지 확인
-        val currentFragment = supportFragmentManager.findFragmentByTag("f${binding.calenderGraphViewpager.currentItem}")
-        if (currentFragment is CalendarFragment) {
-            currentFragment.setDateSelectionEnabled(enabled)
-        }
-    }
-
     private fun hideChipNavigationBarText(chipNavigationBar: ChipNavigationBar) {
         val menuView = chipNavigationBar.getChildAt(0) as ViewGroup
         for (i in 0 until menuView.childCount) {
@@ -98,9 +108,9 @@ class MainActivity : AppCompatActivity() {
     }
 }
 
-class CalendarPagerAdapter(activity: AppCompatActivity) : FragmentStateAdapter(activity) {
+class CardPagerAdapter(activity: AppCompatActivity) : FragmentStateAdapter(activity) {
     override fun getItemCount(): Int {
-        return 2 // 총 프래그먼트 수
+        return 2 // 카드뷰를 위한 총 프래그먼트 수
     }
 
     override fun createFragment(position: Int): Fragment {
@@ -109,7 +119,24 @@ class CalendarPagerAdapter(activity: AppCompatActivity) : FragmentStateAdapter(a
             1 -> graphFragment()
             else -> throw IllegalStateException("Unexpected position $position")
         }
-
     }
 }
+
+class BottomNavPagerAdapter(activity: AppCompatActivity) : FragmentStateAdapter(activity) {
+    override fun getItemCount(): Int {
+        return 4 // 바텀 네비게이션을 위한 총 프래그먼트 수
+    }
+
+    override fun createFragment(position: Int): Fragment {
+        return when (position) {
+            0 -> CalendarFragment() //캘린더 페이지와 연결(메인)
+            1 -> CalendarFragment() //추후에 복약 체크리스트 페이지로 변경 //현재 캘린더임
+            2 -> MealChecklistFragment() // 식사 체크리스트 페이지와 연결
+            3 -> MealChecklistFragment() // 추후에 마이페이지로 변경 //현재 식사임
+            else -> throw IllegalStateException("Unexpected position $position")
+        }
+    }
+}
+
+
 
