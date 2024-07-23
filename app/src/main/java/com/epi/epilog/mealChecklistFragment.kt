@@ -1,11 +1,13 @@
 package com.epi.epilog
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
 import androidx.core.view.children
@@ -45,6 +47,7 @@ class MealChecklistFragment : Fragment() {
         }
 
         initWeekCalendarView(view)
+        initClickListeners(view)
     }
 
     private fun initWeekCalendarView(view: View) {
@@ -97,6 +100,15 @@ class MealChecklistFragment : Fragment() {
         }
 
         Log.d("MealChecklistFragment", "initWeekCalendarView 끝")
+    }
+
+    //클릭 리스너 모음
+    private fun initClickListeners(view: View) {
+        val calculateOnedayEnergyLayout = view.findViewById<LinearLayout>(R.id.calculate_oneday_energy_layout)
+        calculateOnedayEnergyLayout.setOnClickListener {
+            val intent = Intent(context, ActivityMealManageSex::class.java)
+            startActivity(intent)
+        }
     }
 
     private fun onDateSelected(date: LocalDate) {

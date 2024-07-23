@@ -43,6 +43,10 @@
         <activity android:name=".ActivityShowFailDialog"
             android:theme="@style/TransparentTheme" />
 
+        <activity android:name=".ActivityMealManageSex"/>
+        <activity android:name=".ActivityMealManageExercise"/>
+        <activity android:name=".ActivityMealManageWeight"/>
+
     </application>
 
 </manifest>

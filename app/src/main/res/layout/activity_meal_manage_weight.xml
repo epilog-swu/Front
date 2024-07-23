@@ -85,7 +85,7 @@
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <Button
-        android:id="@+id/meal_manage_sex_nextBtn"
+        android:id="@+id/meal_manage_weight_Complete_Btn"
         android:layout_width="310dp"
         android:layout_height="56dp"
         android:layout_gravity="bottom"
