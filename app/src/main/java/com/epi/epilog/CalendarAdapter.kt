@@ -23,7 +23,6 @@ class CalendarAdapter(private val cList: List<CalendarVO>) :
             val tomorrow = LocalDate.now().plusDays(1)
                 .format(DateTimeFormatter.ofPattern("dd").withLocale(Locale.forLanguageTag("ko")))
 
-
             if (item.cl_date == tomorrow) {
                 binding.weekCardview.setBackgroundResource(R.drawable.main_light_purple_shape)
             } else {

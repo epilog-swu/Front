@@ -1,23 +1,39 @@
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:id="@+id/medicine_checklist">
 
-    <FrameLayout
-        android:id="@+id/fragment_container"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="0dp"
+        android:layout_height="?attr/actionBarSize"
+        android:background="@drawable/bottom_stroke_light_purple"
+        app:popupTheme="@style/ThemeOverlay.AppCompat.DayNight.ActionBar"
         app:layout_constraintTop_toTopOf="parent"
-        android:background="@drawable/border"
-        android:padding="20px"/>
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <TextView
+            android:id="@+id/toolbar_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="복용 약 관리"
+            android:textColor="@android:color/black"
+            android:textSize="18sp"
+            android:textStyle="bold"/>
+    </androidx.appcompat.widget.Toolbar>
+
+
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="30dp"
         android:orientation="vertical"
-        app:layout_constraintTop_toBottomOf="@id/fragment_container">
+        app:layout_constraintTop_toBottomOf="@id/toolbar">
 
         <TextView
             android:layout_width="match_parent"
@@ -26,7 +42,7 @@
             android:layout_marginTop="10dp"
             android:layout_marginStart="40px"
             android:textColor="#000"
-            android:textSize="18dp"
+            android:textSize="18sp"
             android:textStyle="bold"/>
         <TextView
             android:layout_width="match_parent"
@@ -37,7 +53,6 @@
             android:textColor="@color/덜진한회색"
             android:textSize="10dp"
             android:textStyle="bold"/>
-
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -58,7 +73,7 @@
                 <ImageView
                     android:layout_width="57dp"
                     android:layout_height="57dp"
-                    android:src="@drawable/medicine"/>
+                    android:src="@drawable/medicine" />
 
                 <LinearLayout
                     android:layout_width="0dp"
@@ -87,25 +102,25 @@
                 <CheckBox
                     android:layout_width="48dp"
                     android:layout_height="48dp"
-                    android:background="@drawable/seizure_check_button"
+                    android:background="@drawable/medicine_check_button"
                     android:button="@null"
                     />
             </LinearLayout>
+
             <TextView
                 android:id="@+id/textView9"
                 android:layout_width="116dp"
                 android:layout_height="22dp"
-                android:text="복용시간 지남"
-                android:textSize="12dp"
-                android:textAlignment="center"
-                android:background="@drawable/red_badge"
-                android:textColor="#fff"
                 android:layout_alignEnd="@id/red_box"
-                android:layout_marginEnd="20dp"
+                android:layout_marginEnd="2dp"
                 android:layout_marginBottom="10px"
-                android:padding="5px"/>
+                android:background="@drawable/red_badge"
+                android:padding="5px"
+                android:text="복용시간 지남"
+                android:textAlignment="center"
+                android:textColor="#fff"
+                android:textSize="12dp" />
         </RelativeLayout>
-
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -117,7 +132,6 @@
             android:gravity="center_vertical"
             android:padding="40px"
             android:layout_marginTop="20px">
-
 
             <ImageView
                 android:layout_width="57dp"
@@ -150,7 +164,7 @@
             <CheckBox
                 android:layout_width="48dp"
                 android:layout_height="48dp"
-                android:background="@drawable/seizure_check_button"
+                android:background="@drawable/medicine_check_button"
                 android:button="@null"
                 />
         </LinearLayout>
@@ -164,7 +178,6 @@
             android:gravity="center_vertical"
             android:padding="40px"
             android:layout_marginTop="50px">
-
 
             <ImageView
                 android:layout_width="57dp"
@@ -198,12 +211,13 @@
             <CheckBox
                 android:layout_width="48dp"
                 android:layout_height="48dp"
-                android:background="@drawable/seizure_check_button"
+                android:background="@drawable/medicine_check_button"
                 android:button="@null"
                 />
         </LinearLayout>
 
     </LinearLayout>
+
     <LinearLayout
         android:id="@+id/buttonLayout"
         android:layout_width="match_parent"
@@ -220,7 +234,7 @@
             android:layout_width="match_parent"
             android:layout_height="56dp"
             android:layout_marginTop="16dp"
-            android:background="@drawable/purple_solid_button_shape"
+            android:background="@drawable/purple_solid_button_shape_2"
             android:text="기존 약 관리하기"
             android:textColor="@color/메인보라"
             android:textSize="20dp" />
@@ -231,7 +245,7 @@
             android:layout_width="match_parent"
             android:layout_height="56dp"
             android:layout_marginTop="8dp"
-            android:background="@drawable/purple_button_shape"
+            android:background="@drawable/purple_button_shape_2"
             android:text="약 추가하기"
             android:textColor="#FFFFFF"
             android:textSize="20dp" />

@@ -37,7 +37,8 @@
         android:gravity="center"
         android:textColor="@color/black"
         android:textSize="14sp"
-        android:text="시간을 제외한 하나 이상의\n항목을 입력해주세요"
+        android:text="시간을 제외한 하나 이상의\n
+항목을 입력해주세요"
         android:layout_marginTop="10dp"
         android:layout_marginBottom="10dp"
         app:layout_constraintStart_toStartOf="parent"
@@ -45,16 +46,21 @@
         app:layout_constraintTop_toBottomOf="@id/dialogline"
         app:layout_constraintBottom_toTopOf="@+id/dialogOkBtn"/>
 
+
     <Button
         android:id="@+id/dialogOkBtn"
         android:layout_width="114dp"
         android:layout_height="50dp"
         android:background="@drawable/epi_dialog_btn"
         android:text="확인"
-        android:layout_marginBottom="10dp"
-        app:layout_constraintStart_toStartOf="parent"
+        android:gravity="center"
+        android:layout_marginStart="20dp"
+        android:layout_marginBottom="20dp"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/dialogMessageTV"
-        app:layout_constraintBottom_toBottomOf="parent"/>
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/dialogMessageTV" />
+
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>
