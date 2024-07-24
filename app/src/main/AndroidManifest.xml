@@ -18,7 +18,13 @@
         <activity android:name=".DiaryWriteActivity"/>
         <activity android:name=".startActivity"/>
         <activity android:name=".DiaryEditActivity"/>
-        <activity android:name=".MainActivity"/>
+        <activity android:name=".MainActivity"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
 
         <activity android:name=".ActivityShowSuccessDialog"
             android:theme="@style/TransparentTheme" />
@@ -26,13 +32,7 @@
             android:theme="@style/TransparentTheme" />
         <activity android:name=".ActivityMedicineAddModify"
         />
-        <activity android:name=".ActivityMedicineChecklist"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
+        <activity android:name=".ActivityMedicineChecklist"/>
 
         <activity android:name=".ActivityMealManageSex"/>
         <activity android:name=".ActivityMealManageExercise"/>

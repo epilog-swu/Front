@@ -1,29 +1,51 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/fragment_meal_checklist"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:id="@+id/fragment_meal_checklist">
+    android:layout_height="match_parent">
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="0dp"
+        android:layout_height="?attr/actionBarSize"
+        android:background="@drawable/bottom_stroke_light_purple"
+        app:layout_constraintBottom_toTopOf="@id/weekcalendar_layout"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:popupTheme="@style/ThemeOverlay.AppCompat.DayNight.ActionBar">
+
+        <TextView
+            android:id="@+id/toolbar_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="식사 관리"
+            android:textColor="@android:color/black"
+            android:textSize="18sp" />
+    </androidx.appcompat.widget.Toolbar>
 
 
+    <!-- 달력 -->
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/weekcalendar_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/scrollView"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/meal_content_layout"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/toolbar">
 
         <include
             android:id="@+id/titlesContainer"
             layout="@layout/calendar_day_titles_container"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
             android:layout_marginStart="10dp"
+            android:layout_marginTop="10dp"
             android:layout_marginEnd="10dp"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"/>
+            app:layout_constraintTop_toTopOf="parent" />
 
         <com.kizitonwose.calendar.view.WeekCalendarView
             android:id="@+id/meal_calendarView"
@@ -33,166 +55,541 @@
             android:layout_marginEnd="10dp"
             app:cv_dayViewResource="@layout/week_calendar_day_layout"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/titlesContainer"/>
+            app:layout_constraintTop_toBottomOf="@id/titlesContainer" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 
-
-    <LinearLayout
-        android:id="@+id/meal_content_layout"
+    <!--식사 체크리스트 아이템과 관련 텍스트뷰 모음-->
+    <ScrollView
+        android:id="@+id/scrollView"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toTopOf="@id/buttonLayout"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/weekcalendar_layout">
 
-        <TextView
+
+        <LinearLayout
+            android:id="@+id/meal_content_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="식사 시간을 관리하고\n오늘의 식단을 등록해 보세요"
-            android:layout_marginTop="10dp"
-            android:layout_marginStart="40px"
-            android:textColor="#000"
-            android:textSize="18dp"
-            android:textStyle="bold"/>
-       
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="14dp"
-            android:layout_marginStart="13dp"
-            android:gravity="center"
-            android:orientation="horizontal">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="식사가 확인되지 않았어요"
-                android:textColor="@color/덜진한회색"
-                android:textSize="10dp"
-                />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="5dp"
-                android:text="워치에 알람보내기"
-                android:textColor="@color/덜진한회색"
-                android:textSize="10dp" />
-        </LinearLayout>
-
-
-        <!-- 1일 에너지 계산용 레이아웃, 레이아웃 자체 클릭 가능하도록 제작-->
-        <LinearLayout
-            android:id="@+id/calculate_oneday_energy_layout"
-            android:layout_width="334dp"
-            android:layout_height="100dp"
-            android:layout_margin="10dp"
             android:orientation="vertical"
-            android:gravity="center"
-            android:clickable="true"
-            android:background="@drawable/oneday_energy_bg">
+            app:layout_constraintTop_toBottomOf="@id/weekcalendar_layout">
 
             <TextView
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="1일 필요 에너지 계산하기"
-                android:textColor="@color/black"
-                android:textSize="18dp"/>
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textSize="12dp"
-                android:text="1일 필요 에너지를 계산하고 식사량을 조절해보세요"/>
-        </LinearLayout>
+                android:layout_marginStart="40px"
+                android:layout_marginTop="10dp"
+                android:text="식사 시간을 관리하고\n오늘의 식단을 등록해 보세요"
+                android:textColor="#000"
+                android:textSize="18dp"
+                android:textStyle="bold" />
 
-
-        
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/meal_checklist_recyclerview"
-            android:layout_width="334dp"
-            android:layout_height="92dp"
-            android:layout_gravity="center"/>
-
-
-        <!--리사이클러뷰 아이템으로 옮깁니다. meal_checklist_item 확인~ 일단 뷰 확인용 -->
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:padding="8dp">
+            <!--식사가 확인되지 않았어요. 워치 알림보내기-->
             <LinearLayout
-                android:id="@+id/red_box"
+                android:layout_width="wrap_content"
+                android:layout_height="14dp"
+                android:layout_marginStart="13dp"
+                android:gravity="center"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="식사가 확인되지 않았어요"
+                    android:textColor="@color/덜진한회색"
+                    android:textSize="10dp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="5dp"
+                    android:text="워치에 알람보내기"
+                    android:textColor="@color/덜진한회색"
+                    android:textSize="10dp" />
+            </LinearLayout>
+
+            <!--오늘의 섭취/권장 칼로리-->
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/calculate_oneday_energy_layout"
                 android:layout_width="334dp"
+                android:layout_height="100dp"
+                android:layout_margin="10dp"
+                android:background="@drawable/meal_today_cal_box"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <!--섭취 칼로리 tv-->
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="40dp"
+                    android:layout_marginTop="10dp"
+                    android:text="섭취 칼로리 kcal"
+                    android:textColor="@color/black"
+                    android:textSize="12sp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+
+                <!--중간 선-->
+                <ImageView
+                    android:id="@+id/meal_today_cal_box_line"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/meal_today_cal_box_line"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <!--권장 칼로리 tv-->
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginEnd="40dp"
+                    android:text="권장 칼로리 kcal"
+                    android:textColor="@color/black"
+                    android:textSize="12sp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <!--실제 오늘 섭취 칼로리 -->
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="35dp"
+                    android:text="1280"
+                    android:textColor="#2000FF"
+                    android:textSize="30sp"
+                    app:layout_constraintEnd_toEndOf="@id/meal_today_cal_box_line"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <!--실제 오늘 권장 칼로리 -->
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="35dp"
+                    android:text="1650"
+                    android:textColor="@color/black"
+                    android:textSize="30sp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="@id/meal_today_cal_box_line"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <!--오늘의 탄단지 -->
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_margin="10dp"
+                android:background="@drawable/meal_pie_graph_box">
+
+
+                <!-- 오늘의 탄수화물-->
+                <LinearLayout
+                    android:id="@+id/meal_carbohydrate_graph_container"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginTop="10dp"
+                    android:orientation="vertical"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent">
+
+                    <TextView
+                        android:id="@+id/meal_carbohydrate_tv"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:layout_gravity="center_horizontal"
+                        android:text="탄수화물(g)"
+                        android:textColor="@color/black"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <com.github.mikephil.charting.charts.PieChart
+                        android:id="@+id/meal_carbohydrate_pie"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_width="75dp"
+                        android:layout_height="75dp"
+                        android:layout_marginTop="2dp"
+                        android:layout_marginBottom="10dp"
+                        app:layout_constraintDimensionRatio="1:1" />
+
+                </LinearLayout>
+
+                <!--탄수화물과 단백질 사이 line-->
+                <ImageView
+                    android:id="@+id/meal_carbohydrate_line"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="20dp"
+                    android:src="@drawable/meal_today_cal_box_line"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toEndOf="@id/meal_carbohydrate_graph_container"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <!-- 오늘의 단백질-->
+                <LinearLayout
+                    android:id="@+id/meal_protein_graph_container"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginTop="10dp"
+                    android:orientation="vertical"
+                    app:layout_constraintStart_toEndOf="@id/meal_carbohydrate_line"
+                    app:layout_constraintTop_toTopOf="parent">
+
+                    <TextView
+                        android:id="@+id/meal_protein_tv"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:layout_gravity="center_horizontal"
+                        android:text="단백질(g)"
+                        android:textColor="@color/black"
+                        app:layout_constraintEnd_toEndOf="@id/meal_protein_line"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <com.github.mikephil.charting.charts.PieChart
+                        android:id="@+id/meal_protein_pie"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_width="75dp"
+                        android:layout_height="75dp"
+                        android:layout_marginTop="2dp"
+                        android:layout_marginBottom="10dp"
+                        app:layout_constraintDimensionRatio="1:1" />
+
+                </LinearLayout>
+
+                <!--단백질과 지방 사이 line-->
+                <ImageView
+                    android:id="@+id/meal_protein_line"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:src="@drawable/meal_today_cal_box_line"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toEndOf="@id/meal_protein_graph_container"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <!-- 오늘의 지방-->
+                <LinearLayout
+                    android:id="@+id/meal_fat_graph_container"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="20dp"
+                    android:layout_marginTop="10dp"
+                    android:orientation="vertical"
+                    app:layout_constraintStart_toEndOf="@id/meal_protein_line"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent">
+
+                    <TextView
+                        android:id="@+id/meal_fat_tv"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:layout_gravity="center_horizontal"
+                        android:text="지방(g)"
+                        android:textColor="@color/black" />
+
+                    <com.github.mikephil.charting.charts.PieChart
+                        android:id="@+id/meal_fat_pie"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_width="75dp"
+                        android:layout_height="75dp"
+                        android:layout_marginTop="2dp"
+                        android:layout_marginBottom="10dp"
+                        app:layout_constraintDimensionRatio="1:1" />
+
+                </LinearLayout>
+
+
+
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+            <!-- 1일 에너지 계산용 레이아웃, 레이아웃 자체 클릭 가능하도록 제작-->
+            <!--        <LinearLayout-->
+            <!--            android:id="@+id/calculate_oneday_energy_layout"-->
+            <!--            android:layout_width="334dp"-->
+            <!--            android:layout_height="100dp"-->
+            <!--            android:layout_margin="10dp"-->
+            <!--            android:orientation="vertical"-->
+            <!--            android:gravity="center"-->
+            <!--            android:clickable="true"-->
+            <!--            android:background="@drawable/oneday_energy_bg">-->
+
+            <!--            <TextView-->
+            <!--                android:layout_width="wrap_content"-->
+            <!--                android:layout_height="wrap_content"-->
+            <!--                android:text="1일 필요 에너지 계산하기"-->
+            <!--                android:textColor="@color/black"-->
+            <!--                android:textSize="18dp"/>-->
+            <!--            <TextView-->
+            <!--                android:layout_width="wrap_content"-->
+            <!--                android:layout_height="wrap_content"-->
+            <!--                android:textSize="12dp"-->
+            <!--                android:text="1일 필요 에너지를 계산하고 식사량을 조절해보세요"/>-->
+            <!--        </LinearLayout>-->
+
+
+            <!--        <androidx.recyclerview.widget.RecyclerView-->
+            <!--            android:id="@+id/meal_checklist_recyclerview"-->
+            <!--            android:layout_width="334dp"-->
+            <!--            android:layout_height="92dp"-->
+            <!--            android:layout_gravity="center"/>-->
+
+
+            <!--리사이클러뷰 아이템으로 옮깁니다. meal_checklist_item 확인~ 일단 뷰 확인용 -->
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="8dp">
+
+                <LinearLayout
+                    android:id="@+id/red_box"
+                    android:layout_width="334dp"
+                    android:layout_height="92dp"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="20px"
+                    android:layout_marginEnd="8dp"
+                    android:background="@drawable/medicine_redbox"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:padding="40px">
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/food_basic_image1" />
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="16dp"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="9시 30분"
+                            android:textColor="#000"
+                            android:textSize="16dp" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="아침식사"
+                            android:textColor="#000"
+                            android:textSize="14dp" />
+                    </LinearLayout>
+
+                    <CheckBox
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/meal_checklist_checkbtn"
+                        android:button="@null" />
+                </LinearLayout>
+
+
+                <TextView
+                    android:id="@+id/textView9"
+                    android:layout_width="116dp"
+                    android:layout_height="22dp"
+                    android:layout_alignEnd="@id/red_box"
+                    android:layout_marginEnd="20dp"
+                    android:layout_marginBottom="10px"
+                    android:background="@drawable/red_badge"
+                    android:padding="5px"
+                    android:text="식사시간 지남"
+                    android:textAlignment="center"
+                    android:textColor="#fff"
+                    android:textSize="12dp" />
+            </RelativeLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="92dp"
-                android:layout_marginStart="8dp"
-                android:layout_marginEnd="8dp"
-                android:orientation="horizontal"
-                android:background="@drawable/medicine_redbox"
+                android:layout_marginStart="15dp"
+                android:layout_marginTop="20px"
+                android:layout_marginEnd="15dp"
+                android:background="@drawable/medicine_purplebox"
                 android:gravity="center_vertical"
-                android:padding="40px"
-                android:layout_marginTop="20px">
+                android:orientation="horizontal"
+                android:padding="40px">
 
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:src="@drawable/food_basic_image1"/>
+                    android:src="@drawable/food_basic_image3" />
 
                 <LinearLayout
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
                     android:layout_weight="1"
-                    android:orientation="vertical"
-                    android:layout_marginStart="16dp">
+                    android:orientation="vertical">
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="9시 30분"
+                        android:text="14시 00분"
                         android:textColor="#000"
                         android:textSize="16dp" />
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="아침식사"
+                        android:text="간식"
+                        android:textColor="#000"
+                        android:textSize="40px" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="식단을 추가해주세요"
+                        android:textColor="@color/메인보라"
+                        android:textSize="10dp"
+                        android:visibility="visible" />
+                </LinearLayout>
+
+                <CheckBox
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/meal_checklist_checkbtng"
+                    android:button="@null" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="334dp"
+                android:layout_height="92dp"
+                android:layout_marginStart="15dp"
+                android:layout_marginTop="20px"
+                android:layout_marginEnd="15dp"
+                android:background="@drawable/meal_checklist_see_meal_btn"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:padding="40px">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/food_basic_image2" />
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="12시 30분"
+                        android:textColor="#000"
+                        android:textSize="16dp" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="점심 식사"
+                        android:textColor="#000"
+                        android:textSize="40px" />
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="92dp"
+                android:layout_marginStart="15dp"
+                android:layout_marginTop="20px"
+                android:layout_marginEnd="15dp"
+                android:background="@drawable/medicine_orangebox"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:padding="40px">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/food_basic_image1" />
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="17시 30분"
+                        android:textColor="#000"
+                        android:textSize="16dp" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="저녁 식사"
                         android:textColor="#000"
                         android:textSize="14dp" />
                 </LinearLayout>
 
                 <CheckBox
-                    android:layout_width="48dp"
-                    android:layout_height="48dp"
-                    android:background="@drawable/seizure_check_button"
-                    android:button="@null"
-                    />
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/meal_checklist_checkbtn"
+                    android:button="@null" />
             </LinearLayout>
-            <TextView
-                android:id="@+id/textView9"
-                android:layout_width="116dp"
-                android:layout_height="22dp"
-                android:text="식사시간 지남"
-                android:textSize="12dp"
-                android:textAlignment="center"
-                android:background="@drawable/red_badge"
-                android:textColor="#fff"
-                android:layout_alignEnd="@id/red_box"
-                android:layout_marginEnd="20dp"
-                android:layout_marginBottom="10px"
-                android:padding="5px"/>
-        </RelativeLayout>
+        </LinearLayout>
+    </ScrollView>
+
+    <LinearLayout
+        android:id="@+id/buttonLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:layout_marginBottom="30dp"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <Button
+            android:id="@+id/goto_meal_manage_btn"
+            android:layout_width="310dp"
+            android:layout_height="56dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
+            android:background="@drawable/purple_button_shape"
+            android:gravity="center"
+            android:text="식사 시간 관리하기"
+            android:textColor="@color/white"
+            android:textSize="18dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+
     </LinearLayout>
 
-    <Button
-        android:id="@+id/goto_meal_manage_btn"
-        android:layout_width="310dp"
-        android:layout_height="56dp"
-        android:layout_marginTop="8dp"
-        android:background="@drawable/purple_button_shape"
-        android:text="식사 시간 관리하기"
-        android:textColor="@color/white"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        android:layout_marginBottom="50dp"
-        android:textSize="18dp" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

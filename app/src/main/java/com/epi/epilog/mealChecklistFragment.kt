@@ -47,7 +47,7 @@ class MealChecklistFragment : Fragment() {
         }
 
         initWeekCalendarView(view)
-        initClickListeners(view)
+        //initClickListeners(view)
     }
 
     private fun initWeekCalendarView(view: View) {
@@ -103,13 +103,13 @@ class MealChecklistFragment : Fragment() {
     }
 
     //클릭 리스너 모음
-    private fun initClickListeners(view: View) {
-        val calculateOnedayEnergyLayout = view.findViewById<LinearLayout>(R.id.calculate_oneday_energy_layout)
-        calculateOnedayEnergyLayout.setOnClickListener {
-            val intent = Intent(context, ActivityMealManageSex::class.java)
-            startActivity(intent)
-        }
-    }
+//    private fun initClickListeners(view: View) {
+//        val calculateOnedayEnergyLayout = view.findViewById<LinearLayout>(R.id.calculate_oneday_energy_layout)
+//        calculateOnedayEnergyLayout.setOnClickListener {
+//            val intent = Intent(context, ActivityMealManageSex::class.java)
+//            startActivity(intent)
+//        }
+//    }
 
     private fun onDateSelected(date: LocalDate) {
         val currentSelection = selectedDate

@@ -65,6 +65,9 @@ dependencies {
     implementation(libs.androidx.recyclerview) // View
     coreLibraryDesugaring ("com.android.tools:desugar_jdk_libs:2.0.4")
 
+    //그래프 라이브러리 추가
+    implementation ("com.github.PhilJay:MPAndroidChart:v3.1.0")
+
     //바텀네비게이션추가
     implementation ("com.github.ismaeldivita:chip-navigation-bar:1.4.0")
 
