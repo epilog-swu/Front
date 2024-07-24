@@ -1,78 +1,170 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:orientation="vertical">
 
-
-    <!-- 요일 헤더 -->
-    <include
-        android:id="@+id/MonthYear"
-        layout="@layout/calendar_month_year"
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar_main"
+        android:layout_width="0dp"
+        android:layout_height="?attr/actionBarSize"
+        android:background="@drawable/bottom_stroke_light_purple"
+        app:popupTheme="@style/ThemeOverlay.AppCompat.DayNight.ActionBar"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/calendarView"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"/>
-
-    <!-- CalendarView -->
-    <com.kizitonwose.calendar.view.CalendarView
-        app:layout_constraintTop_toBottomOf="@+id/MonthYear"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:id="@+id/calendarView"
+        app:layout_constraintBottom_toTopOf="@id/main_linearlayout">
+
+        <TextView
+            android:id="@+id/toolbar_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="메인"
+            android:textColor="@android:color/black"
+            android:textSize="18sp"
+            />
+    </androidx.appcompat.widget.Toolbar>
+
+    <LinearLayout
+        android:id="@+id/main_linearlayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="15dp"
-        android:layout_marginEnd="15dp"
-        app:cv_dayViewResource="@layout/calendar_day_layout"
-        app:cv_monthHeaderResource="@layout/calendar_day_titles_container">
-    </com.kizitonwose.calendar.view.CalendarView>
+        android:orientation="vertical"
+        app:layout_constraintTop_toBottomOf="@id/toolbar_main">
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/MainTabCardView"
+            android:layout_width="304dp"
+            android:layout_height="36dp"
+            android:layout_marginHorizontal="20dp"
+            android:layout_marginTop="10dp"
+            android:layout_gravity="center_horizontal"
+            app:cardBackgroundColor="@color/메인연보라"
+            app:cardCornerRadius="8dp"
+            app:cardElevation="0dp"
+            app:cardMaxElevation="0dp"
+            app:contentPadding="4dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <LinearLayout
+                android:id="@+id/main_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/calendar_button"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:background="?attr/selectableItemBackground"
+                    app:cardBackgroundColor="@color/white"
+                    app:cardCornerRadius="8dp"
+                    app:cardElevation="0dp"
+                    app:cardMaxElevation="0dp">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:minHeight="40dp"
+                        android:text="캘린더"
+                        android:textColor="@color/black"
+                        android:textSize="12dp" />
+
+                </androidx.cardview.widget.CardView>
+
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/graph_button"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:background="?attr/selectableItemBackground"
+                    app:cardBackgroundColor="@android:color/transparent"
+                    app:cardCornerRadius="8dp"
+                    app:cardElevation="0dp"
+                    app:cardMaxElevation="0dp">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:minHeight="40dp"
+                        android:text="그래프"
+                        android:textColor="@color/black"
+                        android:textSize="12dp" />
+
+                </androidx.cardview.widget.CardView>
+
+            </LinearLayout>
+
+        </androidx.cardview.widget.CardView>
+
+        <!-- 요일 헤더 -->
+        <include
+            android:id="@+id/MonthYear"
+            layout="@layout/calendar_month_year" />
+
+        <!-- CalendarView -->
+        <com.kizitonwose.calendar.view.CalendarView
+            android:id="@+id/calendarView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="15dp"
+            android:layout_marginEnd="15dp"
+            app:cv_dayViewResource="@layout/calendar_day_layout"
+            app:cv_monthHeaderResource="@layout/calendar_day_titles_container"></com.kizitonwose.calendar.view.CalendarView>
+
+    </LinearLayout>
+
 
     <Button
         android:id="@+id/pdf_cancel_btn"
         android:layout_width="300dp"
         android:layout_height="50dp"
         android:layout_marginBottom="10dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/pdf_download_btn"
         android:background="@drawable/white_button_shape"
         android:text="취소하기"
         android:textColor="@color/메인보라"
         android:textSize="15dp"
         android:textStyle="bold"
-        android:visibility="invisible"/>
+        android:visibility="invisible"
+        app:layout_constraintBottom_toTopOf="@id/pdf_download_btn"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 
     <Button
         android:id="@+id/pdf_range_btn"
         android:layout_width="300dp"
         android:layout_height="50dp"
-        android:layout_marginBottom="50dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginBottom="20dp"
         android:background="@drawable/white_button_shape"
         android:text="PDF 변환기간 선택하기"
         android:textColor="@color/메인보라"
         android:textSize="15dp"
         android:textStyle="bold"
-        android:visibility="visible"/>
+        android:visibility="visible"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 
     <Button
         android:id="@+id/pdf_download_btn"
         android:layout_width="300dp"
         android:layout_height="50dp"
-        android:layout_marginBottom="50dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginBottom="20dp"
         android:background="@drawable/purple_button_shape"
         android:text="PDF 변환하기"
         android:textColor="@color/white"
         android:textSize="15dp"
         android:textStyle="bold"
-        android:visibility="invisible"/>
+        android:visibility="invisible"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
 

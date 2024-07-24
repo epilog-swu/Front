@@ -1,5 +1,6 @@
 package com.epi.epilog
 
+import android.content.res.ColorStateList
 import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
@@ -19,7 +20,6 @@ import com.kizitonwose.calendar.core.CalendarMonth
 import com.kizitonwose.calendar.core.DayPosition
 import com.kizitonwose.calendar.core.daysOfWeek
 import com.kizitonwose.calendar.core.firstDayOfWeekFromLocale
-import com.kizitonwose.calendar.view.CalendarView
 import com.kizitonwose.calendar.view.MonthDayBinder
 import com.kizitonwose.calendar.view.MonthHeaderFooterBinder
 import com.kizitonwose.calendar.view.ViewContainer
@@ -53,6 +53,24 @@ class CalendarFragment : Fragment() {
         _binding = MainCalendarBinding.inflate(inflater, container, false)
         val view = binding.root
 
+        // MonthYear 레이아웃 포함
+        val calendarMonthYearBinding = CalendarMonthYearBinding.bind(binding.MonthYear.root)
+
+        // 이전 달 버튼 클릭 리스너 설정
+        calendarMonthYearBinding.calendarMonthBackBtn.setOnClickListener {
+            binding.calendarView.findFirstVisibleMonth()?.let { month ->
+                binding.calendarView.smoothScrollToMonth(month.yearMonth.minusMonths(1))
+            }
+        }
+
+        // 다음 달 버튼 클릭 리스너 설정
+        calendarMonthYearBinding.calendarMonthNextBtn.setOnClickListener {
+            binding.calendarView.findFirstVisibleMonth()?.let { month ->
+                binding.calendarView.smoothScrollToMonth(month.yearMonth.plusMonths(1))
+            }
+        }
+
+
         // 커스텀 대화상자 생성
         val dialogBinding = EpiDialogCustomBinding.inflate(inflater, container, false)
 
@@ -65,6 +83,25 @@ class CalendarFragment : Fragment() {
         val firstDayOfWeek = firstDayOfWeekFromLocale() // Available from the library
 
         val daysOfWeek = daysOfWeek(firstDayOfWeek = DayOfWeek.SUNDAY)
+
+
+        //카드뷰 버튼 백그라운드 설정
+        val buttonBackgroundColor = ColorStateList(
+            arrayOf(intArrayOf(android.R.attr.state_selected), intArrayOf()),
+            intArrayOf(Color.WHITE, Color.TRANSPARENT)
+        )
+
+        binding.calendarButton.setCardBackgroundColor(buttonBackgroundColor)
+        binding.graphButton.setCardBackgroundColor(buttonBackgroundColor)
+
+        binding.calendarButton.setOnClickListener {
+        //
+        }
+
+        binding.graphButton.setOnClickListener {
+        //
+        }
+
 
         // MonthScrollListener를 통해 년/월 정보 업데이트
         binding.calendarView.monthScrollListener = { month ->
