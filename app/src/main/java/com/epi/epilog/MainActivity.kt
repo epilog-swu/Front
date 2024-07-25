@@ -7,6 +7,7 @@ import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.viewpager2.adapter.FragmentStateAdapter
+import androidx.viewpager2.widget.ViewPager2
 import com.epi.epilog.databinding.ActivityMainBinding
 import com.ismaeldivita.chipnavigation.ChipNavigationBar
 
@@ -34,8 +35,22 @@ class MainActivity : AppCompatActivity() {
                 }
             }
 
-        }
+            viewPagerMain.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
+                override fun onPageSelected(position: Int) {
+                    super.onPageSelected(position)
 
+                    val id = when(position) {
+                        0 -> R.id.btm_menu_cal
+                        1 -> R.id.btm_menu_medicine
+                        2 -> R.id.btm_menu_food
+                        3 -> R.id.btm_menu_my
+                        else -> return
+                    }
+
+                    mainLayoutBottomNavigation.setItemSelected(id)
+                }
+            })
+        }
 
         // 기본 프래그먼트 설정
         if (savedInstanceState == null) {

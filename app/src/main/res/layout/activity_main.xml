@@ -6,12 +6,10 @@
     android:layout_height="match_parent"
     android:background="#ffffff">
 
-
-
     <androidx.viewpager2.widget.ViewPager2
         android:id="@+id/view_pager_main"
         android:layout_width="match_parent"
-        android:layout_height="650dp"
+        android:layout_height="0dp"
         app:layout_constraintBottom_toTopOf="@id/main_layout_bottom_navigation"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

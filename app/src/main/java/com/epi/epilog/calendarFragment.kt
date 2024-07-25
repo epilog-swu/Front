@@ -12,9 +12,14 @@ import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentManager
+import androidx.lifecycle.Lifecycle
+import androidx.viewpager2.adapter.FragmentStateAdapter
 import com.epi.epilog.databinding.CalendarMonthYearBinding
-import com.epi.epilog.databinding.MainCalendarBinding
 import com.epi.epilog.databinding.EpiDialogCustomBinding
+import com.epi.epilog.databinding.FragmentCalendarBinding
+import com.epi.epilog.databinding.FragmentGraphBinding
+import com.epi.epilog.databinding.MainCalendarBinding
 import com.kizitonwose.calendar.core.CalendarDay
 import com.kizitonwose.calendar.core.CalendarMonth
 import com.kizitonwose.calendar.core.DayPosition
@@ -23,7 +28,6 @@ import com.kizitonwose.calendar.core.firstDayOfWeekFromLocale
 import com.kizitonwose.calendar.view.MonthDayBinder
 import com.kizitonwose.calendar.view.MonthHeaderFooterBinder
 import com.kizitonwose.calendar.view.ViewContainer
-import java.time.DayOfWeek
 import java.time.LocalDate
 import java.time.YearMonth
 import java.time.format.DateTimeFormatter
@@ -31,27 +35,111 @@ import java.time.format.TextStyle
 import java.util.Locale
 
 class CalendarFragment : Fragment() {
-
-
     private var _binding: MainCalendarBinding? = null
     private val binding get() = _binding!!
-    //기간 선택 (비)활성화 변수
-    private var isDateSelectionEnabled: Boolean = false
-    private var rangeStartDate: LocalDate? = null
-    private var rangeEndDate: LocalDate? = null
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-    }
 
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         // Inflate the layout for this fragment
         _binding = MainCalendarBinding.inflate(inflater, container, false)
-        val view = binding.root
+        return binding.root
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        with(binding) {
+            //카드뷰 버튼 백그라운드 설정
+            val buttonBackgroundColor = ColorStateList(
+                arrayOf(intArrayOf(android.R.attr.state_selected), intArrayOf()),
+                intArrayOf(Color.WHITE, Color.TRANSPARENT)
+            )
+
+            calendarButton.setCardBackgroundColor(buttonBackgroundColor)
+            graphButton.setCardBackgroundColor(buttonBackgroundColor)
+
+            viewPager.adapter = ViewPagerAdapter(childFragmentManager, lifecycle)
+            viewPager.isUserInputEnabled = false
+
+            calendarButton.setOnClickListener {
+                calendarButton.isSelected = true
+                graphButton.isSelected = false
+
+                viewPager.currentItem = 0
+            }
+
+            graphButton.setOnClickListener {
+                calendarButton.isSelected = false
+                graphButton.isSelected = true
+
+                viewPager.currentItem = 1
+            }
+
+            calendarButton.performClick()
+        }
+    }
+}
+
+private class DayViewContainer(view: View) : ViewContainer(view) {
+    val textView: TextView = view.findViewById(R.id.calendarDayText)
+}
+
+private class MonthViewContainer(view: View) : ViewContainer(view) {
+    val textViewSunday: TextView = view.findViewById(R.id.sunday)
+    val textViewMonday: TextView = view.findViewById(R.id.monday)
+    val textViewTuesday: TextView = view.findViewById(R.id.tuesday)
+    val textViewWednesday: TextView = view.findViewById(R.id.wednesday)
+    val textViewThursday: TextView = view.findViewById(R.id.thursday)
+    val textViewFriday: TextView = view.findViewById(R.id.friday)
+    val textViewSaturday: TextView = view.findViewById(R.id.saturday)
+}
+
+private class ViewPagerAdapter(fragmentManager: FragmentManager, lifecycle: Lifecycle) :
+    FragmentStateAdapter(fragmentManager, lifecycle) {
+    override fun getItemCount() = 2
+
+    override fun createFragment(position: Int): Fragment {
+        return when (position) {
+            0 -> CalendarPage()
+            else -> GraphPage()
+        }
+    }
+}
+
+class CalendarPage : Fragment() {
+    private var _binding: FragmentCalendarBinding? = null
+    private val binding get() = _binding!!
+
+    //기간 선택 (비)활성화 변수
+    private var isDateSelectionEnabled: Boolean = false
+    private var rangeStartDate: LocalDate? = null
+    private var rangeEndDate: LocalDate? = null
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+        // Inflate the layout for this fragment
+        _binding = FragmentCalendarBinding.inflate(inflater, container, false)
+        return binding.root
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
         // MonthYear 레이아웃 포함
         val calendarMonthYearBinding = CalendarMonthYearBinding.bind(binding.MonthYear.root)
@@ -70,44 +158,16 @@ class CalendarFragment : Fragment() {
             }
         }
 
-
-        // 커스텀 대화상자 생성
-        val dialogBinding = EpiDialogCustomBinding.inflate(inflater, container, false)
-
-        // 포함된 레이아웃의 바인딩 초기화
-        val monthYearBinding = CalendarMonthYearBinding.bind(binding.MonthYear.root)
-
         val currentMonth = YearMonth.now()
         val startMonth = currentMonth.minusMonths(100)  // Adjust as needed
         val endMonth = currentMonth.plusMonths(100)  // Adjust as needed
         val firstDayOfWeek = firstDayOfWeekFromLocale() // Available from the library
 
-        val daysOfWeek = daysOfWeek(firstDayOfWeek = DayOfWeek.SUNDAY)
-
-
-        //카드뷰 버튼 백그라운드 설정
-        val buttonBackgroundColor = ColorStateList(
-            arrayOf(intArrayOf(android.R.attr.state_selected), intArrayOf()),
-            intArrayOf(Color.WHITE, Color.TRANSPARENT)
-        )
-
-        binding.calendarButton.setCardBackgroundColor(buttonBackgroundColor)
-        binding.graphButton.setCardBackgroundColor(buttonBackgroundColor)
-
-        binding.calendarButton.setOnClickListener {
-        //
-        }
-
-        binding.graphButton.setOnClickListener {
-        //
-        }
-
-
         // MonthScrollListener를 통해 년/월 정보 업데이트
         binding.calendarView.monthScrollListener = { month ->
             val yearMonth = month.yearMonth
             val formatter = DateTimeFormatter.ofPattern("yyyy년 M월", Locale.getDefault())
-            monthYearBinding.calendarMonthYearText.text = yearMonth.format(formatter)
+            calendarMonthYearBinding.calendarMonthYearText.text = yearMonth.format(formatter)
         }
 
         binding.calendarView.setup(startMonth, endMonth, firstDayOfWeek)
@@ -142,10 +202,9 @@ class CalendarFragment : Fragment() {
                     container.textView.setOnClickListener {
                         onDateSelected(day.date)
 
-                        if(isDateSelectionEnabled){
+                        if (isDateSelectionEnabled) {
                             //바텀시트2 보이기
-                        }
-                        else{
+                        } else {
                             //바텀시트1보이기
                             showBottomSheet(day.date.toString())
                         }
@@ -159,31 +218,30 @@ class CalendarFragment : Fragment() {
         }
 
         // MonthHeaderBinder를 통해 요일 정보 바인딩
-        binding.calendarView.monthHeaderBinder = object : MonthHeaderFooterBinder<MonthViewContainer> {
-            override fun create(view: View) = MonthViewContainer(view)
-            override fun bind(container: MonthViewContainer, month: CalendarMonth) {
-                val daysOfWeek = daysOfWeek(firstDayOfWeek = firstDayOfWeekFromLocale())
-                container.textViewSunday.text =
-                    daysOfWeek[0].getDisplayName(TextStyle.SHORT, Locale.KOREAN)
-                container.textViewMonday.text =
-                    daysOfWeek[1].getDisplayName(TextStyle.SHORT, Locale.KOREAN)
-                container.textViewTuesday.text =
-                    daysOfWeek[2].getDisplayName(TextStyle.SHORT, Locale.KOREAN)
-                container.textViewWednesday.text =
-                    daysOfWeek[3].getDisplayName(TextStyle.SHORT, Locale.KOREAN)
-                container.textViewThursday.text =
-                    daysOfWeek[4].getDisplayName(TextStyle.SHORT, Locale.KOREAN)
-                container.textViewFriday.text =
-                    daysOfWeek[5].getDisplayName(TextStyle.SHORT, Locale.KOREAN)
-                container.textViewSaturday.text =
-                    daysOfWeek[6].getDisplayName(TextStyle.SHORT, Locale.KOREAN)
+        binding.calendarView.monthHeaderBinder =
+            object : MonthHeaderFooterBinder<MonthViewContainer> {
+                override fun create(view: View) = MonthViewContainer(view)
+                override fun bind(container: MonthViewContainer, month: CalendarMonth) {
+                    val daysOfWeek = daysOfWeek(firstDayOfWeek = firstDayOfWeekFromLocale())
+                    container.textViewSunday.text =
+                        daysOfWeek[0].getDisplayName(TextStyle.SHORT, Locale.KOREAN)
+                    container.textViewMonday.text =
+                        daysOfWeek[1].getDisplayName(TextStyle.SHORT, Locale.KOREAN)
+                    container.textViewTuesday.text =
+                        daysOfWeek[2].getDisplayName(TextStyle.SHORT, Locale.KOREAN)
+                    container.textViewWednesday.text =
+                        daysOfWeek[3].getDisplayName(TextStyle.SHORT, Locale.KOREAN)
+                    container.textViewThursday.text =
+                        daysOfWeek[4].getDisplayName(TextStyle.SHORT, Locale.KOREAN)
+                    container.textViewFriday.text =
+                        daysOfWeek[5].getDisplayName(TextStyle.SHORT, Locale.KOREAN)
+                    container.textViewSaturday.text =
+                        daysOfWeek[6].getDisplayName(TextStyle.SHORT, Locale.KOREAN)
+                }
             }
-        }
-
 
         //기간선택하기를 누르면, 활성화해주고, 범위선택
         binding.pdfRangeBtn.setOnClickListener {
-
             isDateSelectionEnabled = true
 
             // 기간선택 끝났는지 확인
@@ -213,14 +271,17 @@ class CalendarFragment : Fragment() {
                 val dateFormatter = DateTimeFormatter.ofPattern("yyyy년 M월 d일", Locale.getDefault())
 
                 // 커스텀 대화상자 생성
-                val dialogBinding = EpiDialogCustomBinding.inflate(inflater, container, false)
+                val inflater = LayoutInflater.from(requireContext())
+                val dialogBinding = EpiDialogCustomBinding.inflate(inflater)
 
                 // 대화상자 빌더 설정
-                val dialogBuilder = AlertDialog.Builder(requireContext(), R.style.RoundCornerDialogStyle)
+                val dialogBuilder =
+                    AlertDialog.Builder(requireContext(), R.style.RoundCornerDialogStyle)
                 dialogBuilder.setView(dialogBinding.root)
 
                 // 대화상자 메시지 설정
-                dialogBinding.dialogMessageTV.text = "$rangeStartDate 부터 $rangeEndDate \n 까지의 일지를 PDF로 변환하시겠습니까?"
+                dialogBinding.dialogMessageTV.text =
+                    "$rangeStartDate 부터 $rangeEndDate \n 까지의 일지를 PDF로 변환하시겠습니까?"
 
                 val alertDialog = dialogBuilder.create()
 
@@ -253,12 +314,8 @@ class CalendarFragment : Fragment() {
 
             // CalendarView를 업데이트하여 모든 날짜의 배경을 초기화
             binding.calendarView.notifyCalendarChanged()
-
         }
-
-        return view
     }
-
 
     fun setDateSelectionEnabled(enabled: Boolean) {
         isDateSelectionEnabled = enabled
@@ -268,8 +325,7 @@ class CalendarFragment : Fragment() {
         if (!isDateSelectionEnabled) {
             //Toast.makeText(context, "기간 선택이 비활성화되어 있습니다.", Toast.LENGTH_SHORT).show()
             return
-        }
-        else{
+        } else {
             if (rangeStartDate == null) {
                 rangeStartDate = date
             } else if (rangeEndDate == null) {
@@ -294,25 +350,34 @@ class CalendarFragment : Fragment() {
                 putString("date", date)
             }
         }
+
         bottomSheetFragment.show(parentFragmentManager, bottomSheetFragment.tag)
+    }
+}
+
+class GraphPage : Fragment() {
+    private var _binding: FragmentGraphBinding? = null
+    private val binding get() = _binding!!
+
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+        _binding = FragmentGraphBinding.inflate(inflater, container, false)
+        return binding.root
     }
 
     override fun onDestroyView() {
-        super.onDestroyView()
         _binding = null
+        super.onDestroyView()
     }
-}
 
-class DayViewContainer(view: View) : ViewContainer(view) {
-    val textView: TextView = view.findViewById(R.id.calendarDayText)
-}
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
-class MonthViewContainer(view: View) : ViewContainer(view) {
-    val textViewSunday: TextView = view.findViewById(R.id.sunday)
-    val textViewMonday: TextView = view.findViewById(R.id.monday)
-    val textViewTuesday: TextView = view.findViewById(R.id.tuesday)
-    val textViewWednesday: TextView = view.findViewById(R.id.wednesday)
-    val textViewThursday: TextView = view.findViewById(R.id.thursday)
-    val textViewFriday: TextView = view.findViewById(R.id.friday)
-    val textViewSaturday: TextView = view.findViewById(R.id.saturday)
+        with(binding) {
+            // TODO
+        }
+    }
 }
