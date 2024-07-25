@@ -55,6 +55,7 @@
             android:layout_marginEnd="10dp"
             app:cv_dayViewResource="@layout/week_calendar_day_layout"
             app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@id/titlesContainer" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
@@ -208,8 +209,8 @@
                         android:id="@+id/meal_carbohydrate_tv"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="10dp"
                         android:layout_gravity="center_horizontal"
+                        android:layout_marginTop="10dp"
                         android:text="탄수화물(g)"
                         android:textColor="@color/black"
                         app:layout_constraintEnd_toEndOf="parent"
@@ -218,9 +219,9 @@
 
                     <com.github.mikephil.charting.charts.PieChart
                         android:id="@+id/meal_carbohydrate_pie"
-                        android:layout_gravity="center_horizontal"
                         android:layout_width="75dp"
                         android:layout_height="75dp"
+                        android:layout_gravity="center_horizontal"
                         android:layout_marginTop="2dp"
                         android:layout_marginBottom="10dp"
                         app:layout_constraintDimensionRatio="1:1" />
@@ -253,8 +254,8 @@
                         android:id="@+id/meal_protein_tv"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="10dp"
                         android:layout_gravity="center_horizontal"
+                        android:layout_marginTop="10dp"
                         android:text="단백질(g)"
                         android:textColor="@color/black"
                         app:layout_constraintEnd_toEndOf="@id/meal_protein_line"
@@ -263,9 +264,9 @@
 
                     <com.github.mikephil.charting.charts.PieChart
                         android:id="@+id/meal_protein_pie"
-                        android:layout_gravity="center_horizontal"
                         android:layout_width="75dp"
                         android:layout_height="75dp"
+                        android:layout_gravity="center_horizontal"
                         android:layout_marginTop="2dp"
                         android:layout_marginBottom="10dp"
                         app:layout_constraintDimensionRatio="1:1" />
@@ -288,34 +289,32 @@
                     android:id="@+id/meal_fat_graph_container"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginEnd="20dp"
                     android:layout_marginTop="10dp"
+                    android:layout_marginEnd="20dp"
                     android:orientation="vertical"
-                    app:layout_constraintStart_toEndOf="@id/meal_protein_line"
                     app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@id/meal_protein_line"
                     app:layout_constraintTop_toTopOf="parent">
 
                     <TextView
                         android:id="@+id/meal_fat_tv"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="10dp"
                         android:layout_gravity="center_horizontal"
+                        android:layout_marginTop="10dp"
                         android:text="지방(g)"
                         android:textColor="@color/black" />
 
                     <com.github.mikephil.charting.charts.PieChart
                         android:id="@+id/meal_fat_pie"
-                        android:layout_gravity="center_horizontal"
                         android:layout_width="75dp"
                         android:layout_height="75dp"
+                        android:layout_gravity="center_horizontal"
                         android:layout_marginTop="2dp"
                         android:layout_marginBottom="10dp"
                         app:layout_constraintDimensionRatio="1:1" />
 
                 </LinearLayout>
-
-
 
 
             </androidx.constraintlayout.widget.ConstraintLayout>
@@ -470,8 +469,8 @@
                 <CheckBox
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:background="@drawable/meal_checklist_checkbtn"
-                    android:button="@null" />
+
+                    android:background="@drawable/meal_checklist_checkbtn"/>
             </LinearLayout>
 
             <LinearLayout
@@ -566,8 +565,7 @@
         android:id="@+id/buttonLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
-        android:layout_marginBottom="30dp"
+        android:layout_marginBottom="10dp"
         android:orientation="vertical"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -577,9 +575,8 @@
             android:id="@+id/goto_meal_manage_btn"
             android:layout_width="310dp"
             android:layout_height="56dp"
-            android:layout_gravity="center_horizontal"
+            android:layout_gravity="center"
             android:layout_marginTop="10dp"
-            android:layout_marginBottom="10dp"
             android:background="@drawable/purple_button_shape"
             android:gravity="center"
             android:text="식사 시간 관리하기"
