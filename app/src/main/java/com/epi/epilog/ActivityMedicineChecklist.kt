@@ -2,12 +2,13 @@ package com.epi.epilog
 
 import android.os.Bundle
 import android.util.TypedValue
+import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
-import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.core.view.children
+import androidx.fragment.app.Fragment
 import com.kizitonwose.calendar.core.WeekDay
 import com.kizitonwose.calendar.core.atStartOfMonth
 import com.kizitonwose.calendar.core.daysOfWeek
@@ -19,28 +20,29 @@ import java.time.LocalDate
 import java.time.YearMonth
 import java.util.Locale
 
-class ActivityMedicineChecklist : AppCompatActivity() {
+class MedicineChecklistFragment : Fragment() {
 
     private var selectedDate: LocalDate? = null
     private lateinit var weekCalendarView: WeekCalendarView
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.medicine_checklist)
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        val view = inflater.inflate(R.layout.medicine_checklist, container, false)
 
         // Toolbar 설정
-        val toolbar: Toolbar = findViewById(R.id.toolbar)
-        setSupportActionBar(toolbar)
-        supportActionBar?.setDisplayShowTitleEnabled(false)
-        val toolbarTitle: TextView = findViewById(R.id.toolbar_title)
-        toolbarTitle.text = "복용 약 관리"
+        val toolbar: Toolbar = view.findViewById(R.id.toolbar)
+        toolbar.title = "복용 약 관리"
 
         // Initialize WeekCalendarView
-        weekCalendarView = findViewById(R.id.meal_calendarView)
-        initWeekCalendarView()
+        weekCalendarView = view.findViewById(R.id.meal_calendarView)
+        initWeekCalendarView(view)
+
+        return view
     }
 
-    private fun initWeekCalendarView() {
+    private fun initWeekCalendarView(view: View) {
         weekCalendarView.dayBinder = object : WeekDayBinder<DayViewContainer> {
             override fun create(view: View) = DayViewContainer(view)
 
@@ -66,7 +68,7 @@ class ActivityMedicineChecklist : AppCompatActivity() {
         weekCalendarView.setup(startDate, endDate, daysOfWeek.first())
         weekCalendarView.scrollToWeek(currentDate)
 
-        val titlesContainer = findViewById<ViewGroup>(R.id.titlesContainer)
+        val titlesContainer = view.findViewById<ViewGroup>(R.id.titlesContainer)
         titlesContainer?.let { container ->
             container.children.toList().map { it as TextView }.forEachIndexed { index, textView ->
                 val dayOfWeek = daysOfWeek[index]

@@ -32,7 +32,6 @@
             android:theme="@style/TransparentTheme" />
         <activity android:name=".ActivityMedicineAddModify"
         />
-        <activity android:name=".ActivityMedicineChecklist"/>
 
         <activity android:name=".ActivityMealManageSex"/>
         <activity android:name=".ActivityMealManageExercise"/>

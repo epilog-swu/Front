@@ -470,7 +470,7 @@
                 <CheckBox
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:background="@drawable/meal_checklist_checkbtng"
+                    android:background="@drawable/meal_checklist_checkbtn"
                     android:button="@null" />
             </LinearLayout>
 
