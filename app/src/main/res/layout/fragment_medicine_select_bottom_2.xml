@@ -44,18 +44,19 @@
         android:visibility="visible"
         app:layout_constraintTop_toBottomOf="@id/btm_sheet_dlg_no_diary_title"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/write_diary_btn"/>
+        app:layout_constraintEnd_toEndOf="parent"/>
 
     <Button
         android:id="@+id/write_diary_btn"
         android:layout_width="300dp"
         android:layout_height="50dp"
         android:layout_marginBottom="20dp"
+        android:layout_marginTop="10dp"
         android:text="확인"
         android:textSize="16sp"
         android:textColor="@color/white"
         android:background="@drawable/purple_button_shape"
+        app:layout_constraintTop_toBottomOf="@id/time_picker"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"/>

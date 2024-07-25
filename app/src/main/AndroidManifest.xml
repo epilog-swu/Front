@@ -30,9 +30,8 @@
             android:theme="@style/TransparentTheme" />
         <activity android:name=".ActivityShowFailDialog"
             android:theme="@style/TransparentTheme" />
-        <activity android:name=".ActivityMedicineAddModify"
-        />
-
+<activity android:name=".MedicineAddModifyActivity"/>
+        <activity android:name=".MedicineDetailActivity"/>
         <activity android:name=".ActivityMealManageSex"/>
         <activity android:name=".ActivityMealManageExercise"/>
         <activity android:name=".ActivityMealManageWeight"/>

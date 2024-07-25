@@ -1,11 +1,17 @@
 package com.epi.epilog
 
+import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
+import android.widget.LinearLayout
 import android.widget.TextView
+import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.core.view.children
 import androidx.fragment.app.Fragment
@@ -29,20 +35,57 @@ class MedicineChecklistFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val view = inflater.inflate(R.layout.medicine_checklist, container, false)
+        val view = inflater.inflate(R.layout.fragment_medicine_checklist, container, false)
 
         // Toolbar 설정
         val toolbar: Toolbar = view.findViewById(R.id.toolbar)
-        toolbar.title = "복용 약 관리"
+        (activity as? AppCompatActivity)?.setSupportActionBar(toolbar)
+        (activity as? AppCompatActivity)?.supportActionBar?.setDisplayShowTitleEnabled(false)
 
         // Initialize WeekCalendarView
         weekCalendarView = view.findViewById(R.id.meal_calendarView)
         initWeekCalendarView(view)
 
+        view.findViewById<Button>(R.id.add_existing_medicine_button).setOnClickListener {
+            startActivity(Intent(context, MedicineDetailActivity::class.java))
+        }
+
+        view.findViewById<Button>(R.id.add_medicine_button).setOnClickListener {
+            startActivity(Intent(context, MedicineAddModifyActivity::class.java))
+        }
+
+        // Add click listener to medicine items
+        addMedicineItemClickListener(view)
+
         return view
     }
 
+    private fun addMedicineItemClickListener(view: View) {
+        val medicineItems = listOf(
+            view.findViewById<LinearLayout>(R.id.red_box),
+            view.findViewById<LinearLayout>(R.id.orange_box),
+            view.findViewById<LinearLayout>(R.id.purple_box)
+        )
+
+       medicineItems.forEach { item ->
+          item.setOnClickListener {
+              val bottomSheet = MedicineBottomSheetFragment()
+               bottomSheet.show(parentFragmentManager, bottomSheet.tag)
+          }
+        }
+    }
+
     private fun initWeekCalendarView(view: View) {
+        Log.d("MedicineChecklistFragment", "initWeekCalendarView 시작")
+
+        setupDayBinder()
+        setupCalendarView()
+        setupDayTitles(view)
+
+        Log.d("MedicineChecklistFragment", "initWeekCalendarView 끝")
+    }
+
+    private fun setupDayBinder() {
         weekCalendarView.dayBinder = object : WeekDayBinder<DayViewContainer> {
             override fun create(view: View) = DayViewContainer(view)
 
@@ -58,7 +101,9 @@ class MedicineChecklistFragment : Fragment() {
                 }
             }
         }
+    }
 
+    private fun setupCalendarView() {
         val currentDate = LocalDate.now()
         val currentMonth = YearMonth.now()
         val startDate = currentMonth.minusMonths(100).atStartOfMonth()
@@ -67,16 +112,26 @@ class MedicineChecklistFragment : Fragment() {
 
         weekCalendarView.setup(startDate, endDate, daysOfWeek.first())
         weekCalendarView.scrollToWeek(currentDate)
+    }
 
-        val titlesContainer = view.findViewById<ViewGroup>(R.id.titlesContainer)
+    private fun setupDayTitles(view: View) {
+        val titlesContainer = view.findViewById<ViewGroup>(R.id.app_calendar_day_titles_container)
         titlesContainer?.let { container ->
+            val daysOfWeek = daysOfWeek(firstDayOfWeek = DayOfWeek.SUNDAY)
             container.children.toList().map { it as TextView }.forEachIndexed { index, textView ->
                 val dayOfWeek = daysOfWeek[index]
                 val title = dayOfWeek.getDisplayName(java.time.format.TextStyle.SHORT, Locale.getDefault())
                 textView.text = title
-                textView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 14f)
+                textView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 6f)
+
+                val layoutParams = textView.layoutParams as ViewGroup.MarginLayoutParams
+                layoutParams.marginStart = 5
+                layoutParams.topMargin = 5
+                textView.layoutParams = layoutParams
+            } ?: run {
+                Toast.makeText(context, "Titles container not found", Toast.LENGTH_SHORT).show()
             }
-        }
+        } ?: Log.e("MedicineChecklistFragment", "titlesContainer is null")
     }
 
     private fun onDateSelected(date: LocalDate) {

@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="295dp"
     android:layout_height="wrap_content"
     android:layout_gravity="center"
-    android:background="@drawable/dialog_background"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    android:background="@drawable/dialog_background">
 
     <TextView
         android:id="@+id/dialogThemeTV"
@@ -17,7 +17,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toTopOf="@+id/dialogline"/>
+        app:layout_constraintBottom_toTopOf="@+id/dialogline" />
 
     <ImageView
         android:id="@+id/dialogline"
@@ -28,7 +28,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@id/dialogThemeTV"
-        app:layout_constraintBottom_toTopOf="@+id/dialogMessageTV"/>
+        app:layout_constraintBottom_toTopOf="@+id/dialogMessageTV" />
 
     <TextView
         android:id="@+id/dialogMessageTV"
@@ -37,15 +37,13 @@
         android:gravity="center"
         android:textColor="@color/black"
         android:textSize="14sp"
-        android:text="삭제하실 경우 복구가\n
-불가능합니다"
+        android:text="삭제하실 경우 복구가\n불가능합니다"
         android:layout_marginTop="10dp"
         android:layout_marginBottom="10dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@id/dialogline"
-        app:layout_constraintBottom_toTopOf="@+id/dialogCancleBtn"/>
-
+        app:layout_constraintBottom_toTopOf="@+id/dialogCancleBtn" />
 
     <Button
         android:id="@+id/dialogCancleBtn"
@@ -59,8 +57,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/dialogOkBtn"
         app:layout_constraintTop_toBottomOf="@id/dialogMessageTV"
-        app:layout_constraintBottom_toBottomOf="parent"/>
-
+        app:layout_constraintBottom_toBottomOf="parent" />
 
     <Button
         android:id="@+id/dialogOkBtn"
@@ -74,8 +71,6 @@
         app:layout_constraintStart_toEndOf="@+id/dialogCancleBtn"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@id/dialogMessageTV"
-        app:layout_constraintBottom_toBottomOf="parent"/>
-
-
+        app:layout_constraintBottom_toBottomOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

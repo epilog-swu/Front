@@ -1,4 +1,5 @@
 <androidx.constraintlayout.widget.ConstraintLayout
+    android:id="@+id/medicineDetailFragment"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -43,6 +44,7 @@
         app:layout_constraintEnd_toEndOf="parent">
 
         <ImageView
+            android:layout_marginEnd="40dp"
             android:layout_width="30dp"
             android:layout_height="40dp"
             android:src="@drawable/prev"
@@ -51,7 +53,7 @@
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
+            android:layout_weight="2"
             android:orientation="vertical"
             android:gravity="center_horizontal">
 
@@ -62,6 +64,7 @@
         </LinearLayout>
 
         <ImageView
+            android:layout_marginStart="40dp"
             android:layout_width="30dp"
             android:layout_height="40dp"
             android:src="@drawable/next"
@@ -168,7 +171,7 @@
                 android:id="@+id/medicine_effect"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="이 약은 심근경색, 뇌경색, 불안정형 협심증에서 혈전 생성 억제기간중 또는 후에 사용됩니다."
+                android:text="이 약은 심근경색, 뇌경색, 불안정형 협심증에서 혈전 생성 억제와?관상동맥 우회술(CABG) 또는 경피경관 관상동맥 성형술(PTCA) 후 혈전 생성 억제와 고위험군환자(허혈성 심장질환의 가족력, 고혈압, 고콜레스테롤혈증, 비만, 당뇨 등 복합적 위험인자를 가진 환자)에서 심혈관계 위험성 감소에 사용합니다."
                 android:layout_marginTop="8dp"
                 android:textSize="14sp"
                 android:textColor="#000"/>
@@ -187,7 +190,7 @@
                 android:id="@+id/medicine_precaution"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="매일 세잔 이상 장기적 음주가 이 약 또는 다른 성분의 효과를 떨어뜨릴 수 있습니다."
+                android:text="매일 세잔 이상 정기적 음주자가 이 약 또는 다른 해열진통제를 복용할 때는 의사 또는 약사와 상의하십시오. 위장출혈을 일으킬 수 있습니다."
                 android:layout_marginTop="8dp"
                 android:textSize="14sp"
                 android:textColor="#000"/>
@@ -206,7 +209,7 @@
                 android:id="@+id/medicine_storage"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="습기를 피해 실온에서 보관하십시오. 어린이의 손이 닿지 않는 곳에 보관하십시오."
+                android:text="습기를 피해 실온에서 보관하십시오.\n어린이의 손이 닿지 않는 곳에 보관하십시오."
                 android:layout_marginTop="8dp"
                 android:textSize="14sp"
                 android:textColor="#000"/>
@@ -250,6 +253,7 @@
         android:weightSum="2">
 
         <Button
+            android:id="@+id/adjust_button"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -260,13 +264,14 @@
             android:textSize="18sp"/>
 
         <Button
+            android:id="@+id/delete_button"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
             android:layout_marginStart="8dp"
+            android:layout_weight="1"
             android:background="@drawable/purple_solid_button_shape_2"
             android:text="삭제"
             android:textColor="@color/메인보라"
-            android:textSize="18sp"/>
+            android:textSize="18sp" />
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
