@@ -1,21 +1,15 @@
 package com.epi.epilog.presentation
 
-import android.Manifest
 import android.content.Context
 import android.content.Intent
-import android.content.pm.PackageManager
-import android.location.Location
 import android.media.MediaPlayer
-import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
-import android.os.PowerManager
 import android.util.Log
 import android.widget.Button
-import android.widget.Toast
+import android.widget.TextView
 import androidx.activity.ComponentActivity
-import androidx.core.app.ActivityCompat
 import com.epi.epilog.R
 import com.epi.epilog.presentation.theme.api.LocationData
 import com.epi.epilog.presentation.theme.api.RetrofitService
@@ -28,24 +22,27 @@ import retrofit2.Callback
 import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
-import java.util.Timer
-import java.util.TimerTask
 
 class FallDetectionActivity : ComponentActivity() {
 
-    private val timer = Timer()
     private lateinit var fusedLocationClient: FusedLocationProviderClient
     private lateinit var mediaPlayer: MediaPlayer
     private val handler = Handler(Looper.getMainLooper())
     private lateinit var retrofitService: RetrofitService
+    private lateinit var timerTextView: TextView
+    private var timeRemaining = 15 // 15초 타이머
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_fall_detection)
+
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
         mediaPlayer = MediaPlayer.create(this, R.raw.emergency_sound)
+        timerTextView = findViewById(R.id.timer_text)
+
         initializeRetrofit()
         playSound()
+
         findViewById<Button>(R.id.dialog_fall_button_yes).setOnClickListener {
             sendFallDetectionResult(true)
             navigateToMainActivity()
@@ -55,11 +52,8 @@ class FallDetectionActivity : ComponentActivity() {
             sendFallDetectionResult(false)
             navigateToMainActivity()
         }
-        //10초동안 버튼 클릭 X -> 위치 전송
-        handler.postDelayed({
-            sendFallDetectionResult(true)
-            navigateToMainActivity()
-        }, 10000)
+
+        startTimer()
     }
 
     private fun playSound() {
@@ -67,7 +61,6 @@ class FallDetectionActivity : ComponentActivity() {
         handler.postDelayed({
             mediaPlayer.pause()
             mediaPlayer.seekTo(0)
-
         }, 3500)
     }
 
@@ -115,6 +108,22 @@ class FallDetectionActivity : ComponentActivity() {
                 }
             })
         }
+    }
+
+    private fun startTimer() {
+        val timerTask = object : Runnable {
+            override fun run() {
+                if (timeRemaining > 0) {
+                    timerTextView.text = timeRemaining.toString()
+                    timeRemaining--
+                    handler.postDelayed(this, 1000)
+                } else {
+                    sendFallDetectionResult(true)
+                    navigateToMainActivity()
+                }
+            }
+        }
+        handler.post(timerTask)
     }
 
     private fun navigateToMainActivity() {
