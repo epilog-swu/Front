@@ -47,16 +47,17 @@ class FallDetectionActivity : ComponentActivity() {
         initializeRetrofit()
         playSound()
         findViewById<Button>(R.id.dialog_fall_button_yes).setOnClickListener {
-//            sendLocationData()
+            sendFallDetectionResult(true)
             navigateToMainActivity()
         }
 
         findViewById<Button>(R.id.dialog_fall_button_no).setOnClickListener {
+            sendFallDetectionResult(false)
             navigateToMainActivity()
         }
         //10초동안 버튼 클릭 X -> 위치 전송
         handler.postDelayed({
-//            sendLocationData()
+            sendFallDetectionResult(true)
             navigateToMainActivity()
         }, 10000)
     }
@@ -70,18 +71,12 @@ class FallDetectionActivity : ComponentActivity() {
         }, 3500)
     }
 
-    private fun sendLocationData() {
-
-        // Hardcoded latitude and longitude
-        val lat = 37.6292514
-        val lon = 127.0904845
-        val locationData = LocationData(lat, lon)
-        Log.d("좌표", "Latitude: $lat, Longitude: $lon")  // 현재 위도와 경도 값을 출력
-
-        postLocationData(locationData)
-
-
+    private fun sendFallDetectionResult(isFallConfirmed: Boolean) {
+        val intent = Intent("com.epi.epilog.FALL_DETECTION_RESULT")
+        intent.putExtra("isFallConfirmed", isFallConfirmed)
+        sendBroadcast(intent)
     }
+
     private fun initializeRetrofit() {
         val gson: Gson = GsonBuilder().setLenient().create()
         val retrofit = Retrofit.Builder()
@@ -95,6 +90,7 @@ class FallDetectionActivity : ComponentActivity() {
         val sharedPreferences = getSharedPreferences("AppPrefs", Context.MODE_PRIVATE)
         return sharedPreferences.getString("AuthToken", null)
     }
+
     private fun postLocationData(locationData: LocationData) {
         val token = getTokenFromSession()
 
