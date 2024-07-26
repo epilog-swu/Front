@@ -86,13 +86,13 @@ interface RetrofitService {
 data class TokenData(val token: String)
 
 
-data class SensorDataWithRotation(
-    val x: Float,
-    val y: Float,
-    val z: Float,
-    val rotationX: Float,
-    val rotationY: Float,
-    val rotationZ: Float
+data class SensorData(
+    val accX: Float,
+    val accY: Float,
+    val accZ: Float,
+    val gyroX: Float,
+    val gyroY: Float,
+    val gyroZ: Float
 )
 
 data class MealUpdateInfo(

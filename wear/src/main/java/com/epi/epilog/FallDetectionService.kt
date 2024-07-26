@@ -29,16 +29,18 @@ import androidx.core.app.NotificationCompat
 import com.epi.epilog.presentation.ApiResponse
 import com.epi.epilog.presentation.theme.api.LocationData
 import com.epi.epilog.presentation.theme.api.RetrofitService
-import com.epi.epilog.presentation.theme.api.SensorDataWithRotation
+import com.epi.epilog.presentation.theme.api.SensorData
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import org.java_websocket.client.WebSocketClient
 import org.java_websocket.handshake.ServerHandshake
+import org.java_websocket.exceptions.WebsocketNotConnectedException
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import java.lang.Math.round
 import java.net.URI
 import java.net.URISyntaxException
 import java.util.Timer
@@ -49,8 +51,7 @@ class FallDetectionService : Service(), SensorEventListener, LocationListener {
     private lateinit var sensorManager: SensorManager
     private var accelerometer: Sensor? = null
     private var gyroscope: Sensor? = null
-
-    private val sensorData = mutableListOf<SensorDataWithRotation>()
+    private val sensorData = mutableListOf<SensorData>()
     private lateinit var retrofitService: RetrofitService
     private lateinit var locationManager: LocationManager
     private val channelId = "FallDetectionServiceChannel"
@@ -66,16 +67,17 @@ class FallDetectionService : Service(), SensorEventListener, LocationListener {
     private var isDataTransmissionPaused = false
     private var webSocketClient: WebSocketClient? = null
 
-    private var lastTimestamp: Long = 0
-    private var rotationAngles = FloatArray(3)
-
     override fun onCreate() {
         super.onCreate()
         sensorManager = getSystemService(SENSOR_SERVICE) as SensorManager
         accelerometer = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER)
         gyroscope = sensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE)
-        sensorManager.registerListener(this, accelerometer, SensorManager.SENSOR_DELAY_GAME)
-        sensorManager.registerListener(this, gyroscope, SensorManager.SENSOR_DELAY_GAME)
+
+        // 측정 주파수를 40Hz로 설정 (기존 80Hz의 절반)
+        val sensorDelay = (1000000 / 50).toInt() // 마이크로초 단위로 계산
+
+        sensorManager.registerListener(this, accelerometer, sensorDelay)
+        sensorManager.registerListener(this, gyroscope, sensorDelay)
 
         initializeRetrofit()
         startForegroundService()
@@ -92,28 +94,36 @@ class FallDetectionService : Service(), SensorEventListener, LocationListener {
     private fun initializeWebSocket() {
         val token = getTokenFromSession()
         try {
+            // URI 객체를 사용하여 웹소켓 서버에 연결
             val serverEndpoint = "epilog-develop-env.eba-imw3vi3g.ap-northeast-2.elasticbeanstalk.com"
+
+            // Construct the WebSocket URI with the server endpoint and token
             val uri = URI("ws://$serverEndpoint/detection/fall?token=$token")
             webSocketClient = object : WebSocketClient(uri) {
+                // 웹소켓 연결이 열렸을 때 호출
                 override fun onOpen(handshakedata: ServerHandshake?) {
                     Log.d("WebSocket", "Opened")
                     stopReconnectTimer()
                 }
 
+                // 서버로부터 메시지를 받을 때 호출
                 override fun onMessage(message: String?) {
                     Log.d("WebSocket", "Message received: $message")
                 }
 
+                // 웹소켓 연결이 닫혔을 때 호출
                 override fun onClose(code: Int, reason: String?, remote: Boolean) {
                     Log.d("WebSocket", "Closed: $reason")
                     startReconnectTimer()
                 }
 
+                // 웹소켓 오류가 발생했을 때 호출
                 override fun onError(ex: Exception?) {
                     Log.e("WebSocket", "Error: ${ex?.message}")
                     startReconnectTimer()
                 }
             }
+            // 웹소켓 연결 시작
             webSocketClient?.connect()
         } catch (e: URISyntaxException) {
             e.printStackTrace()
@@ -136,6 +146,7 @@ class FallDetectionService : Service(), SensorEventListener, LocationListener {
         reconnectTimer = null
     }
 
+    // 웹소켓을 통해 비상 위치 전송
     private fun sendWebSocketEmergencyLocation(locationData: LocationData, isPermissionDenied: Boolean) {
         if (webSocketClient != null && webSocketClient!!.isOpen) {
             val message = Gson().toJson(mapOf(
@@ -152,34 +163,50 @@ class FallDetectionService : Service(), SensorEventListener, LocationListener {
         }
     }
 
-    private fun sendWebSocketSensorData(data: List<SensorDataWithRotation>) {
+    // 웹소켓을 통해 센서 데이터 전송
+    private fun sendWebSocketSensorData(data: List<SensorData>) {
         if (webSocketClient != null && webSocketClient!!.isOpen) {
-            val message = Gson().toJson(mapOf(
+            val gson = Gson()
+            val jsonString = gson.toJson(mapOf(
                 "event" to "fall",
                 "data" to mapOf(
                     "fall" to data.map { mapOf(
-                        "x" to it.x,
-                        "y" to it.y,
-                        "z" to it.z,
-                        "rotationX" to it.rotationX,
-                        "rotationY" to it.rotationY,
-                        "rotationZ" to it.rotationZ
-                    ) }
+                        "accX" to roundToTwoDecimalPlaces(it.accX),
+                        "accY" to roundToTwoDecimalPlaces(it.accY),
+                        "accZ" to roundToTwoDecimalPlaces(it.accZ),
+                        "gyroX" to roundToTwoDecimalPlaces(it.gyroX),
+                        "gyroY" to roundToTwoDecimalPlaces(it.gyroY),
+                        "gyroZ" to roundToTwoDecimalPlaces(it.gyroZ)
+                    )
+                    }
                 )
             ))
-            webSocketClient?.send(message)
-            Log.d("WebSocket", "Sent fall detection data: $message")
+
+            try {
+                webSocketClient?.send(jsonString)
+                Log.d("WebSocket", jsonString)
+                Log.d("WebSocket", "Sent fall detection data")
+            } catch (e: WebsocketNotConnectedException) {
+                Log.e("WebSocket", "WebSocket is not connected", e)
+                // 재연결 시도 또는 다른 처리 로직을 추가할 수 있습니다.
+            }
         } else {
             Log.e("WebSocket", "WebSocket is not connected")
         }
     }
 
+    private fun roundToTwoDecimalPlaces(value: Float): Float {
+        return String.format("%.2f", value).toFloat()
+    }
+
+    // 포그라운드 서비스 시작
     private fun startForegroundService() {
         createNotificationChannel()
         val notification = createNotification("Monitoring for falls in the background")
         startForeground(notificationId, notification)
     }
 
+    // 알림 채널 생성
     private fun createNotificationChannel() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val channel = NotificationChannel(channelId, "Fall Detection Service", NotificationManager.IMPORTANCE_DEFAULT)
@@ -188,6 +215,7 @@ class FallDetectionService : Service(), SensorEventListener, LocationListener {
         }
     }
 
+    // 알림 생성
     private fun createNotification(contentText: String): Notification {
         return NotificationCompat.Builder(this, channelId)
             .setContentTitle("Fall Detection Service")
@@ -196,6 +224,7 @@ class FallDetectionService : Service(), SensorEventListener, LocationListener {
             .build()
     }
 
+    // Retrofit 초기화
     private fun initializeRetrofit() {
         val gson: Gson = GsonBuilder().setLenient().create()
         val retrofit = Retrofit.Builder()
@@ -205,17 +234,20 @@ class FallDetectionService : Service(), SensorEventListener, LocationListener {
         retrofitService = retrofit.create(RetrofitService::class.java)
     }
 
+    // 세션에서 토큰 가져오기
     private fun getTokenFromSession(): String? {
         val sharedPreferences = getSharedPreferences("AppPrefs", MODE_PRIVATE)
         return sharedPreferences.getString("AuthToken", null)
     }
 
+    // WakeLock 획득
     private fun acquireWakeLock() {
         val powerManager = getSystemService(POWER_SERVICE) as PowerManager
         wakeLock = powerManager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "FallDetectionService::WakeLock")
         wakeLock.acquire()
     }
 
+    // 위치 관리자 초기화
     @SuppressLint("MissingPermission")
     private fun initializeLocationManager() {
         locationManager = getSystemService(LOCATION_SERVICE) as LocationManager
@@ -235,6 +267,7 @@ class FallDetectionService : Service(), SensorEventListener, LocationListener {
         }
     }
 
+    // 위치 변경 시 호출
     override fun onLocationChanged(location: Location) {
         currentLocation = location
         Log.d("LocationUpdate", "New Location: Latitude ${location.latitude}, Longitude ${location.longitude}")
@@ -246,36 +279,27 @@ class FallDetectionService : Service(), SensorEventListener, LocationListener {
 
     override fun onProviderDisabled(provider: String) {}
 
+    // 센서 데이터 변경 시 호출
     override fun onSensorChanged(event: SensorEvent?) {
         event?.let {
-            when (it.sensor.type) {
-                Sensor.TYPE_ACCELEROMETER -> {
-                    val x = it.values[0]
-                    val y = it.values[1]
-                    val z = it.values[2]
-                    synchronized(sensorData) {
-                        if (!isDataTransmissionPaused) {
-                            sensorData.add(SensorDataWithRotation(x, y, z, rotationAngles[0], rotationAngles[1], rotationAngles[2]))
-                        }
+            val x = it.values[0]
+            val y = it.values[1]
+            val z = it.values[2]
+            val sensorType = it.sensor.type
+
+            synchronized(sensorData) {
+                if (!isDataTransmissionPaused) {
+                    when (sensorType) {
+                        Sensor.TYPE_ACCELEROMETER -> sensorData.add(SensorData(x, y, z, 0f, 0f, 0f))
+                        Sensor.TYPE_GYROSCOPE -> sensorData.add(SensorData(0f, 0f, 0f, x, y, z))
+
                     }
-                }
-                Sensor.TYPE_GYROSCOPE -> {
-                    if (lastTimestamp != 0L) {
-                        val dt = (it.timestamp - lastTimestamp) * NS2S
-                        rotationAngles[0] += it.values[0] * dt
-                        rotationAngles[1] += it.values[1] * dt
-                        rotationAngles[2] += it.values[2] * dt
-                    }
-                    lastTimestamp = it.timestamp
                 }
             }
         }
     }
 
-    companion object {
-        private const val NS2S = 1.0f / 1000000000.0f
-    }
-
+    // 비상 절차 시작
     private fun startEmergencyProcedures() {
         mediaPlayer = MediaPlayer.create(this, R.raw.emergency_sound)
         mediaPlayer.start()
@@ -295,6 +319,7 @@ class FallDetectionService : Service(), SensorEventListener, LocationListener {
                     fallASound.start()
 
                     fallASound.setOnCompletionListener {
+                        // 모든 소리가 끝난 후 데이터 전송 재개
                         isDataTransmissionPaused = false
                     }
                 }, 3000)
@@ -303,6 +328,7 @@ class FallDetectionService : Service(), SensorEventListener, LocationListener {
         }, 3500)
     }
 
+    // 비상 위치 전송
     private fun sendEmergencyLocation() {
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
             ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
@@ -319,20 +345,26 @@ class FallDetectionService : Service(), SensorEventListener, LocationListener {
         sendWebSocketEmergencyLocation(locationData, false)
     }
 
+    // 데이터 전송 타이머 시작
     private fun startDataTransmissionTimer() {
         timer.schedule(object : TimerTask() {
             override fun run() {
-                synchronized(sensorData) {
-                    if (sensorData.isNotEmpty()) {
-                        Log.d("SensorData", "Sending data: $sensorData")
-                        sendWebSocketSensorData(ArrayList(sensorData))
-                        sensorData.clear()
+                try {
+                    synchronized(sensorData) {
+                        if (sensorData.isNotEmpty()) {
+                            Log.d("SensorData", "Sending data: $sensorData")
+                            sendWebSocketSensorData(ArrayList(sensorData))
+                            sensorData.clear()
+                        }
                     }
+                } catch (e: Exception) {
+                    Log.e("TimerTask", "Error in TimerTask", e)
                 }
             }
         }, 0, 1000)
     }
 
+    // 알림 업데이트
     private fun updateNotification(isFallDetected: Boolean) {
         try {
             val contentText = if (isFallDetected) "낙상 상황입니다" else "낙상 상황이 아닙니다"
