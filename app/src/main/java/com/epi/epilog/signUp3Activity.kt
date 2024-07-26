@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.os.CountDownTimer
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import android.view.View
 import android.widget.Button
 import android.widget.EditText
@@ -34,13 +35,10 @@ class signUp3Activity : AppCompatActivity() {
         // Toolbar 설정
         val toolbar: Toolbar = findViewById(R.id.toolbar)
         setSupportActionBar(toolbar)
-
-        // 기본 타이틀 숨기기
         supportActionBar?.setDisplayShowTitleEnabled(false)
-
-        // Custom TextView 설정
         val toolbarTitle: TextView = findViewById(R.id.toolbar_title)
         toolbarTitle.text = getString(R.string.signup)
+
         editTextName = findViewById(R.id.editTextText)
         editTextPhone = findViewById(R.id.editTextText2)
         editTextVerification = findViewById(R.id.editTextText3)
@@ -51,7 +49,6 @@ class signUp3Activity : AppCompatActivity() {
         textNameError = findViewById(R.id.textName)
         textPhoneNumberError = findViewById(R.id.textPhoneNumber)
 
-        // 전화번호 입력 중 하이픈 자동 추가 TextWatcher
         editTextPhone.addTextChangedListener(object : TextWatcher {
             private var isFormatting = false
             private var deleteChar = false
@@ -94,8 +91,8 @@ class signUp3Activity : AppCompatActivity() {
         })
 
         verifyButton.setOnClickListener {
-            val phone = editTextPhone.text.toString().trim()
-            if (phone.matches(Regex("^\\d{3}-\\d{4}-\\d{4}\$"))) {
+            val phone = editTextPhone.text.toString().trim().replace("-", "")
+            if (phone.matches(Regex("^\\d{11}\$"))) {
                 isVerificationSent = true
                 textNameError.visibility = View.GONE
                 textPhoneNumberError.visibility = View.GONE
@@ -123,17 +120,40 @@ class signUp3Activity : AppCompatActivity() {
 
         nextButton.setOnClickListener {
             if (validateInputs()) {
-                val intent = Intent(this, signUp4Activity::class.java)
-                startActivity(intent)
+                val loginId = intent.getStringExtra("loginId") ?: ""
+                val password = intent.getStringExtra("password") ?: ""
+                val name = intent.getStringExtra("name") ?: ""
+                val stature = intent.getFloatExtra("stature", 0f)
+                val weight = intent.getFloatExtra("weight", 0f)
+                val gender = intent.getStringExtra("gender") ?: ""
+                val protectorName = editTextName.text.toString().trim()
+                val protectorPhone = editTextPhone.text.toString().trim().replace("-", "")
+
+                val newIntent = Intent(this, signUp4Activity::class.java).apply {
+                    putExtra("loginId", loginId)
+                    putExtra("password", password)
+                    putExtra("name", name)
+                    putExtra("stature", stature)
+                    putExtra("weight", weight)
+                    putExtra("gender", gender)
+                    putExtra("protectorName", protectorName)
+                    putExtra("protectorPhone", protectorPhone)
+                }
+
+                // 로그 메시지 출력
+                Log.d("signUp3Activity", "전달 값 : loginId=$loginId, password=$password, name=$name, stature=$stature, weight=$weight, gender=$gender, protectorName=$protectorName, protectorPhone=$protectorPhone")
+
+                startActivity(newIntent)
             } else {
                 Toast.makeText(this, "모든 항목을 작성해 주세요.", Toast.LENGTH_SHORT).show()
             }
         }
+
     }
 
     private fun validateInputs(): Boolean {
         val name = editTextName.text.toString().trim()
-        val phone = editTextPhone.text.toString().trim()
+        val phone = editTextPhone.text.toString().trim().replace("-", "")
         val verification = editTextVerification.text.toString().trim()
 
         if (name.isEmpty() || phone.isEmpty() || verification.isEmpty() || !isVerificationConfirmed) {

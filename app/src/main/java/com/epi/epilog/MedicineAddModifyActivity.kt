@@ -1,4 +1,3 @@
-// com/epi/epilog/MedicineAddModifyActivity.kt
 package com.epi.epilog
 
 import android.app.DatePickerDialog

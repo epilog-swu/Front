@@ -1,17 +1,23 @@
 package com.epi.epilog
 
-import android.content.ClipData
-import android.content.ClipboardManager
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.text.SpannableString
 import android.text.Spanned
 import android.text.style.UnderlineSpan
+import android.util.Log
 import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import com.epi.epilog.presentation.theme.api.Medication
+import com.epi.epilog.presentation.theme.api.RetrofitClient
+import com.epi.epilog.presentation.theme.api.SignUpRequest
+import com.epi.epilog.presentation.theme.api.SignUpResponse
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
 class signUp5Activity : AppCompatActivity() {
 
@@ -31,9 +37,60 @@ class signUp5Activity : AppCompatActivity() {
         spannableString.setSpan(UnderlineSpan(), 0, content.length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
         textViewCopy.text = spannableString
 
-        completeButton.setOnClickListener {
-            val intent = Intent(this, startActivity::class.java)
-            startActivity(intent)
-        }
+        completeButton.setOnClickListener { signUp() }
+    }
+
+    private fun signUp() {
+        val loginId = intent.getStringExtra("loginId") ?: return
+        val password = intent.getStringExtra("password") ?: return
+        val name = intent.getStringExtra("name") ?: return
+        val stature = intent.getFloatExtra("stature", 0f)
+        val weight = intent.getFloatExtra("weight", 0f)
+        val gender = intent.getStringExtra("gender") ?: return
+        val protectorName = intent.getStringExtra("protectorName") ?: return
+        val protectorPhone = intent.getStringExtra("protectorPhone") ?: return
+        val medications = intent.getSerializableExtra("medications") as? List<Medication> ?: emptyList()
+
+        val signUpRequest = SignUpRequest(
+            loginId = loginId,
+            password = password,
+            name = name,
+            stature = stature,
+            weight = weight,
+            gender = gender,
+            protectorName = protectorName,
+            protectorPhone = protectorPhone,
+            medication = medications
+        )
+
+        RetrofitClient.retrofitService.signUp(signUpRequest).enqueue(object : Callback<SignUpResponse> {
+            override fun onResponse(call: Call<SignUpResponse>, response: Response<SignUpResponse>) {
+                if (response.isSuccessful) {
+                    val responseBody = response.body()
+                    if (responseBody?.success == true) {
+                        saveTokenToSession(responseBody.token)
+
+                        Log.d("signUp5Activity", "전달 값 : loginId=$loginId, password=$password, name=$name, stature=$stature, weight=$weight, gender=$gender, protectorName=$protectorName, protectorPhone=$protectorPhone, medications=$medications")
+
+                        val intent = Intent(this@signUp5Activity, startActivity::class.java)
+                        startActivity(intent)
+                        finish()
+                    } else {
+                        Toast.makeText(this@signUp5Activity,  "회원가입 실패", Toast.LENGTH_SHORT).show()
+                    }
+                } else {
+                    Toast.makeText(this@signUp5Activity, "회원가입 실패", Toast.LENGTH_SHORT).show()
+                }
+            }
+
+            override fun onFailure(call: Call<SignUpResponse>, t: Throwable) {
+                Toast.makeText(this@signUp5Activity, "회원가입 실패: ${t.message}", Toast.LENGTH_SHORT).show()
+            }
+        })
+    }
+
+    private fun saveTokenToSession(token: String) {
+        val sharedPreferences = getSharedPreferences("AppPrefs", Context.MODE_PRIVATE)
+        sharedPreferences.edit().putString("AuthToken", token).apply()
     }
 }
