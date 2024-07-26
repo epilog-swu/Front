@@ -39,7 +39,7 @@
         android:layout_gravity="center"
         android:background="@drawable/white_button_shape"
         android:gravity="center"
-        android:text="다음"
+        android:text="시작하기"
         android:layout_marginTop="10dp"
         android:textColor="@color/main_purple"
         android:textSize="20dp" />

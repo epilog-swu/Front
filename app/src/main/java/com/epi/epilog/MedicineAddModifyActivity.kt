@@ -1,6 +1,7 @@
 package com.epi.epilog
 
 import android.app.DatePickerDialog
+import android.content.Intent
 import android.graphics.Color
 import android.graphics.drawable.Drawable
 import android.os.Bundle
@@ -12,7 +13,7 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import java.util.*
 
-class ActivityMedicineAddModify : AppCompatActivity() {
+class MedicineAddModifyActivity : AppCompatActivity() {
 
     private lateinit var medicationEditText: EditText
     private lateinit var addButton: Button
@@ -35,11 +36,22 @@ class ActivityMedicineAddModify : AppCompatActivity() {
         addButton.setOnClickListener {
             addMedicationItem(medicationEditText.text.toString())
         }
+
+        findViewById<Button>(R.id.save_button).setOnClickListener {
+            val intent = Intent(this, MainActivity::class.java).apply {
+                flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK
+                putExtra("navigateToFragment", "MedicineChecklistFragment")
+            }
+            Toast.makeText(this, "저장되었습니다", Toast.LENGTH_SHORT).show()
+            startActivity(intent)
+        }
+
     }
 
     private fun addMedicationItem(medicationName: String) {
         if (medicationName.isNotEmpty()) {
             val medicationItem = LayoutInflater.from(this).inflate(R.layout.medicine_list_item, medicationList, false) as ConstraintLayout
+            medicationItem.setBackgroundResource(R.drawable.meal_time_box)
 
             val medicationNameTextView = medicationItem.findViewById<TextView>(R.id.titleTextView)
             medicationNameTextView.text = medicationName
@@ -65,6 +77,8 @@ class ActivityMedicineAddModify : AppCompatActivity() {
             currentlyExpandedItem = medicationItem
         }
     }
+
+
 
     private fun showDetailViews(medicationName: String) {
         val signUpDetailView = LayoutInflater.from(this).inflate(R.layout.sign_up_4_detail, detailLayout, false) as ConstraintLayout

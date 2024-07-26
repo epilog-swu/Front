@@ -85,6 +85,7 @@ interface RetrofitService {
 
 data class TokenData(val token: String)
 
+
 data class SensorData(
     val accX: Float,
     val accY: Float,
