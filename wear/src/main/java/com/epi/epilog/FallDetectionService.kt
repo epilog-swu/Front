@@ -48,6 +48,9 @@ import java.net.URI
 import java.net.URISyntaxException
 import java.util.Timer
 import java.util.TimerTask
+import java.util.concurrent.Executors
+import java.util.concurrent.ScheduledExecutorService
+import java.util.concurrent.TimeUnit
 
 class FallDetectionService : Service(), SensorEventListener, LocationListener {
 
@@ -61,7 +64,7 @@ class FallDetectionService : Service(), SensorEventListener, LocationListener {
     private val notificationId = 1
 
     private lateinit var wakeLock: PowerManager.WakeLock
-    private val timer = Timer()
+    private lateinit var scheduledExecutorService: ScheduledExecutorService
 
     private var isEmergencyTriggered = false
     private var currentLocation: Location? = null
@@ -95,13 +98,16 @@ class FallDetectionService : Service(), SensorEventListener, LocationListener {
         initializeRetrofit()
         startForegroundService()
         acquireWakeLock()
-        startDataTransmissionTimer()
         initializeLocationManager()
         initializeWebSocket()
 
         // FallDetectionActivity의 결과를 수신할 BroadcastReceiver 등록
         val filter = IntentFilter("com.epi.epilog.FALL_DETECTION_RESULT")
         registerReceiver(fallDetectionReceiver, filter)
+
+        // ScheduledExecutorService 초기화 및 데이터 전송 타이머 시작
+        scheduledExecutorService = Executors.newScheduledThreadPool(1)
+        startDataTransmissionScheduler()
     }
 
     override fun onDestroy() {
@@ -115,6 +121,9 @@ class FallDetectionService : Service(), SensorEventListener, LocationListener {
             wakeLock.release()
         }
         webSocketClient?.close()
+
+        // ScheduledExecutorService 종료
+        scheduledExecutorService.shutdown()
     }
 
     override fun onBind(intent: Intent?): IBinder? {
@@ -129,7 +138,7 @@ class FallDetectionService : Service(), SensorEventListener, LocationListener {
         val token = getTokenFromSession()
         try {
             // URI 객체를 사용하여 웹소켓 서버에 연결
-            val serverEndpoint = "192.168.227.232:8080"
+            val serverEndpoint = "epilog-develop-env.eba-imw3vi3g.ap-northeast-2.elasticbeanstalk.com"
 
             // Construct the WebSocket URI with the server endpoint and token
             val uri = URI("ws://$serverEndpoint/detection/fall?token=$token")
@@ -271,7 +280,7 @@ class FallDetectionService : Service(), SensorEventListener, LocationListener {
     private fun initializeRetrofit() {
         val gson: Gson = GsonBuilder().setLenient().create()
         val retrofit = Retrofit.Builder()
-            .baseUrl("http://192.168.227.232/")
+            .baseUrl("http://epilog-develop-env.eba-imw3vi3g.ap-northeast-2.elasticbeanstalk.com/")
             .addConverterFactory(GsonConverterFactory.create(gson))
             .build()
         retrofitService = retrofit.create(RetrofitService::class.java)
@@ -387,23 +396,21 @@ class FallDetectionService : Service(), SensorEventListener, LocationListener {
         sendWebSocketEmergencyLocation(locationData, false)
     }
 
-    // 데이터 전송 타이머 시작
-    private fun startDataTransmissionTimer() {
-        timer.schedule(object : TimerTask() {
-            override fun run() {
-                try {
-                    synchronized(sensorData) {
-                        if (sensorData.isNotEmpty()) {
-                            Log.d("SensorData", "Sending data: $sensorData")
-                            sendWebSocketSensorData(ArrayList(sensorData))
-                            sensorData.clear()
-                        }
+    // 데이터 전송 스케줄러 시작
+    private fun startDataTransmissionScheduler() {
+        scheduledExecutorService.scheduleAtFixedRate({
+            try {
+                synchronized(sensorData) {
+                    if (sensorData.isNotEmpty()) {
+                        Log.d("SensorData", "Sending data: $sensorData")
+                        sendWebSocketSensorData(ArrayList(sensorData))
+                        sensorData.clear()
                     }
-                } catch (e: Exception) {
-                    Log.e("TimerTask", "Error in TimerTask", e)
                 }
+            } catch (e: Exception) {
+                Log.e("SchedulerTask", "Error in SchedulerTask", e)
             }
-        }, 0, 1000)
+        }, 0, 1, TimeUnit.SECONDS)
     }
 
     // 알림 업데이트
