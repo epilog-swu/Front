@@ -1,0 +1,13 @@
+<fragment android:id="@+id/medicineChecklistFragment"
+    android:name="com.epi.epilog.MedicineChecklistFragment"
+    tools:layout="@layout/fragment_medicine_checklist"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <action
+        android:id="@+id/action_medicineChecklistFragment_to_medicineDetailFragment"
+        app:destination="@id/medicineDetailFragment" />
+    <action
+        android:id="@+id/action_medicineChecklistFragment_to_medicineAddModifyFragment"
+        app:destination="@id/medicineAddModifyFragment" />
+</fragment>

@@ -125,6 +125,13 @@ dependencies {
     androidTestImplementation(libs.androidx.ui.test.junit4)
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
+
+    //서버
+    implementation ("com.squareup.retrofit2:retrofit:2.9.0")
+    implementation ("com.squareup.retrofit2:converter-gson:2.9.0")
+    implementation ("com.squareup.retrofit2:adapter-rxjava2:2.9.0")
+
+    implementation ("com.google.android.gms:play-services-location:21.0.1")
 }
 
 // Google 서비스 플러그인을 적용합니다

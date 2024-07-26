@@ -100,7 +100,7 @@
                 app:layout_constraintTop_toBottomOf="@+id/editTextText"/>
 
             <EditText
-                android:id="@+id/editTextText2"
+                android:id="@+id/stature_edittext"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="25dp"
@@ -125,10 +125,10 @@
                 android:text="몸무게 (선택)"
                 android:textSize="12dp"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/editTextText2"/>
+                app:layout_constraintTop_toBottomOf="@+id/stature_edittext"/>
 
             <EditText
-                android:id="@+id/editTextText3"
+                android:id="@+id/weight_edittext"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="25dp"
@@ -151,7 +151,7 @@
                 android:text="성별 (선택)"
                 android:textSize="12dp"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/editTextText3"/>
+                app:layout_constraintTop_toBottomOf="@+id/weight_edittext"/>
 
             <Button
                 android:id="@+id/female_button"

@@ -26,7 +26,7 @@ interface RetrofitService {
 
     @POST("api/detection/fall")
     fun postSensorData(
-        @Body data: List<SensorData>,
+        @Body data: List<SensorDataWithRotation>,
         @Header("Authorization") authToken: String
     ): Call<Boolean>
 
@@ -84,6 +84,7 @@ interface RetrofitService {
 }
 
 data class TokenData(val token: String)
+
 
 data class SensorData(
     val accX: Float,

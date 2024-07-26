@@ -16,7 +16,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
 
-        <!-- Custom TextView for Toolbar Title -->
         <TextView
             android:id="@+id/toolbar_title"
             android:layout_width="wrap_content"
@@ -69,58 +68,69 @@
                 app:layout_constraintTop_toBottomOf="@id/textView3" />
 
             <TextView
-        android:id="@+id/textView4"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="25dp"
-        android:layout_marginTop="70dp"
-        android:text="약 이름 (선택)"
-        android:textSize="12sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView10" />
+                android:id="@+id/textView4"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="25dp"
+                android:layout_marginTop="70dp"
+                android:text="약 이름 (선택)"
+                android:textSize="12sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/textView10" />
 
-    <EditText
-        android:id="@+id/editTextText"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="25dp"
-        android:layout_marginTop="12dp"
-        android:layout_marginEnd="100dp"
-        android:ems="10"
-        android:inputType="text"
-        android:minHeight="48dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView4"
-        tools:ignore="SpeakableTextPresentCheck"/>
+            <EditText
+                android:id="@+id/editTextText"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="25dp"
+                android:layout_marginTop="12dp"
+                android:layout_marginEnd="100dp"
+                android:ems="10"
+                android:inputType="text"
+                android:minHeight="48dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/textView4"
+                tools:ignore="SpeakableTextPresentCheck"/>
 
-    <Button
-        android:id="@+id/male_button"
-        android:layout_width="79dp"
-        android:layout_marginStart="10dp"
-        android:layout_height="37dp"
-        android:background="@drawable/grey_solid_button_shape"
-        android:text="추가"
-        android:textSize="14sp"
-        android:layout_marginEnd="20dp"
-        app:layout_constraintBottom_toBottomOf="@+id/editTextText"
-        app:layout_constraintStart_toEndOf="@+id/editTextText"
-        app:layout_constraintTop_toTopOf="@+id/editTextText"
-        app:layout_constraintEnd_toEndOf="parent"/>
+            <Button
+                android:id="@+id/male_button"
+                android:layout_width="79dp"
+                android:layout_marginStart="10dp"
+                android:layout_height="37dp"
+                android:background="@drawable/grey_solid_button_shape"
+                android:text="추가"
+                android:textSize="14sp"
+                android:layout_marginEnd="20dp"
+                app:layout_constraintBottom_toBottomOf="@+id/editTextText"
+                app:layout_constraintStart_toEndOf="@+id/editTextText"
+                app:layout_constraintTop_toTopOf="@+id/editTextText"
+                app:layout_constraintEnd_toEndOf="parent"/>
 
-    <LinearLayout
-        android:id="@+id/medication_list"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
-        android:layout_marginTop="10dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editTextText" />
+            <LinearLayout
+                android:id="@+id/medication_list"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_marginTop="10dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/editTextText" />
 
+            <LinearLayout
+                android:id="@+id/detailLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_marginTop="10dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/medication_list" />
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>
 

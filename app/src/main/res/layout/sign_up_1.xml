@@ -87,6 +87,19 @@
                 tools:ignore="SpeakableTextPresentCheck" />
 
             <TextView
+                android:id="@+id/idErrorTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="25dp"
+                android:layout_marginTop="8dp"
+                android:text="사용할 수 없는 아이디입니다"
+                android:textColor="#FF6363"
+                android:textSize="12sp"
+                android:visibility="gone"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/editTextText" />
+
+            <TextView
                 android:id="@+id/textView5"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -95,7 +108,7 @@
                 android:text="@string/password"
                 android:textSize="12sp"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/editTextText" />
+                app:layout_constraintTop_toBottomOf="@+id/idErrorTextView" />
 
             <EditText
                 android:id="@+id/editTextText2"
@@ -151,7 +164,6 @@
                 android:textSize="12sp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/editTextText3" />
-
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>
 
