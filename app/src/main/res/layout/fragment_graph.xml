@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".graphFragment">
+    tools:context=".graphPage">
 
     <!-- 달력 -->
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -28,12 +28,12 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <com.kizitonwose.calendar.view.WeekCalendarView
-            android:id="@+id/meal_calendarView"
+            android:id="@+id/graph_calendarview"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="20dp"
             android:layout_marginEnd="20dp"
-            app:cv_dayViewResource="@layout/week_calendar_day_layout"
+            app:cv_dayViewResource="@layout/calendar_day_layout"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/titlesContainer" />
