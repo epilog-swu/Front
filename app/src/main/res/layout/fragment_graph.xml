@@ -22,7 +22,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="20dp"
             android:layout_marginEnd="10dp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -31,8 +31,8 @@
             android:id="@+id/graph_calendarview"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="20dp"
-            android:layout_marginEnd="20dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
             app:cv_dayViewResource="@layout/calendar_day_layout"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -58,6 +58,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="20dp"
+                android:layout_marginTop="20dp"
                 android:orientation="horizontal">
 
                 <TextView
@@ -89,16 +90,25 @@
 
             <!-- 오늘의 혈당 라인차트 -->
             <HorizontalScrollView
-                android:layout_width="704dp"
-                android:layout_height="333dp"
-                android:layout_marginStart="20dp">
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="15dp"
+                android:layout_marginEnd="20dp"
+                android:scrollbars="none">
 
-                <com.github.mikephil.charting.charts.LineChart
-                    android:id="@+id/app_graph_blood_sugar_chart"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_marginTop="15dp" />
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+
+                    <com.github.mikephil.charting.charts.LineChart
+                        android:id="@+id/app_graph_blood_sugar_chart"
+                        android:layout_width="700dp"
+                        android:layout_height="310dp"
+                        android:layout_marginTop="15dp" />
+                </LinearLayout>
             </HorizontalScrollView>
+
 
             <!--평균혈당/ 식전후 평균혈당 레이아웃-->
             <LinearLayout
@@ -122,6 +132,7 @@
                         android:textColor="@color/black"
                         android:textSize="14dp"
                         android:textStyle="bold"
+                        android:layout_marginTop="10dp"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent" />
@@ -164,6 +175,7 @@
                         android:textColor="@color/white"
                         android:textSize="14dp"
                         android:textStyle="bold"
+                        android:layout_marginTop="10dp"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent" />
@@ -177,7 +189,7 @@
                         app:layout_constraintTop_toBottomOf="@id/graph_avg_bloodsugar_meal_plain_tv">
 
                         <TextView
-                            android:id="@+id/graph_avg_bloodsugar_meal_tv"
+                            android:id="@+id/graph_avg_bloodsugar_meal_pre_tv"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="108"
@@ -196,10 +208,10 @@
                             android:textSize="26dp"
                             android:textStyle="bold"
                             app:layout_constraintBottom_toBottomOf="parent"
-                            app:layout_constraintStart_toEndOf="@id/graph_avg_bloodsugar_meal_tv" />
+                            app:layout_constraintStart_toEndOf="@id/graph_avg_bloodsugar_meal_pre_tv" />
 
                         <TextView
-                            android:id="@+id/graph_avg_bloodsugar_meal_goal_tv"
+                            android:id="@+id/graph_avg_bloodsugar_meal_post_tv"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="210"
@@ -217,7 +229,7 @@
                             android:textColor="@color/white"
                             android:textSize="8dp"
                             app:layout_constraintBottom_toBottomOf="parent"
-                            app:layout_constraintStart_toEndOf="@id/graph_avg_bloodsugar_meal_goal_tv" />
+                            app:layout_constraintStart_toEndOf="@id/graph_avg_bloodsugar_meal_post_tv" />
                     </androidx.constraintlayout.widget.ConstraintLayout>
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
