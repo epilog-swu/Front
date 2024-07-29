@@ -66,6 +66,9 @@ dependencies {
     implementation("com.kizitonwose.calendar:view:2.5.1") // View
     //implementation ("com.github.kizitonwose:CalendarView:2.5.1")
 
+    //WebSocket Header 지원 라이브러리
+    implementation("com.squareup.okhttp3:okhttp:4.9.3")
+
     //그래프 라이브러리 사용하려고 추가
     implementation ("com.google.android.gms:play-services-location:21.0.1")
     implementation ("com.github.PhilJay:MPAndroidChart:v3.1.0")
