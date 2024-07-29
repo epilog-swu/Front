@@ -89,8 +89,8 @@ class FallDetectionService : Service(), SensorEventListener, LocationListener {
         accelerometer = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER)
         gyroscope = sensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE)
 
-        // 측정 주파수를 50Hz로 설정 (기존 80Hz의 절반)
-        val sensorDelay = (1000000 / 50).toInt() // 마이크로초 단위로 계산
+        // 측정 주파수를 80Hz로 설정 (기존 100Hz보다 줄임)
+        val sensorDelay = (1000000 / 100).toInt() // 마이크로초 단위로 계산
 
         sensorManager.registerListener(this, accelerometer, sensorDelay)
         sensorManager.registerListener(this, gyroscope, sensorDelay)
@@ -138,7 +138,7 @@ class FallDetectionService : Service(), SensorEventListener, LocationListener {
         val token = getTokenFromSession()
         try {
             // URI 객체를 사용하여 웹소켓 서버에 연결
-            val serverEndpoint = "epilog-develop-env.eba-imw3vi3g.ap-northeast-2.elasticbeanstalk.com"
+            val serverEndpoint = "http://epilog-develop-env.eba-imw3vi3g.ap-northeast-2.elasticbeanstalk.com/"
 
             // Construct the WebSocket URI with the server endpoint and token
             val uri = URI("ws://$serverEndpoint/detection/fall?token=$token")
@@ -219,33 +219,50 @@ class FallDetectionService : Service(), SensorEventListener, LocationListener {
     private fun sendWebSocketSensorData(data: List<SensorData>) {
         if (webSocketClient != null && webSocketClient!!.isOpen) {
             val gson = Gson()
-            val jsonString = gson.toJson(mapOf(
-                "event" to "fall",
-                "data" to mapOf(
-                    "fall" to data.map { mapOf(
-                        "accX" to roundToTwoDecimalPlaces(it.accX),
-                        "accY" to roundToTwoDecimalPlaces(it.accY),
-                        "accZ" to roundToTwoDecimalPlaces(it.accZ),
-                        "gyroX" to roundToTwoDecimalPlaces(it.gyroX),
-                        "gyroY" to roundToTwoDecimalPlaces(it.gyroY),
-                        "gyroZ" to roundToTwoDecimalPlaces(it.gyroZ)
-                    )
-                    }
-                )
-            ))
+            val chunkedData = data.chunkedBySize(100)  // 데이터를 100개씩 청크로 나눔
+            val totalChunks = chunkedData.size
 
-            try {
-                webSocketClient?.send(jsonString)
-                Log.d("WebSocket", jsonString)
-                Log.d("WebSocket", "Sent fall detection data")
-            } catch (e: WebsocketNotConnectedException) {
-                Log.e("WebSocket", "WebSocket is not connected", e)
+            for ((index, chunk) in chunkedData.withIndex()) {
+                val jsonString = gson.toJson(mapOf(
+                    "event" to "fall",
+                    "chunkIndex" to index,
+                    "totalChunks" to totalChunks,
+                    "data" to mapOf(
+                        "fall" to chunk.map { mapOf(
+                            "accX" to roundToTwoDecimalPlaces(it.accX),
+                            "accY" to roundToTwoDecimalPlaces(it.accY),
+                            "accZ" to roundToTwoDecimalPlaces(it.accZ),
+                            "gyroX" to roundToTwoDecimalPlaces(it.gyroX),
+                            "gyroY" to roundToTwoDecimalPlaces(it.gyroY),
+                            "gyroZ" to roundToTwoDecimalPlaces(it.gyroZ)
+                        )
+                        }
+                    )
+                ))
+
+                try {
+                    webSocketClient?.send(jsonString)
+//                    Log.d("WebSocket", jsonString)
+                    Log.d("WebSocket", "Sent fall detection data chunk $index of $totalChunks")
+                } catch (e: WebsocketNotConnectedException) {
+                    Log.e("WebSocket", "WebSocket is not connected", e)
+                }
             }
         } else {
             Log.e("WebSocket", "WebSocket is not connected")
         }
     }
 
+    private fun List<SensorData>.chunkedBySize(chunkSize: Int): List<List<SensorData>> {
+        val chunks = mutableListOf<List<SensorData>>()
+        var start = 0
+        while (start < this.size) {
+            val end = (start + chunkSize).coerceAtMost(this.size)
+            chunks.add(this.subList(start, end))
+            start += chunkSize
+        }
+        return chunks
+    }
 
     private fun roundToTwoDecimalPlaces(value: Float): Float {
         return String.format("%.2f", value).toFloat()

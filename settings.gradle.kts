@@ -19,6 +19,6 @@ dependencyResolutionManagement {
         maven { url = uri("https://jitpack.io") }
     }}
 
-rootProject.name = "Epilog"
+rootProject.name = "epilog"
 include(":app")
 include(":wear")
