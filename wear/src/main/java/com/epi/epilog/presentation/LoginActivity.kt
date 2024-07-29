@@ -3,6 +3,8 @@ package com.epi.epilog.presentation
 import android.app.AlertDialog
 import android.content.Context
 import android.content.Intent
+import android.net.ConnectivityManager
+import android.net.NetworkCapabilities
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
@@ -34,7 +36,7 @@ class LoginActivity : ComponentActivity() {
 
         initializeRetrofit()
 
-        if (isLoggedIn()) { //로그인한 상태일 경우
+        if (isLoggedIn()) { // 로그인한 상태일 경우
             getTokenAndNavigate()
             return
         }
@@ -45,11 +47,15 @@ class LoginActivity : ComponentActivity() {
         val loginButton = findViewById<Button>(R.id.button)
 
         loginButton.setOnClickListener {
-            val code = codeInput.text.toString()
-            if (code.isNotEmpty() && code == "123456") {
-                postData(code)
+            if (isNetworkAvailable()) {
+                val code = codeInput.text.toString()
+                if (code.isNotEmpty()) {
+                    postData(code)
+                } else {
+                    showInvalidCodeDialog("코드를 입력하세요.") // 코드 미입력 시
+                }
             } else {
-                showInvalidCodeDialog() //다른 연동코드 입력 시
+                Toast.makeText(this, "네트워크 연결을 확인하세요.", Toast.LENGTH_SHORT).show()
             }
         }
     }
@@ -70,20 +76,22 @@ class LoginActivity : ComponentActivity() {
             override fun onResponse(call: Call<String>, response: Response<String>) {
                 if (response.isSuccessful) {
                     response.body()?.let {
-                        Log.d("LoginActivity", "Server Response: $it")
-                        saveTokenToSession(it) //토큰 저장
+                        Log.d(TAG, "Server Response: $it")
+                        saveTokenToSession(it) // 토큰 저장
                         setLoggedIn(true)
-                        getTokenAndNavigate() //FCM 토큰 가져와서 출력 및 메인 액티비티로 이동
                         disableBatteryOptimization()
+                        getTokenAndNavigate() // FCM 토큰 가져와서 출력 및 메인 액티비티로 이동
                     }
                 } else {
-                    Log.d("LoginActivity", "Error Response: ${response.errorBody()?.string()}")
-                    Log.d("LoginActivity", "Response Code: ${response.code()}")
+                    Log.d(TAG, "Error Response: ${response.errorBody()?.string()}")
+                    Log.d(TAG, "Response Code: ${response.code()}")
+                    showInvalidCodeDialog("코드 검증에 실패했습니다.") // 서버 오류 시
                 }
             }
 
             override fun onFailure(call: Call<String>, t: Throwable) {
-                Log.d("LoginActivity", "POST failed: ${t.message}")
+                Log.d(TAG, "POST failed: ${t.message}")
+                Toast.makeText(this@LoginActivity, "서버 연결 실패: ${t.message}", Toast.LENGTH_SHORT).show()
             }
         })
     }
@@ -106,19 +114,18 @@ class LoginActivity : ComponentActivity() {
     private fun getTokenAndNavigate() {
         FirebaseMessaging.getInstance().token.addOnCompleteListener { task ->
             if (!task.isSuccessful) {
-                Log.w("FCM", "Fetching FCM registration token failed", task.exception)
+                Log.w(TAG, "Fetching FCM registration token failed", task.exception)
                 return@addOnCompleteListener
             }
 
             // FCM 토큰
             val token = task.result
-            Log.d("FCM", "FCM Token: $token")
+            Log.d(TAG, "FCM Token: $token")
 
             // FCM 토큰 서버로 보내기
             sendTokenToServer(token)
 
             navigateToMainActivity()
-            finish()
         }
     }
 
@@ -127,7 +134,7 @@ class LoginActivity : ComponentActivity() {
         val authToken = sharedPreferences.getString("AuthToken", null)
 
         if (authToken.isNullOrEmpty()) {
-            Log.d("FCM", "Auth token is missing")
+            Log.d(TAG, "Auth token is missing")
             return
         }
 
@@ -138,22 +145,20 @@ class LoginActivity : ComponentActivity() {
                 if (response.isSuccessful) {
                     val tokenResponse = response.body()
                     if (tokenResponse?.success == true) {
-                        Log.d("FCM", "Token saved successfully on the server: ${tokenResponse.message}")
+                        Log.d(TAG, "Token saved successfully on the server: ${tokenResponse.message}")
                     } else {
-                        Log.d("FCM", "Failed to save token on the server: ${tokenResponse?.message}")
+                        Log.d(TAG, "Failed to save token on the server: ${tokenResponse?.message}")
                     }
                 } else {
-                    Log.d("FCM", "Error saving token on the server: ${response.errorBody()?.string()}")
+                    Log.d(TAG, "Error saving token on the server: ${response.errorBody()?.string()}")
                 }
             }
 
             override fun onFailure(call: Call<ApiResponse>, t: Throwable) {
-                Log.d("LoginActivity", "Failed to send token to server: ${t.message}")
+                Log.d(TAG, "Failed to send token to server: ${t.message}")
             }
         })
     }
-
-
 
     private fun navigateToMainActivity() {
         val intent = Intent(this, MainActivity::class.java)
@@ -174,20 +179,30 @@ class LoginActivity : ComponentActivity() {
         }
     }
 
-    private fun showInvalidCodeDialog() {
+    private fun showInvalidCodeDialog(message: String) {
         val dialogView = layoutInflater.inflate(R.layout.login_modal, null)
         val dialog = AlertDialog.Builder(this)
             .setView(dialogView)
+            .setMessage(message) // 메시지 설정
             .create()
 
         dialogView.findViewById<Button>(R.id.button2).setOnClickListener {
             dialog.dismiss()
-            val intent = Intent(this, LoginActivity::class.java)
-            startActivity(intent)
-            finish()
         }
 
         dialog.show()
+    }
+
+    private fun isNetworkAvailable(): Boolean {
+        val connectivityManager = getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            val network = connectivityManager.activeNetwork ?: return false
+            val capabilities = connectivityManager.getNetworkCapabilities(network) ?: return false
+            return capabilities.hasTransport(NetworkCapabilities.TRANSPORT_WIFI) || capabilities.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR)
+        } else {
+            val networkInfo = connectivityManager.activeNetworkInfo ?: return false
+            return networkInfo.isConnected
+        }
     }
 
     companion object {

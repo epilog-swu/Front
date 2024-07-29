@@ -9,6 +9,7 @@ import android.os.Looper
 import android.util.Log
 import android.widget.Button
 import android.widget.TextView
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import com.epi.epilog.R
 import com.epi.epilog.presentation.theme.api.LocationData
@@ -31,6 +32,7 @@ class FallDetectionActivity : ComponentActivity() {
     private lateinit var retrofitService: RetrofitService
     private lateinit var timerTextView: TextView
     private var timeRemaining = 15 // 15초 타이머
+    private var timerRunnable: Runnable? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -44,13 +46,17 @@ class FallDetectionActivity : ComponentActivity() {
         playSound()
 
         findViewById<Button>(R.id.dialog_fall_button_yes).setOnClickListener {
-            sendFallDetectionResult(true)
-            navigateToMainActivity()
+            cancelTimer()
+            sendFallDetectionResult(true) {
+                navigateToMainActivity()
+            }
         }
 
         findViewById<Button>(R.id.dialog_fall_button_no).setOnClickListener {
-            sendFallDetectionResult(false)
-            navigateToMainActivity()
+            cancelTimer()
+            sendFallDetectionResult(false) {
+                navigateToMainActivity()
+            }
         }
 
         startTimer()
@@ -61,13 +67,19 @@ class FallDetectionActivity : ComponentActivity() {
         handler.postDelayed({
             mediaPlayer.pause()
             mediaPlayer.seekTo(0)
-        }, 3500)
+        }, 15000)
     }
 
-    private fun sendFallDetectionResult(isFallConfirmed: Boolean) {
+    private fun sendFallDetectionResult(isFallConfirmed: Boolean, onComplete: () -> Unit) {
         val intent = Intent("com.epi.epilog.FALL_DETECTION_RESULT")
         intent.putExtra("isFallConfirmed", isFallConfirmed)
         sendBroadcast(intent)
+
+        // "비상 연락 전송됨" 토스트 메시지 띄우기
+        if (isFallConfirmed) {
+            Toast.makeText(this, "비상 연락 전송됨", Toast.LENGTH_SHORT).show()
+        }
+        handler.postDelayed(onComplete, 2000)  // 일정 시간 후에 onComplete 호출
     }
 
     private fun initializeRetrofit() {
@@ -111,19 +123,24 @@ class FallDetectionActivity : ComponentActivity() {
     }
 
     private fun startTimer() {
-        val timerTask = object : Runnable {
+        timerRunnable = object : Runnable {
             override fun run() {
                 if (timeRemaining > 0) {
                     timerTextView.text = timeRemaining.toString()
                     timeRemaining--
                     handler.postDelayed(this, 1000)
                 } else {
-                    sendFallDetectionResult(true)
-                    navigateToMainActivity()
+                    sendFallDetectionResult(true) {
+                        navigateToMainActivity()
+                    }
                 }
             }
         }
-        handler.post(timerTask)
+        handler.post(timerRunnable!!)
+    }
+
+    private fun cancelTimer() {
+        timerRunnable?.let { handler.removeCallbacks(it) }
     }
 
     private fun navigateToMainActivity() {
@@ -134,6 +151,7 @@ class FallDetectionActivity : ComponentActivity() {
 
     override fun onDestroy() {
         super.onDestroy()
+        cancelTimer()
         mediaPlayer.release()
     }
 }
