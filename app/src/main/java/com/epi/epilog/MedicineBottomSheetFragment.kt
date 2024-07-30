@@ -27,7 +27,12 @@ class MedicineBottomSheetFragment : BottomSheetDialogFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
+        binding.bottomButton1.setOnClickListener {
+            dismiss()
+        }
+        binding.bottomButton3.setOnClickListener {
+            dismiss()
+        }
         binding.bottomButton2.setOnClickListener {
             val secondBottomSheet = MedicineBottomSheetFragment2()
             secondBottomSheet.show(parentFragmentManager, secondBottomSheet.tag)
@@ -39,7 +44,7 @@ class MedicineBottomSheetFragment : BottomSheetDialogFragment() {
             if (bottomSheet != null) {
                 val behavior = BottomSheetBehavior.from(bottomSheet)
                 val scale = resources.displayMetrics.density
-                val minHeight = (210 * scale + 0.5f).toInt()
+                val minHeight = (190 * scale + 0.5f).toInt()
 
                 behavior.peekHeight = minHeight
                 bottomSheet.layoutParams.height = minHeight

@@ -8,6 +8,7 @@ import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.view.marginStart
 import com.epi.epilog.presentation.theme.api.Medication
 
 class signUp4Activity : AppCompatActivity() {
@@ -16,17 +17,15 @@ class signUp4Activity : AppCompatActivity() {
     private lateinit var addButton: Button
     private lateinit var nextButton: Button
     private lateinit var medicationList: LinearLayout
-    private lateinit var detailLayout: LinearLayout
     private var currentlyExpandedItem: View? = null
-    private val inflater by lazy { LayoutInflater.from(this) }
-
+    private lateinit var inflater: LayoutInflater
     private val medications = mutableListOf<Medication>()
+    private val medicationTimes = mutableMapOf<String, MutableList<String>>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.sign_up_4)
 
-        // Toolbar 설정
         val toolbar: Toolbar = findViewById(R.id.toolbar)
         setSupportActionBar(toolbar)
         supportActionBar?.setDisplayShowTitleEnabled(false)
@@ -37,7 +36,7 @@ class signUp4Activity : AppCompatActivity() {
         addButton = findViewById(R.id.male_button)
         nextButton = findViewById(R.id.button5)
         medicationList = findViewById(R.id.medication_list)
-        detailLayout = findViewById(R.id.detailLayout)
+        inflater = LayoutInflater.from(this)
 
         addButton.setOnClickListener {
             val medicationName = editText.text.toString().trim()
@@ -62,66 +61,83 @@ class signUp4Activity : AppCompatActivity() {
                 putExtra("protectorPhone", this@signUp4Activity.intent.getStringExtra("protectorPhone"))
                 putParcelableArrayListExtra("medications", ArrayList(medications))
             }
-
             startActivity(intent)
         }
-    }
-
-    private fun Intent.putParcelableArrayListExtra(key: String, value: ArrayList<Medication>): Intent {
-        return this.putParcelableArrayListExtra(key, value)
     }
 
     private fun addMedicationItem(medicationName: String) {
         val medicationItem = inflater.inflate(R.layout.medicine_list_item, medicationList, false) as ConstraintLayout
         medicationItem.setBackgroundResource(R.drawable.meal_time_box)
 
+        val layoutParams = LinearLayout.LayoutParams(
+            LinearLayout.LayoutParams.MATCH_PARENT,
+            LinearLayout.LayoutParams.WRAP_CONTENT
+        )
+        layoutParams.setMargins(35, 15, 35, 15)
+        medicationItem.layoutParams = layoutParams
         val medicationNameTextView = medicationItem.findViewById<TextView>(R.id.titleTextView)
         medicationNameTextView.text = medicationName
 
+        val detailLayout = LinearLayout(this).apply {
+            orientation = LinearLayout.VERTICAL
+        }
+
         medicationItem.setOnClickListener {
-            toggleDetailViews(medicationItem, medicationName)
+            toggleDetailViews(detailLayout, medicationName)
         }
 
         medicationList.addView(medicationItem)
+        medicationList.addView(detailLayout)
     }
 
-    private fun toggleDetailViews(medicationItem: View, medicationName: String) {
-        if (currentlyExpandedItem == medicationItem) {
+    private fun toggleDetailViews(detailLayout: LinearLayout, medicationName: String) {
+        if (currentlyExpandedItem == detailLayout) {
             detailLayout.removeAllViews()
             currentlyExpandedItem = null
         } else {
-            detailLayout.removeAllViews()
-            showDetailViews(medicationName)
-            currentlyExpandedItem = medicationItem
+            currentlyExpandedItem?.let {
+                (it as LinearLayout).removeAllViews()
+            }
+            showDetailViews(detailLayout, medicationName)
+            currentlyExpandedItem = detailLayout
         }
     }
 
-    private fun showDetailViews(medicationName: String) {
+    private fun showDetailViews(detailLayout: LinearLayout, medicationName: String) {
         val signUpDetailView = inflater.inflate(R.layout.sign_up_4_detail, detailLayout, false) as ConstraintLayout
 
         val addTimeButton = signUpDetailView.findViewById<Button>(R.id.add_time_button)
         val timePicker = signUpDetailView.findViewById<TimePicker>(R.id.timePicker)
         val timeListLayout = signUpDetailView.findViewById<LinearLayout>(R.id.time_list_layout)
 
+        // Repopulate the times for this medication if they exist
+        medicationTimes[medicationName]?.forEach { time ->
+            addTimeEntry(timeListLayout, time)
+        }
+
         addTimeButton.setOnClickListener {
             val hour = timePicker.hour
             val minute = timePicker.minute
-            addTimeEntry(timeListLayout, hour, minute)
+            val time = String.format("%02d:%02d", hour, minute)
+            addTimeEntry(timeListLayout, time)
+            medicationTimes.getOrPut(medicationName) { mutableListOf() }.add(time)
         }
 
         detailLayout.addView(signUpDetailView)
     }
 
-    private fun addTimeEntry(timeListLayout: LinearLayout, hour: Int, minute: Int) {
+    private fun addTimeEntry(timeListLayout: LinearLayout, time: String) {
         val timeEntryView = inflater.inflate(R.layout.time_item, timeListLayout, false)
         val timeTextView = timeEntryView.findViewById<TextView>(R.id.timeTextView)
         val removeButton = timeEntryView.findViewById<ImageView>(R.id.removeButton)
 
-        val selectedTime = String.format("%02d:%02d", hour, minute)
-        timeTextView.text = selectedTime
+        timeTextView.text = time
 
         removeButton.setOnClickListener {
             timeListLayout.removeView(timeEntryView)
+            medicationTimes.values.forEach { times ->
+                times.remove(time)
+            }
         }
 
         timeListLayout.addView(timeEntryView)
@@ -129,17 +145,10 @@ class signUp4Activity : AppCompatActivity() {
 
     private fun collectMedications() {
         medications.clear()
-        for (i in 0 until medicationList.childCount) {
+        for (i in 0 until medicationList.childCount step 2) {
             val medicationView = medicationList.getChildAt(i) as ConstraintLayout
             val medicationName = medicationView.findViewById<TextView>(R.id.titleTextView).text.toString()
-            val times = mutableListOf<String>()
-
-            val timeListLayout = detailLayout.findViewById<LinearLayout>(R.id.time_list_layout)
-            for (j in 0 until timeListLayout.childCount) {
-                val timeItem = timeListLayout.getChildAt(j)
-                val time = timeItem.findViewById<TextView>(R.id.timeTextView).text.toString()
-                times.add(time)
-            }
+            val times = medicationTimes[medicationName] ?: mutableListOf()
 
             medications.add(Medication(medicationName, times))
         }

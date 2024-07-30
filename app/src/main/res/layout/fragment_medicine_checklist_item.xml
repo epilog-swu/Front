@@ -1,0 +1,46 @@
+<!-- res/layout/fragment_medicine_checklist_item.xml -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="92dp"
+    android:orientation="horizontal"
+    android:gravity="center_vertical"
+    android:padding="40px">
+
+    <ImageView
+        android:layout_width="57dp"
+        android:layout_height="57dp"
+        android:src="@drawable/medicine" />
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:orientation="vertical"
+        android:layout_marginStart="16dp">
+
+        <TextView
+            android:id="@+id/medicine_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Time"
+            android:textColor="#000"
+            android:textSize="16dp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/medicine_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Medicine Name"
+            android:textColor="#000"
+            android:textSize="14dp"
+            android:textStyle="bold" />
+    </LinearLayout>
+
+    <CheckBox
+        android:id="@+id/medicine_checkbox"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:background="@drawable/medicine_check_button"
+        android:button="@null" />
+</LinearLayout>
