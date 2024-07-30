@@ -5,7 +5,7 @@ object RetrofitClient {
 
     val instance: Retrofit by lazy {
         Retrofit.Builder()
-            .baseUrl("http://Epilog-develop-env.eba-imw3vi3g.ap-northeast-2.elasticbeanstalk.com/")
+            .baseUrl("http://epilog-develop-env.eba-imw3vi3g.ap-northeast-2.elasticbeanstalk.com/")
             .addConverterFactory(GsonConverterFactory.create())
             .build()
     }

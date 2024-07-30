@@ -1,21 +1,16 @@
 package com.epi.epilog.presentation
 
-import android.Manifest
 import android.content.Context
 import android.content.Intent
-import android.content.pm.PackageManager
-import android.location.Location
 import android.media.MediaPlayer
-import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
-import android.os.PowerManager
 import android.util.Log
 import android.widget.Button
+import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.ComponentActivity
-import androidx.core.app.ActivityCompat
 import com.epi.epilog.R
 import com.epi.epilog.presentation.theme.api.LocationData
 import com.epi.epilog.presentation.theme.api.RetrofitService
@@ -28,37 +23,43 @@ import retrofit2.Callback
 import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
-import java.util.Timer
-import java.util.TimerTask
 
 class FallDetectionActivity : ComponentActivity() {
 
-    private val timer = Timer()
     private lateinit var fusedLocationClient: FusedLocationProviderClient
     private lateinit var mediaPlayer: MediaPlayer
     private val handler = Handler(Looper.getMainLooper())
     private lateinit var retrofitService: RetrofitService
+    private lateinit var timerTextView: TextView
+    private var timeRemaining = 15 // 15초 타이머
+    private var timerRunnable: Runnable? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_fall_detection)
+
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
         mediaPlayer = MediaPlayer.create(this, R.raw.emergency_sound)
+        timerTextView = findViewById(R.id.timer_text)
+
         initializeRetrofit()
         playSound()
+
         findViewById<Button>(R.id.dialog_fall_button_yes).setOnClickListener {
-//            sendLocationData()
-            navigateToMainActivity()
+            cancelTimer()
+            sendFallDetectionResult(true) {
+                navigateToMainActivity()
+            }
         }
 
         findViewById<Button>(R.id.dialog_fall_button_no).setOnClickListener {
-            navigateToMainActivity()
+            cancelTimer()
+            sendFallDetectionResult(false) {
+                navigateToMainActivity()
+            }
         }
-        //10초동안 버튼 클릭 X -> 위치 전송
-        handler.postDelayed({
-//            sendLocationData()
-            navigateToMainActivity()
-        }, 10000)
+
+        startTimer()
     }
 
     private fun playSound() {
@@ -66,22 +67,21 @@ class FallDetectionActivity : ComponentActivity() {
         handler.postDelayed({
             mediaPlayer.pause()
             mediaPlayer.seekTo(0)
-
-        }, 3500)
+        }, 15000)
     }
 
-    private fun sendLocationData() {
+    private fun sendFallDetectionResult(isFallConfirmed: Boolean, onComplete: () -> Unit) {
+        val intent = Intent("com.epi.epilog.FALL_DETECTION_RESULT")
+        intent.putExtra("isFallConfirmed", isFallConfirmed)
+        sendBroadcast(intent)
 
-        // Hardcoded latitude and longitude
-        val lat = 37.6292514
-        val lon = 127.0904845
-        val locationData = LocationData(lat, lon)
-        Log.d("좌표", "Latitude: $lat, Longitude: $lon")  // 현재 위도와 경도 값을 출력
-
-        postLocationData(locationData)
-
-
+        // "비상 연락 전송됨" 토스트 메시지 띄우기
+        if (isFallConfirmed) {
+            Toast.makeText(this, "비상 연락 전송됨", Toast.LENGTH_SHORT).show()
+        }
+        handler.postDelayed(onComplete, 2000)  // 일정 시간 후에 onComplete 호출
     }
+
     private fun initializeRetrofit() {
         val gson: Gson = GsonBuilder().setLenient().create()
         val retrofit = Retrofit.Builder()
@@ -95,6 +95,7 @@ class FallDetectionActivity : ComponentActivity() {
         val sharedPreferences = getSharedPreferences("AppPrefs", Context.MODE_PRIVATE)
         return sharedPreferences.getString("AuthToken", null)
     }
+
     private fun postLocationData(locationData: LocationData) {
         val token = getTokenFromSession()
 
@@ -121,6 +122,27 @@ class FallDetectionActivity : ComponentActivity() {
         }
     }
 
+    private fun startTimer() {
+        timerRunnable = object : Runnable {
+            override fun run() {
+                if (timeRemaining > 0) {
+                    timerTextView.text = timeRemaining.toString()
+                    timeRemaining--
+                    handler.postDelayed(this, 1000)
+                } else {
+                    sendFallDetectionResult(true) {
+                        navigateToMainActivity()
+                    }
+                }
+            }
+        }
+        handler.post(timerRunnable!!)
+    }
+
+    private fun cancelTimer() {
+        timerRunnable?.let { handler.removeCallbacks(it) }
+    }
+
     private fun navigateToMainActivity() {
         val intent = Intent(this, MainActivity::class.java)
         startActivity(intent)
@@ -129,6 +151,7 @@ class FallDetectionActivity : ComponentActivity() {
 
     override fun onDestroy() {
         super.onDestroy()
+        cancelTimer()
         mediaPlayer.release()
     }
 }
