@@ -3,7 +3,7 @@
     <item android:state_checked="true">
         <shape android:shape="rectangle">
             <corners android:radius="45dp"/>
-            <solid android:color="@color/제일연한보라"/>
+            <solid android:color="@color/연보라2"/>
         </shape>
     </item>
     <item>

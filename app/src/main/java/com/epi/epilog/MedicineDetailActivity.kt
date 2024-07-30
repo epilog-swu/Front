@@ -3,6 +3,7 @@ package com.epi.epilog
 import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 
 class MedicineDetailActivity : AppCompatActivity() {
@@ -14,6 +15,10 @@ class MedicineDetailActivity : AppCompatActivity() {
 
         findViewById<Button>(R.id.adjust_button).setOnClickListener {
             showDeleteDialog()
+            Toast.makeText(this, "수정되었습니다", Toast.LENGTH_SHORT).show()
+            val intent = Intent(this, MainActivity::class.java)
+            startActivity(intent)
+            finish()
         }
 
         findViewById<Button>(R.id.delete_button).setOnClickListener {

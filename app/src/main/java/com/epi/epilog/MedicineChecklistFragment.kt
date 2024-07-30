@@ -2,13 +2,14 @@ package com.epi.epilog
 
 import android.content.Context
 import android.content.Intent
+import android.graphics.Paint
 import android.os.Bundle
 import android.util.Log
-import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.CheckBox
 import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
@@ -61,25 +62,7 @@ class MedicineChecklistFragment : Fragment() {
             startActivity(Intent(context, MedicineAddModifyActivity::class.java))
         }
 
-        // Add click listener to medicine items
-        addMedicineItemClickListener(view)
-
         return view
-    }
-
-    private fun addMedicineItemClickListener(view: View) {
-        val medicineItems = listOf(
-            view.findViewById<LinearLayout>(R.id.red_box),
-            view.findViewById<LinearLayout>(R.id.orange_box),
-            view.findViewById<LinearLayout>(R.id.purple_box)
-        )
-
-        medicineItems.forEach { item ->
-            item.setOnClickListener {
-                val bottomSheet = MedicineBottomSheetFragment()
-                bottomSheet.show(parentFragmentManager, bottomSheet.tag)
-            }
-        }
     }
 
     private fun initWeekCalendarView(view: View) {
@@ -129,12 +112,6 @@ class MedicineChecklistFragment : Fragment() {
                 val dayOfWeek = daysOfWeek[index]
                 val title = dayOfWeek.getDisplayName(java.time.format.TextStyle.SHORT, Locale.getDefault())
                 textView.text = title
-                textView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 6f)
-
-                val layoutParams = textView.layoutParams as ViewGroup.MarginLayoutParams
-                layoutParams.marginStart = 5
-                layoutParams.topMargin = 5
-                textView.layoutParams = layoutParams
             } ?: run {
                 Toast.makeText(context, "Titles container not found", Toast.LENGTH_SHORT).show()
             }
@@ -154,16 +131,14 @@ class MedicineChecklistFragment : Fragment() {
             weekCalendarView.notifyDateChanged(currentSelection)
         }
 
-        // Show toast message with the selected date
         Toast.makeText(context, "Selected date: $date", Toast.LENGTH_SHORT).show()
 
-        // Fetch and display medication checklist for the selected date
         fetchMedicationChecklist(date)
     }
 
     private fun fetchMedicationChecklist(date: LocalDate) {
-        val dateString = date.toString()  // Format date as needed
-        val token = "Bearer " + getTokenFromSession()  // Retrieve token from session or shared preferences
+        val dateString = date.toString()
+        val token = "Bearer " + getTokenFromSession()
 
         RetrofitClient.retrofitService.getMedicationChecklist(dateString, token).enqueue(object :
             Callback<MedicationChecklistResponse> {
@@ -189,10 +164,32 @@ class MedicineChecklistFragment : Fragment() {
 
         for (item in checklist) {
             Log.d("MedicineChecklistFragment", "Checklist item: $item")
-            val itemView = LayoutInflater.from(context).inflate(R.layout.fragment_medicine_checklist, medicineContentLayout, false)
-            itemView.findViewById<TextView>(R.id.medicine_time).text = item.time
-            itemView.findViewById<TextView>(R.id.medicine_name).text = item.medicationName
-            // Configure other views as needed
+            val itemView = LayoutInflater.from(context).inflate(R.layout.fragment_medicine_checklist_item, medicineContentLayout, false)
+            val medicineTime = itemView.findViewById<TextView>(R.id.medicine_time)
+            val medicineName = itemView.findViewById<TextView>(R.id.medicine_name)
+            val medicineCheckbox = itemView.findViewById<CheckBox>(R.id.medicine_checkbox)
+
+            medicineTime.text = item.time
+            medicineName.text = item.medicationName
+            medicineCheckbox.isChecked = item.isComplete
+
+            // Add strikethrough effect if the item is complete
+            if (item.isComplete) {
+                medicineName.paintFlags = medicineName.paintFlags or Paint.STRIKE_THRU_TEXT_FLAG
+            } else {
+                medicineName.paintFlags = medicineName.paintFlags and Paint.STRIKE_THRU_TEXT_FLAG.inv()
+            }
+
+            medicineCheckbox.setOnCheckedChangeListener { _, isChecked ->
+                item.isComplete = isChecked
+                if (isChecked) {
+                    medicineName.paintFlags = medicineName.paintFlags or Paint.STRIKE_THRU_TEXT_FLAG
+                } else {
+                    medicineName.paintFlags = medicineName.paintFlags and Paint.STRIKE_THRU_TEXT_FLAG.inv()
+                }
+                // Optionally, update the server with the new status here
+            }
+
             medicineContentLayout?.addView(itemView)
         }
     }

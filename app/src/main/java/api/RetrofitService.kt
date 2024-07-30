@@ -51,8 +51,21 @@ interface RetrofitService {
     @GET("api/medicines")
     fun getMedicationChecklist(@Query("date") date: String, @Header("Authorization") token: String): Call<MedicationChecklistResponse>
 
+    @POST("/api/fcm/token")
+    fun postToken(
+        @Header("Authorization") authToken: String,
+        @Body tokenData: TokenData
+    ): Call<ApiResponse>
+
+    @Headers("Content-Type: application/json")
+    @POST("api/medications")
+    fun addMedication(
+        @Header("Authorization") token: String,
+        @Body request: MedicationRequest
+    ): Call<ApiResponse>
 }
 
+data class TokenData(val token: String)
 
 data class MedicationChecklistResponse(
     val date: String,
@@ -66,7 +79,7 @@ data class ChecklistItem(
     val title: String,
     val time: String,
     val medicationName: String,
-    val isComplete: Boolean,
+    var isComplete: Boolean,
     val state: String
 )
 
@@ -91,6 +104,19 @@ data class SignUpRequest(
     val protectorName: String,
     val protectorPhone: String,
     val medication: List<Medication>
+)
+
+data class MedicationRequest(
+    val medicationName: String,
+    val times: List<String>,
+    val startDate: String,
+    val endDate: String?,
+    val endless: Boolean,
+    val isAlarm: Boolean,
+    val weeks: List<String>?,
+    val effectiveness: String,
+    val precautions: String,
+    val storageMethod: String
 )
 
 data class Medication(

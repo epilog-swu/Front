@@ -26,7 +26,7 @@ interface RetrofitService {
 
     @POST("api/detection/fall")
     fun postSensorData(
-        @Body data: List<SensorDataWithRotation>,
+        @Body data: List<SensorData>,
         @Header("Authorization") authToken: String
     ): Call<Boolean>
 

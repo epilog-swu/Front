@@ -35,7 +35,6 @@ class MedicineBottomSheetFragment2 : BottomSheetDialogFragment() {
             val selectedMinute = binding.timePicker.minute
             // 시간 설정 처리
             Toast.makeText(context, "Selected time: $selectedHour:$selectedMinute", Toast.LENGTH_SHORT).show()
-            navigateToChecklistFragment()
             dismiss()
         }
 
@@ -44,7 +43,7 @@ class MedicineBottomSheetFragment2 : BottomSheetDialogFragment() {
             if (bottomSheet != null) {
                 val behavior = BottomSheetBehavior.from(bottomSheet)
                 val scale = resources.displayMetrics.density
-                val minHeight = (400 * scale + 0.5f).toInt() // 250dp를 픽셀로 변환
+                val minHeight = (390 * scale + 0.5f).toInt() // 250dp를 픽셀로 변환
 
                 behavior.peekHeight = minHeight
                 bottomSheet.layoutParams.height = minHeight
@@ -64,12 +63,7 @@ class MedicineBottomSheetFragment2 : BottomSheetDialogFragment() {
         }
     }
 
-    private fun navigateToChecklistFragment() {
-        val intent = Intent(context, MainActivity::class.java)
-        intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK
-        intent.putExtra("navigateToFragment", "MedicineChecklistFragment")
-        startActivity(intent)
-    }
+
 
     override fun onDestroyView() {
         super.onDestroyView()

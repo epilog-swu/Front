@@ -20,8 +20,6 @@ class DeleteDialogFragment : DialogFragment() {
             .create()
 
         dialogView.findViewById<Button>(R.id.dialogCancleBtn).setOnClickListener {
-            Toast.makeText(context, "수정되었습니다", Toast.LENGTH_SHORT).show()
-            navigateToChecklistFragment()
             dialog.dismiss()
         }
 
