@@ -1,6 +1,6 @@
 package com.epi.epilog
 
-import android.annotation.SuppressLint
+
 import android.content.Context
 import android.graphics.Color
 import android.os.Bundle
@@ -15,6 +15,7 @@ import androidx.core.view.children
 import androidx.fragment.app.Fragment
 import com.epi.epilog.databinding.FragmentGraphBinding
 import com.github.mikephil.charting.charts.LineChart
+import com.github.mikephil.charting.components.Legend
 import com.github.mikephil.charting.components.MarkerView
 import com.github.mikephil.charting.components.XAxis
 import com.github.mikephil.charting.data.Entry
@@ -22,6 +23,7 @@ import com.github.mikephil.charting.data.LineData
 import com.github.mikephil.charting.data.LineDataSet
 import com.github.mikephil.charting.formatter.IndexAxisValueFormatter
 import com.github.mikephil.charting.highlight.Highlight
+import com.github.mikephil.charting.listener.OnChartValueSelectedListener
 import com.github.mikephil.charting.utils.MPPointF
 import com.kizitonwose.calendar.core.WeekDay
 import com.kizitonwose.calendar.core.atStartOfMonth
@@ -29,11 +31,12 @@ import com.kizitonwose.calendar.core.daysOfWeek
 import com.kizitonwose.calendar.view.ViewContainer
 import com.kizitonwose.calendar.view.WeekCalendarView
 import com.kizitonwose.calendar.view.WeekDayBinder
-import java.security.KeyStore
 import java.time.DayOfWeek
 import java.time.LocalDate
 import java.time.YearMonth
+import java.util.Calendar
 import java.util.Locale
+
 
 class GraphPage : Fragment() {
     private var _binding: FragmentGraphBinding? = null
@@ -63,6 +66,7 @@ class GraphPage : Fragment() {
 
         initWeekCalendarView(view)
         initLineChart(view)
+        initLineChart2(view)
         //initClickListeners(view)
     }
 
@@ -112,7 +116,8 @@ class GraphPage : Fragment() {
             val daysOfWeek = daysOfWeek(firstDayOfWeek = DayOfWeek.SUNDAY)
             container.children.toList().map { it as TextView }.forEachIndexed { index, textView ->
                 val dayOfWeek = daysOfWeek[index]
-                val title = dayOfWeek.getDisplayName(java.time.format.TextStyle.SHORT, Locale.getDefault())
+                val title =
+                    dayOfWeek.getDisplayName(java.time.format.TextStyle.SHORT, Locale.getDefault())
                 textView.text = title
                 textView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 6f)
 
@@ -155,7 +160,7 @@ class GraphPage : Fragment() {
         val entries = mutableListOf<Entry>()
 
         // 더미 데이터 추가
-        entries.add(Entry(0f,50f))
+        entries.add(Entry(0f, 50f))
         entries.add(Entry(1f, 100f))
         entries.add(Entry(2f, 110f))
         entries.add(Entry(3f, 120f))
@@ -180,7 +185,7 @@ class GraphPage : Fragment() {
         // y축 설정
         val yAxis = lineChart.axisLeft
         yAxis.axisLineColor = Color.parseColor("#817DA1") // y축 색상 설정
-        yAxis.textColor =  Color.parseColor("#817DA1")    // y축 라벨 색상 설정
+        yAxis.textColor = Color.parseColor("#817DA1")    // y축 라벨 색상 설정
         yAxis.gridColor = Color.parseColor("#E2DEFC")// y축 격자선 색상 설정
         yAxis.axisMinimum = 0f
         yAxis.axisMaximum = 300f
@@ -191,18 +196,19 @@ class GraphPage : Fragment() {
         // x축 설정
         val xAxis = lineChart.xAxis
         xAxis.axisLineColor = Color.parseColor("#817DA1") // x축 색상 설정
-        xAxis.textColor =  Color.parseColor("#817DA1") // x축 라벨 색상 설정
+        xAxis.textColor = Color.parseColor("#817DA1") // x축 라벨 색상 설정
         xAxis.gridColor = Color.parseColor("#E2DEFC")// x축 격자선 색상 설정
         xAxis.axisMinimum = 0f
         xAxis.axisMaximum = 7f
         xAxis.granularity = 1f  // 라벨 간격 설정
         xAxis.position = XAxis.XAxisPosition.BOTTOM // x축 라벨을 아래쪽에 표시
-        xAxis.valueFormatter = IndexAxisValueFormatter(arrayOf("0", "1", "2", "3", "4", "5", "6", "7")) // x축 라벨 설정
+        xAxis.valueFormatter =
+            IndexAxisValueFormatter(arrayOf("0", "1", "2", "3", "4", "5", "6", "7")) // x축 라벨 설정
 
         lineChart.legend.isEnabled = false //'혈당 변화' 라벨 설정 비활성화
 
         // 마커 설정
-        val markerView = context?.let { MyMarkerView(it, R.layout.graph_marker_layout) }
+        val markerView = context?.let { bloodSugarMarkerView(it, R.layout.graph_marker_layout) }
         lineChart.marker = markerView
         if (markerView != null) {
             lineChart.marker = markerView
@@ -214,6 +220,113 @@ class GraphPage : Fragment() {
         lineChart.invalidate()
     }
 
+    private fun initLineChart2(view: View) {
+
+        val lineChart: LineChart = view.findViewById(R.id.graph_weight_bmi_avg_linechart)
+
+        //x축 날짜 설정
+        val daysInMonth: Int = getDaysInCurrentMonth()
+
+        // X축 설정
+        val xAxis = lineChart.xAxis
+        xAxis.position = XAxis.XAxisPosition.BOTTOM
+        xAxis.granularity = 1f
+        xAxis.valueFormatter = IndexAxisValueFormatter(getDaysOfMonth(daysInMonth))
+
+
+        // Y축 설정
+        val leftAxis = lineChart.axisLeft
+        leftAxis.axisMinimum = 0f
+        leftAxis.axisMaximum = 200f
+        leftAxis.granularity = 50f //간격 설정
+        leftAxis.axisLineColor = Color.parseColor("#827DA1")
+        leftAxis.textColor = Color.parseColor("#827DA1")
+
+        val rightAxis = lineChart.axisRight
+        rightAxis.isEnabled = false
+
+
+        // WeightLine 데이터
+        val weightEntries: ArrayList<Entry> = generateData(daysInMonth)
+
+        val weightDataSet = LineDataSet(weightEntries, "Weight Line")
+        weightDataSet.color = Color.parseColor("#625353")
+
+        weightDataSet.setHighlightEnabled(true)   // 하이라이트 비활성화
+        weightDataSet.highLightColor = Color.TRANSPARENT // 하이라이트 라인을 투명하게 설정 //마커만 보이게 하기 위함
+        weightDataSet.setDrawCircles(false) //데이터 dot그리지않음
+        weightDataSet.setDrawValues(false) // 데이터 값 텍스트 숨기기
+
+
+        // BMILine 데이터
+        val bmiEntries: ArrayList<Entry> = generateData(daysInMonth)
+
+        val bmiDatasets = LineDataSet(bmiEntries, "BMI Line")
+        bmiDatasets.color = Color.parseColor("#A096E9")
+
+        bmiDatasets.setHighlightEnabled(true)   // 하이라이트 비활성화
+        bmiDatasets.highLightColor = Color.TRANSPARENT // 하이라이트 라인을 투명하게 설정 //마커만 보이게 하기 위함
+        bmiDatasets.setDrawCircles(false) //데이터 dot그리지않음
+        bmiDatasets.setDrawValues(false)  //데이터 값 텍스트 숨기기
+
+        val lineData = LineData(weightDataSet, bmiDatasets)
+        lineChart.data = lineData
+
+
+        // 범례 설정
+        val legend = lineChart.legend
+        legend.textSize = 12f
+        legend.form = Legend.LegendForm.LINE
+        legend.setEnabled(false)
+
+
+
+        // 첫 번째 마커 뷰 설정
+        val weightMarker = context?.let { weightMarkerView(it, R.layout.graph_marker_weight_layout) }
+        // 두 번째 마커 뷰 설정
+        val bmiMarker = context?.let { bmiMarkerView(it, R.layout.graph_marker_bmi_layout) }
+
+        // 차트에 클릭 리스너 설정
+        lineChart.setOnChartValueSelectedListener(object : OnChartValueSelectedListener {
+            override fun onValueSelected(e: Entry, h: Highlight) {
+                // 조건에 따라 다른 마커를 설정
+                if (h.dataSetIndex == 0) {
+                    lineChart.marker = weightMarker
+                } else {
+                    lineChart.marker = bmiMarker
+                }
+            }
+
+            override fun onNothingSelected() {
+                // 아무 것도 선택되지 않았을 때
+            }
+        })
+
+        //차트 갱신
+        lineChart.invalidate()
+    }
+
+    private fun getDaysInCurrentMonth(): Int {
+        val calendar: Calendar = Calendar.getInstance()
+        return calendar.getActualMaximum(Calendar.DAY_OF_MONTH)
+    }
+
+    private fun generateData(daysInMonth: Int): ArrayList<Entry> {
+        val data = ArrayList<Entry>()
+        for (i in 0 until daysInMonth) {
+            data.add(Entry(i.toFloat(), (Math.random() * 200).toFloat()))
+        }
+        return data
+    }
+
+    private fun getDaysOfMonth(daysInMonth: Int): List<String> {
+        val days: MutableList<String> = ArrayList()
+        for (i in 1..daysInMonth) {
+            days.add(i.toString())
+        }
+        return days
+    }
+
 
     override fun onDestroyView() {
         _binding = null
@@ -223,18 +336,63 @@ class GraphPage : Fragment() {
 
 }
 
-// MyMarkerView 클래스 정의, MarkerView를 상속
-class MyMarkerView(context: Context, layoutResource: Int) : MarkerView(context, layoutResource) {
+//혈당 마커
+class bloodSugarMarkerView(context: Context, layoutResource: Int) :
+    MarkerView(context, layoutResource) {
 
     // 레이아웃의 TextView를 초기화
 
     private val occuranceTypeTV: TextView = findViewById(R.id.main_graph_occurance_markertv)
-    private val bloodsugarTV : TextView = findViewById(R.id.main_graph_blood_sugar_markertv)
+    private val bloodsugarTV: TextView = findViewById(R.id.main_graph_blood_sugar_markertv)
 
     // MarkerView가 다시 그려질 때마다 호출되는 콜백으로, UI 내용을 업데이트하는 데 사용
     override fun refreshContent(e: Entry?, highlight: Highlight?) {
         occuranceTypeTV.text = "아침식사 전"  // Entry의 y값을 텍스트로 설정합니다. //TODO: 나중에 서버에서 받을 값
         bloodsugarTV.text = "${e?.y}"  // Entry의 y값을 텍스트로 설정합니다.
+        super.refreshContent(e, highlight) // 부모 클래스의 메서드 호출
+    }
+
+    // MarkerView의 오프셋을 설정하여, 화면에서의 위치를 조정
+    override fun getOffset(): MPPointF {
+        return MPPointF(-(width / 2).toFloat(), -height.toFloat() - 20) // 중앙에 표시되도록 오프셋 설정
+    }
+}
+
+//몸무게 마커
+class weightMarkerView(context: Context, layoutResource: Int) :
+    MarkerView(context, layoutResource) {
+
+    // 레이아웃의 TextView를 초기화
+
+    private val dateTV: TextView = findViewById(R.id.graph_weight_marker_date)
+    private val weightTV: TextView = findViewById(R.id.graph_weight_marker_tv)
+
+    // MarkerView가 다시 그려질 때마다 호출되는 콜백으로, UI 내용을 업데이트하는 데 사용
+    override fun refreshContent(e: Entry?, highlight: Highlight?) {
+        dateTV.text = "24.07.01"  // Entry의 y값을 텍스트로 설정합니다. //TODO: 나중에 서버에서 받을 값
+        weightTV.text = "${e?.y}"  // Entry의 y값을 텍스트로 설정합니다.
+        super.refreshContent(e, highlight) // 부모 클래스의 메서드 호출
+    }
+
+    // MarkerView의 오프셋을 설정하여, 화면에서의 위치를 조정
+    override fun getOffset(): MPPointF {
+        return MPPointF(-(width / 2).toFloat(), -height.toFloat() - 20) // 중앙에 표시되도록 오프셋 설정
+    }
+}
+
+//체지방률 마커
+class bmiMarkerView(context: Context, layoutResource: Int) :
+    MarkerView(context, layoutResource) {
+
+    // 레이아웃의 TextView를 초기화
+
+    private val dateTV: TextView = findViewById(R.id.graph_bmi_marker_date)
+    private val bmiTV: TextView = findViewById(R.id.graph_bmi_marker_tv)
+
+    // MarkerView가 다시 그려질 때마다 호출되는 콜백으로, UI 내용을 업데이트하는 데 사용
+    override fun refreshContent(e: Entry?, highlight: Highlight?) {
+        dateTV.text = "24.07.01"  // Entry의 y값을 텍스트로 설정합니다. //TODO: 나중에 서버에서 받을 값
+        bmiTV.text = "${e?.y}"  // Entry의 y값을 텍스트로 설정합니다.
         super.refreshContent(e, highlight) // 부모 클래스의 메서드 호출
     }
 

@@ -261,16 +261,24 @@
                     android:textStyle="bold" />
             </LinearLayout>
 
-            <!-- 몸무게 / 체지방률 라인 차트 -->
+            <!-- 오늘의 혈당 라인차트 -->
             <HorizontalScrollView
-                android:layout_width="650dp"
-                android:layout_height="250dp"
-                android:layout_marginStart="20dp">
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:layout_marginBottom="15dp"
+                android:layout_marginEnd="20dp"
+                android:scrollbars="none">
 
-                <com.github.mikephil.charting.charts.LineChart
-                    android:id="@+id/graph_avg_bmi_linechart"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent" />
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+
+                    <com.github.mikephil.charting.charts.LineChart
+                        android:id="@+id/graph_weight_bmi_avg_linechart"
+                        android:layout_width="700dp"
+                        android:layout_height="210dp" />
+                </LinearLayout>
             </HorizontalScrollView>
         </LinearLayout>
     </ScrollView>
