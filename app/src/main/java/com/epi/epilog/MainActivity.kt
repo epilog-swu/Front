@@ -9,6 +9,7 @@ import androidx.fragment.app.Fragment
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import androidx.viewpager2.widget.ViewPager2
 import com.epi.epilog.databinding.ActivityMainBinding
+import com.epi.epilog.meal.MealChecklistFragment
 import com.ismaeldivita.chipnavigation.ChipNavigationBar
 
 

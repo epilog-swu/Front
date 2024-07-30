@@ -4,9 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".graphFragment">
-
-
+    tools:context=".graphPage">
 
     <!-- 달력 -->
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -24,72 +22,265 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="20dp"
             android:layout_marginEnd="10dp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
         <com.kizitonwose.calendar.view.WeekCalendarView
-            android:id="@+id/meal_calendarView"
+            android:id="@+id/graph_calendarview"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
             android:layout_marginEnd="10dp"
-            app:cv_dayViewResource="@layout/week_calendar_day_layout"
-            app:layout_constraintStart_toStartOf="parent"
+            app:cv_dayViewResource="@layout/calendar_day_layout"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/titlesContainer" />
-
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-
-    <!--그래프 기록부분 시작, 스크롤뷰-->
+    <!-- 스크롤뷰 -->
     <ScrollView
         android:id="@+id/scrollView_graph"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/graph_week_calendar_layout">
+        android:layout_height="0dp"
+        app:layout_constraintTop_toBottomOf="@id/graph_week_calendar_layout"
+        app:layout_constraintBottom_toBottomOf="parent">
 
-        <!-- 날짜 정보와 기록개수에 관한 가로 tv 모음-->
         <LinearLayout
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="10dp"
-            android:orientation="horizontal">
+            android:orientation="vertical">
 
-            <TextView
-                android:id="@+id/graph_date_tv"
+            <!-- 날짜 정보와 기록개수에 관한 가로 tv 모음-->
+            <LinearLayout
+                android:id="@+id/graph_bloodsugar_plain_tv"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="2024년 7월 1일"/>
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="20dp"
+                android:orientation="horizontal">
 
-            <TextView
+                <TextView
+                    android:id="@+id/graph_date_tv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="2024년 7월 1일"
+                    android:textColor="@color/black"
+                    android:textSize="16dp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text=" 혈당 변화 추이"
+                    android:textColor="@color/black"
+                    android:textSize="16dp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/graph_date_records_counts"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text=" (7)"
+                    android:textColor="@color/black"
+                    android:textSize="16dp"
+                    android:textStyle="bold" />
+            </LinearLayout>
+
+            <!-- 오늘의 혈당 라인차트 -->
+            <HorizontalScrollView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="15dp"
+                android:layout_marginEnd="20dp"
+                android:scrollbars="none">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+
+                    <com.github.mikephil.charting.charts.LineChart
+                        android:id="@+id/app_graph_blood_sugar_chart"
+                        android:layout_width="700dp"
+                        android:layout_height="310dp"
+                        android:layout_marginTop="15dp" />
+                </LinearLayout>
+            </HorizontalScrollView>
+
+
+            <!--평균혈당/ 식전후 평균혈당 레이아웃-->
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text=" 혈당 변화 추이"/>
+                android:orientation="horizontal"
+                android:layout_gravity="center">
 
-            <TextView
-                android:id="@+id/graph_date_records_counts"
+                <!-- 평균혈당 박스 -->
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/graph_avg_bloodsugar"
+                    android:layout_width="150dp"
+                    android:layout_height="90dp"
+                    android:background="@drawable/graph_avg_bloodsugar_bg"
+                    android:layout_marginTop="10dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="평균 혈당"
+                        android:textColor="@color/black"
+                        android:textSize="14dp"
+                        android:textStyle="bold"
+                        android:layout_marginTop="10dp"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <TextView
+                        android:id="@+id/graph_avg_bloodsugar_tv"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="15dp"
+                        android:text="126"
+                        android:textColor="#4E4C61"
+                        android:textSize="26dp"
+                        android:textStyle="bold"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="20dp"
+                        android:text="   mg/dl"
+                        android:textSize="8dp"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintStart_toEndOf="@id/graph_avg_bloodsugar_tv" />
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <!-- 식전후 평균혈당 박스 -->
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="180dp"
+                    android:layout_height="90dp"
+                    android:background="@drawable/graph_avg_bloodsugar_meal_bg"
+                    android:layout_marginTop="10dp">
+
+                    <TextView
+                        android:id="@+id/graph_avg_bloodsugar_meal_plain_tv"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="식전/후 평균 혈당"
+                        android:textColor="@color/white"
+                        android:textSize="14dp"
+                        android:textStyle="bold"
+                        android:layout_marginTop="10dp"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/graph_avg_bloodsugar_meal_plain_tv">
+
+                        <TextView
+                            android:id="@+id/graph_avg_bloodsugar_meal_pre_tv"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="108"
+                            android:textColor="@color/white"
+                            android:textSize="26dp"
+                            android:textStyle="bold"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintStart_toStartOf="parent" />
+
+                        <TextView
+                            android:id="@+id/slash"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text=" / "
+                            android:textColor="@color/white"
+                            android:textSize="26dp"
+                            android:textStyle="bold"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintStart_toEndOf="@id/graph_avg_bloodsugar_meal_pre_tv" />
+
+                        <TextView
+                            android:id="@+id/graph_avg_bloodsugar_meal_post_tv"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="210"
+                            android:textColor="@color/white"
+                            android:textSize="26dp"
+                            android:textStyle="bold"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintStart_toEndOf="@id/slash" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="5dp"
+                            android:text="   mg/dl"
+                            android:textColor="@color/white"
+                            android:textSize="8dp"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintStart_toEndOf="@id/graph_avg_bloodsugar_meal_post_tv" />
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+            </LinearLayout>
+
+            <!-- 7월 몸무게 / 체지방률 변화 플레인 텍스트 -->
+            <LinearLayout
+                android:id="@+id/graph_avg_bmi_text_layout"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text=" (7)"/>
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="20dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="7월"
+                    android:textColor="@color/black"
+                    android:textSize="16dp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text=" 몸무게/체지방률 변화추이"
+                    android:textColor="@color/black"
+                    android:textSize="16dp"
+                    android:textStyle="bold" />
+            </LinearLayout>
+
+            <!-- 오늘의 혈당 라인차트 -->
+            <HorizontalScrollView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:layout_marginBottom="15dp"
+                android:layout_marginEnd="20dp"
+                android:scrollbars="none">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+
+                    <com.github.mikephil.charting.charts.LineChart
+                        android:id="@+id/graph_weight_bmi_avg_linechart"
+                        android:layout_width="700dp"
+                        android:layout_height="210dp" />
+                </LinearLayout>
+            </HorizontalScrollView>
         </LinearLayout>
-
-
-        <!--라인차트-->
-<!--        <com.github.mikephil.charting.charts.LineChart-->
-<!--            android:id="@+id/app_graph_blood_sugar_chart"-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="match_parent"-->
-<!--            android:layout_marginTop="15dp" />-->
-
-
-
     </ScrollView>
 
-
 </androidx.constraintlayout.widget.ConstraintLayout>
-
-

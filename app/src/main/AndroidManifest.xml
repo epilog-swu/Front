@@ -36,9 +36,9 @@
             android:theme="@style/TransparentTheme" />
 <activity android:name=".MedicineAddModifyActivity"/>
         <activity android:name=".MedicineDetailActivity"/>
-        <activity android:name=".ActivityMealManageSex"/>
-        <activity android:name=".ActivityMealManageExercise"/>
-        <activity android:name=".ActivityMealManageWeight"/>
+        <activity android:name=".meal.ActivityMealManageSex"/>
+        <activity android:name=".meal.ActivityMealManageExercise"/>
+        <activity android:name=".meal.ActivityMealManageWeight"/>
 
 
     </application>
