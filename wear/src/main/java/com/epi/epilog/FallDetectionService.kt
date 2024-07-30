@@ -138,7 +138,7 @@ class FallDetectionService : Service(), SensorEventListener, LocationListener {
         val token = getTokenFromSession()
         try {
             // URI 객체를 사용하여 웹소켓 서버에 연결
-            val serverEndpoint = "http://epilog-develop-env.eba-imw3vi3g.ap-northeast-2.elasticbeanstalk.com/"
+            val serverEndpoint = "epilog-develop-env.eba-imw3vi3g.ap-northeast-2.elasticbeanstalk.com"
 
             // Construct the WebSocket URI with the server endpoint and token
             val uri = URI("ws://$serverEndpoint/detection/fall?token=$token")
