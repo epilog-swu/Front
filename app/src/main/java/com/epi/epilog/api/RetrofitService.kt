@@ -61,7 +61,6 @@ interface RetrofitService {
     ): Call<ApiResponse>
 
 
-
     //메인 그래프 2 정보 얻어오기
     @Headers("Content-Type: application/json")
     @GET("api/logs/weight")
@@ -69,8 +68,6 @@ interface RetrofitService {
         @Query("date") date: String,
         @Header("Authorization") token: String
     ): Call<GraphWeightBMIResponse>
-
-
 
 }
 

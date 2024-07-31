@@ -229,93 +229,6 @@ class GraphPage : Fragment() {
     }
 
 
-
-//    private fun initLineChart2(view: View) {
-//
-//        val lineChart: LineChart = view.findViewById(R.id.graph_weight_bmi_avg_linechart)
-//
-//        //x축 날짜 설정
-//        val daysInMonth: Int = getDaysInCurrentMonth()
-//
-//        // X축 설정
-//        val xAxis = lineChart.xAxis
-//        xAxis.position = XAxis.XAxisPosition.BOTTOM
-//        xAxis.granularity = 1f
-//        xAxis.valueFormatter = IndexAxisValueFormatter(getDaysOfMonth(daysInMonth))
-//
-//
-//        // Y축 설정
-//        val leftAxis = lineChart.axisLeft
-//        leftAxis.axisMinimum = 0f
-//        leftAxis.axisMaximum = 200f
-//        leftAxis.granularity = 50f //간격 설정
-//        leftAxis.axisLineColor = Color.parseColor("#827DA1")
-//        leftAxis.textColor = Color.parseColor("#827DA1")
-//
-//        val rightAxis = lineChart.axisRight
-//        rightAxis.isEnabled = false
-//
-//
-//        // WeightLine 데이터
-//        val weightEntries: ArrayList<Entry> = generateData(daysInMonth)
-//
-//        val weightDataSet = LineDataSet(weightEntries, "Weight Line")
-//        weightDataSet.color = Color.parseColor("#625353")
-//
-//        weightDataSet.setHighlightEnabled(true)   // 하이라이트 비활성화
-//        weightDataSet.highLightColor = Color.TRANSPARENT // 하이라이트 라인을 투명하게 설정 //마커만 보이게 하기 위함
-//        weightDataSet.setDrawCircles(false) //데이터 dot그리지않음
-//        weightDataSet.setDrawValues(false) // 데이터 값 텍스트 숨기기
-//
-//
-//        // BMILine 데이터
-//        val bmiEntries: ArrayList<Entry> = generateData(daysInMonth)
-//
-//        val bmiDatasets = LineDataSet(bmiEntries, "BMI Line")
-//        bmiDatasets.color = Color.parseColor("#A096E9")
-//
-//        bmiDatasets.setHighlightEnabled(true)   // 하이라이트 비활성화
-//        bmiDatasets.highLightColor = Color.TRANSPARENT // 하이라이트 라인을 투명하게 설정 //마커만 보이게 하기 위함
-//        bmiDatasets.setDrawCircles(false) //데이터 dot그리지않음
-//        bmiDatasets.setDrawValues(false)  //데이터 값 텍스트 숨기기
-//
-//        val lineData = LineData(weightDataSet, bmiDatasets)
-//        lineChart.data = lineData
-//
-//
-//        // 범례 설정
-//        val legend = lineChart.legend
-//        legend.textSize = 12f
-//        legend.form = Legend.LegendForm.LINE
-//        legend.setEnabled(false)
-//
-//
-//
-//        // 첫 번째 마커 뷰 설정
-//        val weightMarker = context?.let { weightMarkerView(it, R.layout.graph_marker_weight_layout) }
-//        // 두 번째 마커 뷰 설정
-//        val bmiMarker = context?.let { bmiMarkerView(it, R.layout.graph_marker_bmi_layout) }
-//
-//        // 차트에 클릭 리스너 설정
-//        lineChart.setOnChartValueSelectedListener(object : OnChartValueSelectedListener {
-//            override fun onValueSelected(e: Entry, h: Highlight) {
-//                // 조건에 따라 다른 마커를 설정
-//                if (h.dataSetIndex == 0) {
-//                    lineChart.marker = weightMarker
-//                } else {
-//                    lineChart.marker = bmiMarker
-//                }
-//            }
-//
-//            override fun onNothingSelected() {
-//                // 아무 것도 선택되지 않았을 때
-//            }
-//        })
-//
-//        //차트 갱신
-//        lineChart.invalidate()
-
-
     private fun initLineChart2(view: View) {
         val lineChart: LineChart = view.findViewById(R.id.graph_weight_bmi_avg_linechart)
 
@@ -328,8 +241,8 @@ class GraphPage : Fragment() {
         // Y축 설정
         val leftAxis = lineChart.axisLeft
         leftAxis.axisMinimum = 0f
-        leftAxis.axisMaximum = 200f
-        leftAxis.granularity = 50f // 간격 설정
+        leftAxis.axisMaximum = 100f
+        leftAxis.granularity = 30f // 간격 설정
         leftAxis.axisLineColor = Color.parseColor("#827DA1")
         leftAxis.textColor = Color.parseColor("#827DA1")
 
@@ -342,26 +255,6 @@ class GraphPage : Fragment() {
         legend.form = Legend.LegendForm.LINE
         legend.isEnabled = false
 
-        // 첫 번째 마커 뷰 설정
-        val weightMarker = context?.let { weightMarkerView(it, R.layout.graph_marker_weight_layout) }
-        // 두 번째 마커 뷰 설정
-        val bmiMarker = context?.let { bmiMarkerView(it, R.layout.graph_marker_bmi_layout) }
-
-        // 차트에 클릭 리스너 설정
-        lineChart.setOnChartValueSelectedListener(object : OnChartValueSelectedListener {
-            override fun onValueSelected(e: Entry, h: Highlight) {
-                // 조건에 따라 다른 마커를 설정
-                if (h.dataSetIndex == 0) {
-                    lineChart.marker = weightMarker
-                } else {
-                    lineChart.marker = bmiMarker
-                }
-            }
-
-            override fun onNothingSelected() {
-                // 아무 것도 선택되지 않았을 때
-            }
-        })
 
         // 특정 날짜의 몸무게와 BMI 데이터를 가져와서 차트에 반영
         fetchGraphWeightBMI(LocalDate.now())
@@ -385,14 +278,12 @@ class GraphPage : Fragment() {
         val bmiEntries = ArrayList<Entry>()
 
         // weightData와 bmiData를 Entry 리스트로 변환
-        for (weight in weightData) {
-            val date = parseDate(weight.date)
-            weightEntries.add(Entry(date.toFloat(), weight.value))
+        for (i in weightData.indices) {
+            weightEntries.add(Entry(i.toFloat(), weightData[i].value))
         }
 
-        for (bmi in bmiData) {
-            val date = parseDate(bmi.date)
-            bmiEntries.add(Entry(date.toFloat(), bmi.value))
+        for (i in bmiData.indices) {
+            bmiEntries.add(Entry(i.toFloat(), bmiData[i].value))
         }
 
         // WeightLine 데이터 설정
@@ -400,20 +291,36 @@ class GraphPage : Fragment() {
         weightDataSet.color = Color.parseColor("#625353")
         weightDataSet.setHighlightEnabled(true) // 하이라이트 비활성화
         weightDataSet.highLightColor = Color.TRANSPARENT // 하이라이트 라인을 투명하게 설정
-        weightDataSet.setDrawCircles(false) // 데이터 dot 그리지 않음
+        weightDataSet.setDrawCircles(true) // 데이터 dot 그리지 않음
         weightDataSet.setDrawValues(false) // 데이터 값 텍스트 숨기기
+        weightDataSet.setCircleColors(Color.parseColor("#625353"))
 
         // BMILine 데이터 설정
         val bmiDataSet = LineDataSet(bmiEntries, "BMI Line")
         bmiDataSet.color = Color.parseColor("#A096E9")
         bmiDataSet.setHighlightEnabled(true) // 하이라이트 비활성화
         bmiDataSet.highLightColor = Color.TRANSPARENT // 하이라이트 라인을 투명하게 설정
-        bmiDataSet.setDrawCircles(false) // 데이터 dot 그리지 않음
+        bmiDataSet.setDrawCircles(true) // 데이터 dot 그리지 않음
         bmiDataSet.setDrawValues(false) // 데이터 값 텍스트 숨기기
+        bmiDataSet.setCircleColors(Color.parseColor("#A096E9"))
 
-        // 차트 데이터 설정
         val lineData = LineData(weightDataSet, bmiDataSet)
         lineChart.data = lineData
+
+        val weightMarker = context?.let { weightMarkerView(it, R.layout.graph_marker_weight_layout, weightData) }
+        val bmiMarker = context?.let { bmiMarkerView(it, R.layout.graph_marker_bmi_layout, bmiData) }
+
+        lineChart.setOnChartValueSelectedListener(object : OnChartValueSelectedListener {
+            override fun onValueSelected(e: Entry, h: Highlight) {
+                if (h.dataSetIndex == 0) {
+                    lineChart.marker = weightMarker
+                } else {
+                    lineChart.marker = bmiMarker
+                }
+            }
+
+            override fun onNothingSelected() {}
+        })
 
         // 차트 갱신
         lineChart.invalidate()
@@ -430,8 +337,9 @@ class GraphPage : Fragment() {
     private fun fetchGraphWeightBMI(date: LocalDate) {
         // LocalDate 객체를 문자열로 변환
         val dateString = date.toString()
+        Log.d("GraphWeightBMIFragment", "date String : $dateString")
         // 세션에서 토큰을 가져와 Bearer 토큰 형식으로 설정
-        val token = "Bearer " + getTokenFromSession()
+        val token = "Bearer " + "eyJhbGciOiJIUzI1NiJ9.eyJtZW1iZXJJZCI6IjIiLCJpYXQiOjE3MjI0MzQ5MDQsImV4cCI6MTgwODgzNDkwNH0.2HCBO4wv2I83XZA7ww7HkHODmROGLp2WTlaj-GLxtTw"
 
         if (token.isBlank()) {
             Toast.makeText(context, "Auth token is missing", Toast.LENGTH_SHORT).show()
@@ -439,7 +347,7 @@ class GraphPage : Fragment() {
         }
 
         // Retrofit을 사용하여 API 호출
-        RetrofitClient.retrofitService.getGraphWeightBMI(token, dateString).enqueue(object :
+        RetrofitClient.retrofitService.getGraphWeightBMI(dateString, token).enqueue(object :
             Callback<GraphWeightBMIResponse> {
             // 응답이 성공적일 때 호출되는 콜백
             override fun onResponse(call: Call<GraphWeightBMIResponse>, response: Response<GraphWeightBMIResponse>) {
@@ -535,45 +443,42 @@ class bloodSugarMarkerView(context: Context, layoutResource: Int) :
 }
 
 //몸무게 마커
-class weightMarkerView(context: Context, layoutResource: Int) :
+class weightMarkerView(context: Context, layoutResource: Int, private val data: List<GraphWeightBMIDate>) :
     MarkerView(context, layoutResource) {
-
-    // 레이아웃의 TextView를 초기화
 
     private val dateTV: TextView = findViewById(R.id.graph_weight_marker_date)
     private val weightTV: TextView = findViewById(R.id.graph_weight_marker_tv)
 
-    // MarkerView가 다시 그려질 때마다 호출되는 콜백으로, UI 내용을 업데이트하는 데 사용
     override fun refreshContent(e: Entry?, highlight: Highlight?) {
-        dateTV.text = "24.07.01"  // Entry의 y값을 텍스트로 설정합니다. //TODO: 나중에 서버에서 받을 값
+        val entryIndex = e?.x?.toInt() ?: 0
+        val date = data[entryIndex].date
+        dateTV.text = date  // 서버에서 받은 날짜 값 설정
         weightTV.text = "${e?.y}"  // Entry의 y값을 텍스트로 설정합니다.
-        super.refreshContent(e, highlight) // 부모 클래스의 메서드 호출
+        super.refreshContent(e, highlight)
     }
 
-    // MarkerView의 오프셋을 설정하여, 화면에서의 위치를 조정
     override fun getOffset(): MPPointF {
-        return MPPointF(-(width / 2).toFloat(), -height.toFloat() - 20) // 중앙에 표시되도록 오프셋 설정
+        return MPPointF(-(width / 2).toFloat(), -height.toFloat() - 20)
     }
 }
 
-//체지방률 마커
-class bmiMarkerView(context: Context, layoutResource: Int) :
-    MarkerView(context, layoutResource) {
 
-    // 레이아웃의 TextView를 초기화
+//체지방률 마커
+class bmiMarkerView(context: Context, layoutResource: Int, private val data: List<GraphWeightBMIDate>) :
+    MarkerView(context, layoutResource) {
 
     private val dateTV: TextView = findViewById(R.id.graph_bmi_marker_date)
     private val bmiTV: TextView = findViewById(R.id.graph_bmi_marker_tv)
 
-    // MarkerView가 다시 그려질 때마다 호출되는 콜백으로, UI 내용을 업데이트하는 데 사용
     override fun refreshContent(e: Entry?, highlight: Highlight?) {
-        dateTV.text = "24.07.01"  // Entry의 y값을 텍스트로 설정합니다. //TODO: 나중에 서버에서 받을 값
+        val entryIndex = e?.x?.toInt() ?: 0
+        val date = data[entryIndex].date
+        dateTV.text = date  // 서버에서 받은 날짜 값 설정
         bmiTV.text = "${e?.y}"  // Entry의 y값을 텍스트로 설정합니다.
-        super.refreshContent(e, highlight) // 부모 클래스의 메서드 호출
+        super.refreshContent(e, highlight)
     }
 
-    // MarkerView의 오프셋을 설정하여, 화면에서의 위치를 조정
     override fun getOffset(): MPPointF {
-        return MPPointF(-(width / 2).toFloat(), -height.toFloat() - 20) // 중앙에 표시되도록 오프셋 설정
+        return MPPointF(-(width / 2).toFloat(), -height.toFloat() - 20)
     }
 }
