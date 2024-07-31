@@ -13,6 +13,8 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.core.view.children
 import androidx.fragment.app.Fragment
+import com.epi.epilog.api.GraphBloodSugarResponse
+import com.epi.epilog.api.GraphBloodSugars
 import com.epi.epilog.api.GraphWeightBMIDate
 import com.epi.epilog.api.GraphWeightBMIResponse
 import com.epi.epilog.api.MedicationChecklistResponse
@@ -72,9 +74,9 @@ class GraphPage : Fragment() {
             return
         }
 
-        initWeekCalendarView(view)
-        initLineChart(view)
-        initLineChart2(view)
+        initWeekCalendarView(view)  //캘린더뷰 초기화
+        initLineChart(view)         //혈당 그래프
+        initLineChart2(view)        //몸무게 및 체지방률 그래프
         //initClickListeners(view)
     }
 
@@ -163,72 +165,117 @@ class GraphPage : Fragment() {
         val textView: TextView = view.findViewById(R.id.calendarDayText)
     }
 
+    //혈당 데이터 초기화 함수
     private fun initLineChart(view: View) {
         val lineChart: LineChart = view.findViewById(R.id.app_graph_blood_sugar_chart)
-        val entries = mutableListOf<Entry>()
 
-        // 더미 데이터 추가
-        entries.add(Entry(0f, 50f))
-        entries.add(Entry(1f, 100f))
-        entries.add(Entry(2f, 110f))
-        entries.add(Entry(3f, 120f))
-        entries.add(Entry(4f, 150f))
-        entries.add(Entry(5f, 90f))
-        entries.add(Entry(6f, 120f))
-        entries.add(Entry(7f, 50f))
+        // X축 설정
+        val xAxis = lineChart.xAxis
+        xAxis.position = XAxis.XAxisPosition.BOTTOM
+        xAxis.granularity = 1f
+        xAxis.setGridColor(Color.argb(50, 0, 0, 0)) // 격자선의 색상을 투명한 검정색으로 설정
+        xAxis.axisLineColor = Color.parseColor("#817DA1") // x축 색상 설정
+        xAxis.textColor = Color.parseColor("#817DA1") // x축 라벨 색상 설정
+        xAxis.axisMinimum = 0f
+        xAxis.axisMaximum = 7f
+        xAxis.valueFormatter = IndexAxisValueFormatter(arrayOf("0", "1", "2", "3", "4", "5", "6", "7")) // x축 라벨 설정
+
+        // Y축 설정
+        val yAxis = lineChart.axisLeft
+        yAxis.axisLineColor = Color.parseColor("#817DA1") // y축 색상 설정
+        yAxis.textColor = Color.parseColor("#817DA1")    // y축 라벨 색상 설정
+        yAxis.setGridColor(Color.argb(50, 0, 0, 0)) // 격자선의 색상을 투명한 검정색으로 설정
+        yAxis.axisMinimum = 0f
+        yAxis.axisMaximum = 300f
+
+        // 오른쪽 Y축 비활성화
+        lineChart.axisRight.isEnabled = false
+
+        // 범례 설정
+        val legend = lineChart.legend
+        legend.textSize = 12f
+        legend.form = Legend.LegendForm.LINE
+        legend.isEnabled = false
+
+        // 특정 날짜의 혈당 데이터를 가져와서 차트에 반영
+        fetchBloodSugars(LocalDate.now(), lineChart)
+
+        // 차트 갱신
+        lineChart.invalidate()
+    }
+
+    // 특정 날짜의 혈당 데이터를 가져와서 차트에 반영
+    private fun fetchBloodSugars(date: LocalDate, lineChart: LineChart) {
+        val dateString = date.toString()
+        Log.d("GraphWeightBMIFragment", "date String : $dateString")
+        val token = "Bearer " + "eyJhbGciOiJIUzI1NiJ9.eyJtZW1iZXJJZCI6IjIiLCJpYXQiOjE3MjI0MzQ5MDQsImV4cCI6MTgwODgzNDkwNH0.2HCBO4wv2I83XZA7ww7HkHODmROGLp2WTlaj-GLxtTw"
+
+        if (token.isBlank()) {
+            Toast.makeText(context, "Auth token is missing", Toast.LENGTH_SHORT).show()
+            return
+        }
+
+        RetrofitClient.retrofitService.getGraphBloodSugar(dateString, token).enqueue(object :
+            Callback<GraphBloodSugarResponse> {
+            override fun onResponse(call: Call<GraphBloodSugarResponse>, response: Response<GraphBloodSugarResponse>) {
+                if (response.isSuccessful) {
+                    val responseBody = response.body()
+                    if (responseBody != null) {
+                        val bloodSugarDatas = responseBody.bloodSugars
+
+                        Log.d("GraphWeightBMIFragment", "Fetched bloodSugars data: $bloodSugarDatas")
+                        // UI를 업데이트하는 함수 호출
+                        updateBloodSugarUI(lineChart, bloodSugarDatas)
+                    } else {
+                        Toast.makeText(context, "Response body is null", Toast.LENGTH_SHORT).show()
+                    }
+                } else {
+                    Log.e("GraphWeightBMIFragment", "Failed with status code: ${response.code()}, message: ${response.message()}")
+                    Toast.makeText(context, "Failed to load blood sugar data: ${response.message()}", Toast.LENGTH_SHORT).show()
+                }
+            }
+
+            override fun onFailure(call: Call<GraphBloodSugarResponse>, t: Throwable) {
+                Toast.makeText(context, "Error: ${t.message}", Toast.LENGTH_SHORT).show()
+            }
+        })
+    }
+
+    //혈당 데이터 UI 바꾸기
+    private fun updateBloodSugarUI(lineChart: LineChart, bloodSugarData: List<GraphBloodSugars>) {
+        val entries = ArrayList<Entry>()
+        val entryTitleMap = mutableMapOf<Entry, String>()
+
+        for (i in bloodSugarData.indices) {
+            val entry = Entry(i.toFloat(), bloodSugarData[i].bloodSugar)
+            entries.add(entry)
+            entryTitleMap[entry] = bloodSugarData[i].title
+        }
 
         val dataSet = LineDataSet(entries, "혈당 변화")
-        dataSet.color = Color.BLACK // 데이터 세트의 선 색상 설정
-        dataSet.valueTextColor = Color.BLACK // 데이터 값의 텍스트 색상 설정
-        dataSet.valueTextSize = 9f //value Text size 조절
-        dataSet.setCircleColors(Color.BLACK) // 데이터 dot의 색상 설정
-        dataSet.setDrawCircleHole(false) //데이터 dot의 구멍 내부 채움
-        dataSet.setHighlightEnabled(true)   // 하이라이트 비활성화
-        dataSet.highLightColor = Color.TRANSPARENT // 하이라이트 라인을 투명하게 설정 //마커만 보이게 하기 위함
-        dataSet.circleRadius = 5f      //데이터 dot 크기 조절
+        dataSet.color = Color.BLACK
+        dataSet.valueTextColor = Color.BLACK
+        dataSet.valueTextSize = 9f
+        dataSet.setCircleColors(Color.BLACK)
+        dataSet.setDrawCircleHole(false)
+        dataSet.setHighlightEnabled(true)
+        dataSet.highLightColor = Color.TRANSPARENT
+        dataSet.circleRadius = 5f
+        dataSet.lineWidth = 3f // 선의 굵기 설정
 
         val lineData = LineData(dataSet)
         lineChart.data = lineData
 
-        // y축 설정
-        val yAxis = lineChart.axisLeft
-        yAxis.axisLineColor = Color.parseColor("#817DA1") // y축 색상 설정
-        yAxis.textColor = Color.parseColor("#817DA1")    // y축 라벨 색상 설정
-        yAxis.gridColor = Color.parseColor("#E2DEFC")// y축 격자선 색상 설정
-        yAxis.axisMinimum = 0f
-        yAxis.axisMaximum = 300f
-
-        // 오른쪽 y축 비활성화 (필요한 경우)
-        lineChart.axisRight.isEnabled = false
-
-        // x축 설정
-        val xAxis = lineChart.xAxis
-        xAxis.axisLineColor = Color.parseColor("#817DA1") // x축 색상 설정
-        xAxis.textColor = Color.parseColor("#817DA1") // x축 라벨 색상 설정
-        xAxis.gridColor = Color.parseColor("#E2DEFC")// x축 격자선 색상 설정
-        xAxis.axisMinimum = 0f
-        xAxis.axisMaximum = 7f
-        xAxis.granularity = 1f  // 라벨 간격 설정
-        xAxis.position = XAxis.XAxisPosition.BOTTOM // x축 라벨을 아래쪽에 표시
-        xAxis.valueFormatter =
-            IndexAxisValueFormatter(arrayOf("0", "1", "2", "3", "4", "5", "6", "7")) // x축 라벨 설정
-
-        lineChart.legend.isEnabled = false //'혈당 변화' 라벨 설정 비활성화
-
-        // 마커 설정
-        val markerView = context?.let { bloodSugarMarkerView(it, R.layout.graph_marker_layout) }
+        val markerView = context?.let { bloodSugarMarkerView(it, R.layout.graph_marker_layout, entryTitleMap) }
         lineChart.marker = markerView
-        if (markerView != null) {
-            lineChart.marker = markerView
-        } else {
-            Log.e("GraphPage", "markerView is null")
-        }
 
         // 차트 갱신
         lineChart.invalidate()
     }
 
 
+
+    //몸무게 및 체지방률 데이터 초기화 함수
     private fun initLineChart2(view: View) {
         val lineChart: LineChart = view.findViewById(R.id.graph_weight_bmi_avg_linechart)
 
@@ -263,7 +310,7 @@ class GraphPage : Fragment() {
         lineChart.invalidate()
     }
 
-
+    //몸무게 및 체지방률 데이터 UI 바꾸기
     private fun updateWeightBMIUI(weightData: List<GraphWeightBMIDate>, bmiData: List<GraphWeightBMIDate>) {
 
         // view가 null인 경우 함수 종료
@@ -293,7 +340,8 @@ class GraphPage : Fragment() {
         weightDataSet.highLightColor = Color.TRANSPARENT // 하이라이트 라인을 투명하게 설정
         weightDataSet.setDrawCircles(true) // 데이터 dot 그리지 않음
         weightDataSet.setDrawValues(false) // 데이터 값 텍스트 숨기기
-        weightDataSet.setCircleColors(Color.parseColor("#625353"))
+        weightDataSet.setCircleColors(Color.parseColor("#625353")) //weight 데이터 dot 색상
+        weightDataSet.lineWidth = 2f    //weightline 선 굵기
 
         // BMILine 데이터 설정
         val bmiDataSet = LineDataSet(bmiEntries, "BMI Line")
@@ -302,7 +350,8 @@ class GraphPage : Fragment() {
         bmiDataSet.highLightColor = Color.TRANSPARENT // 하이라이트 라인을 투명하게 설정
         bmiDataSet.setDrawCircles(true) // 데이터 dot 그리지 않음
         bmiDataSet.setDrawValues(false) // 데이터 값 텍스트 숨기기
-        bmiDataSet.setCircleColors(Color.parseColor("#A096E9"))
+        bmiDataSet.setCircleColors(Color.parseColor("#A096E9")) //bmi 데이터 dot 색상
+        bmiDataSet.lineWidth = 2f       //bmiline 선 굵기
 
         val lineData = LineData(weightDataSet, bmiDataSet)
         lineChart.data = lineData
@@ -325,13 +374,6 @@ class GraphPage : Fragment() {
         // 차트 갱신
         lineChart.invalidate()
     }
-
-    // 날짜를 Float로 변환하는 헬퍼 함수
-    private fun parseDate(date: String): Int {
-        val dateParts = date.split("-")
-        return dateParts[2].toInt() // 일(day) 부분을 반환
-    }
-
 
     // 특정 날짜의 몸무게와 BMI 가져옴
     private fun fetchGraphWeightBMI(date: LocalDate) {
@@ -389,29 +431,6 @@ class GraphPage : Fragment() {
         return token
     }
 
-
-    private fun getDaysInCurrentMonth(): Int {
-        val calendar: Calendar = Calendar.getInstance()
-        return calendar.getActualMaximum(Calendar.DAY_OF_MONTH)
-    }
-
-    private fun generateData(daysInMonth: Int): ArrayList<Entry> {
-        val data = ArrayList<Entry>()
-        for (i in 0 until daysInMonth) {
-            data.add(Entry(i.toFloat(), (Math.random() * 200).toFloat()))
-        }
-        return data
-    }
-
-    private fun getDaysOfMonth(daysInMonth: Int): List<String> {
-        val days: MutableList<String> = ArrayList()
-        for (i in 1..daysInMonth) {
-            days.add(i.toString())
-        }
-        return days
-    }
-
-
     override fun onDestroyView() {
         _binding = null
         super.onDestroyView()
@@ -421,26 +440,27 @@ class GraphPage : Fragment() {
 }
 
 //혈당 마커
-class bloodSugarMarkerView(context: Context, layoutResource: Int) :
-    MarkerView(context, layoutResource) {
-
-    // 레이아웃의 TextView를 초기화
+class bloodSugarMarkerView(
+    context: Context,
+    layoutResource: Int,
+    private val entryTitleMap: Map<Entry, String>
+) : MarkerView(context, layoutResource) {
 
     private val occuranceTypeTV: TextView = findViewById(R.id.main_graph_occurance_markertv)
     private val bloodsugarTV: TextView = findViewById(R.id.main_graph_blood_sugar_markertv)
 
-    // MarkerView가 다시 그려질 때마다 호출되는 콜백으로, UI 내용을 업데이트하는 데 사용
     override fun refreshContent(e: Entry?, highlight: Highlight?) {
-        occuranceTypeTV.text = "아침식사 전"  // Entry의 y값을 텍스트로 설정합니다. //TODO: 나중에 서버에서 받을 값
-        bloodsugarTV.text = "${e?.y}"  // Entry의 y값을 텍스트로 설정합니다.
-        super.refreshContent(e, highlight) // 부모 클래스의 메서드 호출
+        val title = entryTitleMap[e]
+        occuranceTypeTV.text = title ?: "N/A"  // Entry의 title 값을 텍스트로 설정
+        bloodsugarTV.text = "${e?.y}"  // Entry의 y값을 텍스트로 설정
+        super.refreshContent(e, highlight)
     }
 
-    // MarkerView의 오프셋을 설정하여, 화면에서의 위치를 조정
     override fun getOffset(): MPPointF {
         return MPPointF(-(width / 2).toFloat(), -height.toFloat() - 20) // 중앙에 표시되도록 오프셋 설정
     }
 }
+
 
 //몸무게 마커
 class weightMarkerView(context: Context, layoutResource: Int, private val data: List<GraphWeightBMIDate>) :

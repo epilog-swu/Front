@@ -69,9 +69,27 @@ interface RetrofitService {
         @Header("Authorization") token: String
     ): Call<GraphWeightBMIResponse>
 
+    @Headers("Content-Type: application/json")
+    @GET("api/logs/bloodsugar")
+    fun getGraphBloodSugar(
+        @Query("date") date: String,
+        @Header("Authorization") token: String
+    ) : Call<GraphBloodSugarResponse>
+
 }
 
 data class TokenData(val token: String)
+
+data class GraphBloodSugarResponse(
+    val date : String,
+    val count : Int,
+    val bloodSugars: List<GraphBloodSugars>
+)
+
+data class GraphBloodSugars(
+    val title: String,
+    val bloodSugar: Float
+)
 
 data class GraphWeightBMIResponse(
     val year: Int,
