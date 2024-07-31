@@ -4,9 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
-import com.epi.epilog.presentation.theme.api.RetrofitService
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
+
 class startActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {

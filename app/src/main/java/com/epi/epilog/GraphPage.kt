@@ -13,6 +13,11 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.core.view.children
 import androidx.fragment.app.Fragment
+import com.epi.epilog.api.GraphWeightBMIDate
+import com.epi.epilog.api.GraphWeightBMIResponse
+import com.epi.epilog.api.MedicationChecklistResponse
+import com.epi.epilog.api.RetrofitClient
+import com.epi.epilog.api.RetrofitService
 import com.epi.epilog.databinding.FragmentGraphBinding
 import com.github.mikephil.charting.charts.LineChart
 import com.github.mikephil.charting.components.Legend
@@ -31,6 +36,9 @@ import com.kizitonwose.calendar.core.daysOfWeek
 import com.kizitonwose.calendar.view.ViewContainer
 import com.kizitonwose.calendar.view.WeekCalendarView
 import com.kizitonwose.calendar.view.WeekDayBinder
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 import java.time.DayOfWeek
 import java.time.LocalDate
 import java.time.YearMonth
@@ -220,66 +228,119 @@ class GraphPage : Fragment() {
         lineChart.invalidate()
     }
 
+
+
+//    private fun initLineChart2(view: View) {
+//
+//        val lineChart: LineChart = view.findViewById(R.id.graph_weight_bmi_avg_linechart)
+//
+//        //x축 날짜 설정
+//        val daysInMonth: Int = getDaysInCurrentMonth()
+//
+//        // X축 설정
+//        val xAxis = lineChart.xAxis
+//        xAxis.position = XAxis.XAxisPosition.BOTTOM
+//        xAxis.granularity = 1f
+//        xAxis.valueFormatter = IndexAxisValueFormatter(getDaysOfMonth(daysInMonth))
+//
+//
+//        // Y축 설정
+//        val leftAxis = lineChart.axisLeft
+//        leftAxis.axisMinimum = 0f
+//        leftAxis.axisMaximum = 200f
+//        leftAxis.granularity = 50f //간격 설정
+//        leftAxis.axisLineColor = Color.parseColor("#827DA1")
+//        leftAxis.textColor = Color.parseColor("#827DA1")
+//
+//        val rightAxis = lineChart.axisRight
+//        rightAxis.isEnabled = false
+//
+//
+//        // WeightLine 데이터
+//        val weightEntries: ArrayList<Entry> = generateData(daysInMonth)
+//
+//        val weightDataSet = LineDataSet(weightEntries, "Weight Line")
+//        weightDataSet.color = Color.parseColor("#625353")
+//
+//        weightDataSet.setHighlightEnabled(true)   // 하이라이트 비활성화
+//        weightDataSet.highLightColor = Color.TRANSPARENT // 하이라이트 라인을 투명하게 설정 //마커만 보이게 하기 위함
+//        weightDataSet.setDrawCircles(false) //데이터 dot그리지않음
+//        weightDataSet.setDrawValues(false) // 데이터 값 텍스트 숨기기
+//
+//
+//        // BMILine 데이터
+//        val bmiEntries: ArrayList<Entry> = generateData(daysInMonth)
+//
+//        val bmiDatasets = LineDataSet(bmiEntries, "BMI Line")
+//        bmiDatasets.color = Color.parseColor("#A096E9")
+//
+//        bmiDatasets.setHighlightEnabled(true)   // 하이라이트 비활성화
+//        bmiDatasets.highLightColor = Color.TRANSPARENT // 하이라이트 라인을 투명하게 설정 //마커만 보이게 하기 위함
+//        bmiDatasets.setDrawCircles(false) //데이터 dot그리지않음
+//        bmiDatasets.setDrawValues(false)  //데이터 값 텍스트 숨기기
+//
+//        val lineData = LineData(weightDataSet, bmiDatasets)
+//        lineChart.data = lineData
+//
+//
+//        // 범례 설정
+//        val legend = lineChart.legend
+//        legend.textSize = 12f
+//        legend.form = Legend.LegendForm.LINE
+//        legend.setEnabled(false)
+//
+//
+//
+//        // 첫 번째 마커 뷰 설정
+//        val weightMarker = context?.let { weightMarkerView(it, R.layout.graph_marker_weight_layout) }
+//        // 두 번째 마커 뷰 설정
+//        val bmiMarker = context?.let { bmiMarkerView(it, R.layout.graph_marker_bmi_layout) }
+//
+//        // 차트에 클릭 리스너 설정
+//        lineChart.setOnChartValueSelectedListener(object : OnChartValueSelectedListener {
+//            override fun onValueSelected(e: Entry, h: Highlight) {
+//                // 조건에 따라 다른 마커를 설정
+//                if (h.dataSetIndex == 0) {
+//                    lineChart.marker = weightMarker
+//                } else {
+//                    lineChart.marker = bmiMarker
+//                }
+//            }
+//
+//            override fun onNothingSelected() {
+//                // 아무 것도 선택되지 않았을 때
+//            }
+//        })
+//
+//        //차트 갱신
+//        lineChart.invalidate()
+
+
     private fun initLineChart2(view: View) {
-
         val lineChart: LineChart = view.findViewById(R.id.graph_weight_bmi_avg_linechart)
-
-        //x축 날짜 설정
-        val daysInMonth: Int = getDaysInCurrentMonth()
 
         // X축 설정
         val xAxis = lineChart.xAxis
         xAxis.position = XAxis.XAxisPosition.BOTTOM
         xAxis.granularity = 1f
-        xAxis.valueFormatter = IndexAxisValueFormatter(getDaysOfMonth(daysInMonth))
-
+        //xAxis.valueFormatter = IndexAxisValueFormatter(getDaysOfMonth(getDaysInCurrentMonth()))
 
         // Y축 설정
         val leftAxis = lineChart.axisLeft
         leftAxis.axisMinimum = 0f
         leftAxis.axisMaximum = 200f
-        leftAxis.granularity = 50f //간격 설정
+        leftAxis.granularity = 50f // 간격 설정
         leftAxis.axisLineColor = Color.parseColor("#827DA1")
         leftAxis.textColor = Color.parseColor("#827DA1")
 
         val rightAxis = lineChart.axisRight
         rightAxis.isEnabled = false
 
-
-        // WeightLine 데이터
-        val weightEntries: ArrayList<Entry> = generateData(daysInMonth)
-
-        val weightDataSet = LineDataSet(weightEntries, "Weight Line")
-        weightDataSet.color = Color.parseColor("#625353")
-
-        weightDataSet.setHighlightEnabled(true)   // 하이라이트 비활성화
-        weightDataSet.highLightColor = Color.TRANSPARENT // 하이라이트 라인을 투명하게 설정 //마커만 보이게 하기 위함
-        weightDataSet.setDrawCircles(false) //데이터 dot그리지않음
-        weightDataSet.setDrawValues(false) // 데이터 값 텍스트 숨기기
-
-
-        // BMILine 데이터
-        val bmiEntries: ArrayList<Entry> = generateData(daysInMonth)
-
-        val bmiDatasets = LineDataSet(bmiEntries, "BMI Line")
-        bmiDatasets.color = Color.parseColor("#A096E9")
-
-        bmiDatasets.setHighlightEnabled(true)   // 하이라이트 비활성화
-        bmiDatasets.highLightColor = Color.TRANSPARENT // 하이라이트 라인을 투명하게 설정 //마커만 보이게 하기 위함
-        bmiDatasets.setDrawCircles(false) //데이터 dot그리지않음
-        bmiDatasets.setDrawValues(false)  //데이터 값 텍스트 숨기기
-
-        val lineData = LineData(weightDataSet, bmiDatasets)
-        lineChart.data = lineData
-
-
         // 범례 설정
         val legend = lineChart.legend
         legend.textSize = 12f
         legend.form = Legend.LegendForm.LINE
-        legend.setEnabled(false)
-
-
+        legend.isEnabled = false
 
         // 첫 번째 마커 뷰 설정
         val weightMarker = context?.let { weightMarkerView(it, R.layout.graph_marker_weight_layout) }
@@ -302,9 +363,124 @@ class GraphPage : Fragment() {
             }
         })
 
-        //차트 갱신
+        // 특정 날짜의 몸무게와 BMI 데이터를 가져와서 차트에 반영
+        fetchGraphWeightBMI(LocalDate.now())
+
+        // 차트 갱신
         lineChart.invalidate()
     }
+
+
+    private fun updateWeightBMIUI(weightData: List<GraphWeightBMIDate>, bmiData: List<GraphWeightBMIDate>) {
+
+        // view가 null인 경우 함수 종료
+        if (view == null) {
+            Log.e("GraphPage", "View is null, cannot initialize chart")
+            return
+        }
+
+        val lineChart: LineChart = requireView().findViewById(R.id.graph_weight_bmi_avg_linechart)
+
+        val weightEntries = ArrayList<Entry>()
+        val bmiEntries = ArrayList<Entry>()
+
+        // weightData와 bmiData를 Entry 리스트로 변환
+        for (weight in weightData) {
+            val date = parseDate(weight.date)
+            weightEntries.add(Entry(date.toFloat(), weight.value))
+        }
+
+        for (bmi in bmiData) {
+            val date = parseDate(bmi.date)
+            bmiEntries.add(Entry(date.toFloat(), bmi.value))
+        }
+
+        // WeightLine 데이터 설정
+        val weightDataSet = LineDataSet(weightEntries, "Weight Line")
+        weightDataSet.color = Color.parseColor("#625353")
+        weightDataSet.setHighlightEnabled(true) // 하이라이트 비활성화
+        weightDataSet.highLightColor = Color.TRANSPARENT // 하이라이트 라인을 투명하게 설정
+        weightDataSet.setDrawCircles(false) // 데이터 dot 그리지 않음
+        weightDataSet.setDrawValues(false) // 데이터 값 텍스트 숨기기
+
+        // BMILine 데이터 설정
+        val bmiDataSet = LineDataSet(bmiEntries, "BMI Line")
+        bmiDataSet.color = Color.parseColor("#A096E9")
+        bmiDataSet.setHighlightEnabled(true) // 하이라이트 비활성화
+        bmiDataSet.highLightColor = Color.TRANSPARENT // 하이라이트 라인을 투명하게 설정
+        bmiDataSet.setDrawCircles(false) // 데이터 dot 그리지 않음
+        bmiDataSet.setDrawValues(false) // 데이터 값 텍스트 숨기기
+
+        // 차트 데이터 설정
+        val lineData = LineData(weightDataSet, bmiDataSet)
+        lineChart.data = lineData
+
+        // 차트 갱신
+        lineChart.invalidate()
+    }
+
+    // 날짜를 Float로 변환하는 헬퍼 함수
+    private fun parseDate(date: String): Int {
+        val dateParts = date.split("-")
+        return dateParts[2].toInt() // 일(day) 부분을 반환
+    }
+
+
+    // 특정 날짜의 몸무게와 BMI 가져옴
+    private fun fetchGraphWeightBMI(date: LocalDate) {
+        // LocalDate 객체를 문자열로 변환
+        val dateString = date.toString()
+        // 세션에서 토큰을 가져와 Bearer 토큰 형식으로 설정
+        val token = "Bearer " + getTokenFromSession()
+
+        if (token.isBlank()) {
+            Toast.makeText(context, "Auth token is missing", Toast.LENGTH_SHORT).show()
+            return
+        }
+
+        // Retrofit을 사용하여 API 호출
+        RetrofitClient.retrofitService.getGraphWeightBMI(token, dateString).enqueue(object :
+            Callback<GraphWeightBMIResponse> {
+            // 응답이 성공적일 때 호출되는 콜백
+            override fun onResponse(call: Call<GraphWeightBMIResponse>, response: Response<GraphWeightBMIResponse>) {
+                if (response.isSuccessful) {
+                    // 응답 본문에서 데이터를 가져옴
+                    val responseBody = response.body()
+                    if (responseBody != null) {
+                        val weightData = responseBody.dayWeight
+                        val bmiData = responseBody.dayBodyFatPercentage
+
+                        Log.d("GraphWeightBMIFragment", "Fetched weight data: $weightData")
+                        Log.d("GraphWeightBMIFragment", "Fetched BMI data: $bmiData")
+
+                        // UI를 업데이트하는 함수 호출
+                        updateWeightBMIUI(weightData, bmiData)
+                    } else {
+                        Toast.makeText(context, "Response body is null", Toast.LENGTH_SHORT).show()
+                    }
+                } else {
+                    // 상태 코드와 응답 메시지를 로그로 출력
+                    Log.e("GraphWeightBMIFragment", "Failed with status code: ${response.code()}, message: ${response.message()}")
+                    Toast.makeText(context, "Failed to load weight and BMI data: ${response.message()}", Toast.LENGTH_SHORT).show()
+                }
+            }
+
+            // 네트워크 호출이 실패했을 때 호출되는 콜백
+            override fun onFailure(call: Call<GraphWeightBMIResponse>, t: Throwable) {
+                // 실패 메시지를 토스트로 표시
+                Toast.makeText(context, "Error: ${t.message}", Toast.LENGTH_SHORT).show()
+            }
+        })
+    }
+
+    //토큰 가져오기
+    private fun getTokenFromSession(): String {
+        val sharedPreferences = context?.getSharedPreferences("AppPrefs", Context.MODE_PRIVATE)
+        val token = sharedPreferences?.getString("AuthToken", "") ?: ""
+        Log.d("GraphWeightBMIFragment", "Fetched token from session: $token")
+        return token
+    }
+
 
     private fun getDaysInCurrentMonth(): Int {
         val calendar: Calendar = Calendar.getInstance()
