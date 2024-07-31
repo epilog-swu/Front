@@ -64,7 +64,7 @@ interface RetrofitService {
 
     //메인 그래프 2 정보 얻어오기
     @Headers("Content-Type: application/json")
-    @GET("com/epi/epilog/api/logs/weight")
+    @GET("api/logs/weight")
     fun getGraphWeightBMI(
         @Query("date") date: String,
         @Header("Authorization") token: String
