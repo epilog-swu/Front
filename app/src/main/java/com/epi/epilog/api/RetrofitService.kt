@@ -49,7 +49,7 @@ interface RetrofitService {
 
     @POST("/com/epi/epilog/api/fcm/token")
     fun postToken(
-        @Header("Authorization") authToken: String,
+        @Header("Authorization") authToken:  String,
         @Body tokenData: TokenData
     ): Call<ApiResponse>
 
