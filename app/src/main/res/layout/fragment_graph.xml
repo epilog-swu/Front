@@ -245,6 +245,7 @@
                 android:orientation="horizontal">
 
                 <TextView
+                    android:id="@+id/graph_weight_bmi_date_tv"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="7월"
@@ -261,7 +262,7 @@
                     android:textStyle="bold" />
             </LinearLayout>
 
-            <!-- 오늘의 혈당 라인차트 -->
+            <!-- 몸무게 및 체지방율 라인차트 -->
             <HorizontalScrollView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

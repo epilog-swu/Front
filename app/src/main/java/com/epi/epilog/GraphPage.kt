@@ -44,6 +44,7 @@ import retrofit2.Response
 import java.time.DayOfWeek
 import java.time.LocalDate
 import java.time.YearMonth
+import java.time.format.DateTimeFormatter
 import java.util.Calendar
 import java.util.Locale
 
@@ -77,7 +78,10 @@ class GraphPage : Fragment() {
         initWeekCalendarView(view)  //캘린더뷰 초기화
         initLineChart(view)         //혈당 그래프
         initLineChart2(view)        //몸무게 및 체지방률 그래프
-        //initClickListeners(view)
+
+        // 앱이 실행될 때 오늘 날짜를 선택한 것처럼 초기화
+        val today = LocalDate.now()
+        onDateSelected(today)
     }
 
     private fun initWeekCalendarView(view: View) {
@@ -157,11 +161,21 @@ class GraphPage : Fragment() {
         // Show toast message with the selected date
         Toast.makeText(context, "Selected date: $date", Toast.LENGTH_SHORT).show()
 
+
         // 선택된 날짜에 따라 차트 업데이트
         view?.let {
+            val formattedDate = (selectedDate ?: LocalDate.now()).format(DateTimeFormatter.ofPattern("yyyy년 MM월 dd일"))
+            val monthDate = (selectedDate ?: LocalDate.now()).format(DateTimeFormatter.ofPattern("MM월"))
+            updateDateTextView(formattedDate, monthDate)
             initLineChart(it)
             initLineChart2(it)
         }
+    }
+
+    // 선택된 날짜에 따라 textview 변경
+    private fun updateDateTextView(formattedDate: String, monthDate: String) {
+        binding.graphDateTv.text = formattedDate // 혈당차트 상단 글자 바꾸기
+        binding.graphWeightBmiDateTv.text = monthDate // 몸무게 및 체지방율 차트 상단 글자 바꾸기
     }
 
     private class DayViewContainer(view: View) : ViewContainer(view) {
@@ -231,6 +245,8 @@ class GraphPage : Fragment() {
                         Log.d("GraphWeightBMIFragment", "Fetched bloodSugars data: $bloodSugarDatas")
                         // UI를 업데이트하는 함수 호출
                         updateBloodSugarUI(lineChart, bloodSugarDatas)
+                        // TextView 업데이트
+                        binding.graphDateRecordsCounts.text = " (${bloodSugarDatas.size})"
                     } else {
                         Toast.makeText(context, "Response body is null", Toast.LENGTH_SHORT).show()
                     }
