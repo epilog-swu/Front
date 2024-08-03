@@ -13,6 +13,7 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.core.view.children
 import androidx.fragment.app.Fragment
+import com.epi.epilog.api.GraphBloodSugarAverageResponse
 import com.epi.epilog.api.GraphBloodSugarResponse
 import com.epi.epilog.api.GraphBloodSugars
 import com.epi.epilog.api.GraphWeightBMIDate
@@ -170,7 +171,19 @@ class GraphPage : Fragment() {
             initLineChart(it)
             initLineChart2(it)
         }
+        //API를 통해 평균 혈당, 식전후 혈당 데이터 가져와서 UI 업데이트
+        fetchAverageBloodSugar(date) { averageBloodSugar, preAverageBloodSugar, postAverageBloodSugar ->
+            updateAverageBloodSugarUI(averageBloodSugar, preAverageBloodSugar, postAverageBloodSugar)
+        }
     }
+
+    //선택된 날짜에 따라 (혈당)textView 변경
+    private fun updateAverageBloodSugarUI(averageBloodSugar: Float, preAverageBloodSugar: Float, postAverageBloodSugar: Float) {
+        binding.graphAvgBloodsugarTv.text = averageBloodSugar.toString()
+        binding.graphAvgBloodsugarMealPreTv.text = preAverageBloodSugar.toString()
+        binding.graphAvgBloodsugarMealPostTv.text = postAverageBloodSugar.toString()
+    }
+
 
     // 선택된 날짜에 따라 textview 변경
     private fun updateDateTextView(formattedDate: String, monthDate: String) {
@@ -181,6 +194,48 @@ class GraphPage : Fragment() {
     private class DayViewContainer(view: View) : ViewContainer(view) {
         val textView: TextView = view.findViewById(R.id.calendarDayText)
     }
+
+    private fun fetchAverageBloodSugar(date: LocalDate, callback: (Float, Float, Float) -> Unit) {
+        val dateString = date.toString()
+        Log.d("GraphPage", "Fetching average blood sugar for date: $dateString")
+        // 직접 토큰 설정
+        val token = "Bearer " + "eyJhbGciOiJIUzI1NiJ9.eyJtZW1iZXJJZCI6IjIiLCJpYXQiOjE3MjI0MzQ5MDQsImV4cCI6MTgwODgzNDkwNH0.2HCBO4wv2I83XZA7ww7HkHODmROGLp2WTlaj-GLxtTw"
+
+        if (token.isBlank()) {
+            Toast.makeText(context, "Auth token is missing", Toast.LENGTH_SHORT).show()
+            return
+        }
+
+        Log.d("GraphPage", "Using token: $token")
+
+        RetrofitClient.retrofitService.getBloodSugarAverage(dateString, token).enqueue(object :
+            Callback<GraphBloodSugarAverageResponse> {
+            override fun onResponse(call: Call<GraphBloodSugarAverageResponse>, response: Response<GraphBloodSugarAverageResponse>) {
+                if (response.isSuccessful) {
+                    val responseBody = response.body()
+                    if (responseBody != null) {
+                        val averageBloodSugar = responseBody.average
+                        val preAverageBloodSugar = responseBody.preAverage
+                        val postAverageBloodSugar = responseBody.postAverage
+                        Log.d("GraphPage", "Fetched average blood sugar: $averageBloodSugar")
+                        callback(averageBloodSugar, preAverageBloodSugar, postAverageBloodSugar)
+                    } else {
+                        Toast.makeText(context, "Response body is null", Toast.LENGTH_SHORT).show()
+                    }
+                } else {
+                    Log.e("GraphPage", "Failed with status code: ${response.code()}, message: ${response.message()}")
+                    Toast.makeText(context, "Failed to load average blood sugar: ${response.message()}", Toast.LENGTH_SHORT).show()
+                }
+            }
+
+            override fun onFailure(call: Call<GraphBloodSugarAverageResponse>, t: Throwable) {
+                Toast.makeText(context, "Error: ${t.message}", Toast.LENGTH_SHORT).show()
+            }
+        })
+    }
+
+
+
 
     //혈당 데이터 초기화 함수
     private fun initLineChart(view: View) {
@@ -451,7 +506,7 @@ class GraphPage : Fragment() {
         val sharedPreferences = context?.getSharedPreferences("AppPrefs", Context.MODE_PRIVATE)
         val token = sharedPreferences?.getString("AuthToken", "") ?: ""
         Log.d("GraphWeightBMIFragment", "Fetched token from session: $token")
-        return token
+        return "Bearer $token"  // Ensure token is prefixed with "Bearer "
     }
 
     override fun onDestroyView() {

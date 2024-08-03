@@ -3,6 +3,7 @@ package com.epi.epilog.api
 import android.os.Parcel
 import android.os.Parcelable
 import com.epi.epilog.ApiResponse
+import com.google.gson.annotations.SerializedName
 import retrofit2.Call
 import retrofit2.http.Body
 import retrofit2.http.GET
@@ -76,9 +77,25 @@ interface RetrofitService {
         @Header("Authorization") token: String
     ) : Call<GraphBloodSugarResponse>
 
+    @Headers("Content-Type: application/json")
+    @GET("api/logs/bloodsugar/average")
+    fun getBloodSugarAverage(
+        @Query("date") date: String,
+        @Header("Authorization") token: String
+    ):Call<GraphBloodSugarAverageResponse>
+
 }
 
 data class TokenData(val token: String)
+
+data class GraphBloodSugarAverageResponse(
+    val date : String,
+    @SerializedName("average") val average: Float,
+    @SerializedName("preAverage") val preAverage: Float,
+    @SerializedName("postAverage") val postAverage: Float
+
+
+)
 
 data class GraphBloodSugarResponse(
     val date : String,
