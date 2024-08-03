@@ -198,8 +198,8 @@ class GraphPage : Fragment() {
     private fun fetchAverageBloodSugar(date: LocalDate, callback: (Float, Float, Float) -> Unit) {
         val dateString = date.toString()
         Log.d("GraphPage", "Fetching average blood sugar for date: $dateString")
-        // 직접 토큰 설정
-        val token = "Bearer " + "eyJhbGciOiJIUzI1NiJ9.eyJtZW1iZXJJZCI6IjIiLCJpYXQiOjE3MjI0MzQ5MDQsImV4cCI6MTgwODgzNDkwNH0.2HCBO4wv2I83XZA7ww7HkHODmROGLp2WTlaj-GLxtTw"
+
+        val token = getTokenFromSession()
 
         if (token.isBlank()) {
             Toast.makeText(context, "Auth token is missing", Toast.LENGTH_SHORT).show()
@@ -278,11 +278,10 @@ class GraphPage : Fragment() {
         lineChart.invalidate()
     }
 
-    // 특정 날짜의 혈당 데이터를 가져와서 차트에 반영
     private fun fetchBloodSugars(date: LocalDate, lineChart: LineChart) {
         val dateString = date.toString()
         Log.d("GraphWeightBMIFragment", "date String : $dateString")
-        val token = "Bearer " + "eyJhbGciOiJIUzI1NiJ9.eyJtZW1iZXJJZCI6IjIiLCJpYXQiOjE3MjI0MzQ5MDQsImV4cCI6MTgwODgzNDkwNH0.2HCBO4wv2I83XZA7ww7HkHODmROGLp2WTlaj-GLxtTw"
+        val token = getTokenFromSession()
 
         if (token.isBlank()) {
             Toast.makeText(context, "Auth token is missing", Toast.LENGTH_SHORT).show()
@@ -458,8 +457,8 @@ class GraphPage : Fragment() {
         // LocalDate 객체를 문자열로 변환
         val dateString = date.toString()
         Log.d("GraphWeightBMIFragment", "date String : $dateString")
-        // 세션에서 토큰을 가져와 Bearer 토큰 형식으로 설정
-        val token = "Bearer " + "eyJhbGciOiJIUzI1NiJ9.eyJtZW1iZXJJZCI6IjIiLCJpYXQiOjE3MjI0MzQ5MDQsImV4cCI6MTgwODgzNDkwNH0.2HCBO4wv2I83XZA7ww7HkHODmROGLp2WTlaj-GLxtTw"
+
+        val token = getTokenFromSession()
 
         if (token.isBlank()) {
             Toast.makeText(context, "Auth token is missing", Toast.LENGTH_SHORT).show()
