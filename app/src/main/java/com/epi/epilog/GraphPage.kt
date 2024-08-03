@@ -157,8 +157,11 @@ class GraphPage : Fragment() {
         // Show toast message with the selected date
         Toast.makeText(context, "Selected date: $date", Toast.LENGTH_SHORT).show()
 
-        // Fetch and display medication checklist for the selected date
-        //fetchMedicationChecklist(date)
+        // 선택된 날짜에 따라 차트 업데이트
+        view?.let {
+            initLineChart(it)
+            initLineChart2(it)
+        }
     }
 
     private class DayViewContainer(view: View) : ViewContainer(view) {
@@ -197,8 +200,10 @@ class GraphPage : Fragment() {
         legend.form = Legend.LegendForm.LINE
         legend.isEnabled = false
 
-        // 특정 날짜의 혈당 데이터를 가져와서 차트에 반영
-        fetchBloodSugars(LocalDate.now(), lineChart)
+        // 선택된 날짜가 없으면 현재 날짜를 기본값으로 사용
+        val dateToFetch = selectedDate ?: LocalDate.now()
+        // 특정 날짜의 혈당 데이터를 가져와서 차트에 반영 //혈당 그래프
+        fetchBloodSugars(dateToFetch, lineChart)
 
         // 차트 갱신
         lineChart.invalidate()
@@ -303,8 +308,10 @@ class GraphPage : Fragment() {
         legend.isEnabled = false
 
 
+        // 선택된 날짜가 없으면 현재 날짜를 기본값으로 사용
+        val dateToFetch = selectedDate ?: LocalDate.now()
         // 특정 날짜의 몸무게와 BMI 데이터를 가져와서 차트에 반영
-        fetchGraphWeightBMI(LocalDate.now())
+        fetchGraphWeightBMI(dateToFetch)
 
         // 차트 갱신
         lineChart.invalidate()
