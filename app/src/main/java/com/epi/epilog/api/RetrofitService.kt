@@ -1,18 +1,15 @@
-package com.epi.epilog.presentation.theme.api
-
+package com.epi.epilog.api
 
 import android.os.Parcel
 import android.os.Parcelable
 import com.epi.epilog.ApiResponse
-import okhttp3.ResponseBody
+import com.google.gson.annotations.SerializedName
 import retrofit2.Call
 import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.Header
 import retrofit2.http.Headers
-import retrofit2.http.PATCH
 import retrofit2.http.POST
-import retrofit2.http.Path
 import retrofit2.http.Query
 
 import retrofit2.Retrofit
@@ -36,36 +33,93 @@ object RetrofitClient {
 
 interface RetrofitService {
     @Headers("Content-Type: application/json")
-    @POST("api/auth/login")
+    @POST("com/epi/epilog/api/auth/login")
     fun login(@Body request: LoginRequest): Call<String>
 
     @Headers("Content-Type: application/json")
-    @POST("/api/auth/signup")
+    @POST("/com/epi/epilog/api/auth/signup")
     fun signUp(@Body request: SignUpRequest): Call<SignUpResponse>
 
     @Headers("Content-Type: application/json")
-    @GET("api/auth/validation")
+    @GET("com/epi/epilog/api/auth/validation")
     fun validateId(@Query("id") userId: String): Call<ApiResponse>
 
     @Headers("Content-Type: application/json")
-    @GET("api/medicines")
+    @GET("com/epi/epilog/api/medicines")
     fun getMedicationChecklist(@Query("date") date: String, @Header("Authorization") token: String): Call<MedicationChecklistResponse>
 
-    @POST("/api/fcm/token")
+    @POST("/com/epi/epilog/api/fcm/token")
     fun postToken(
         @Header("Authorization") authToken:  String,
         @Body tokenData: TokenData
     ): Call<ApiResponse>
 
     @Headers("Content-Type: application/json")
-    @POST("api/medications")
+    @POST("com/epi/epilog/api/medications")
     fun addMedication(
         @Header("Authorization") token: String,
         @Body request: MedicationRequest
     ): Call<ApiResponse>
+
+
+    //메인 그래프 2 정보 얻어오기
+    @Headers("Content-Type: application/json")
+    @GET("api/logs/weight")
+    fun getGraphWeightBMI(
+        @Query("date") date: String,
+        @Header("Authorization") token: String
+    ): Call<GraphWeightBMIResponse>
+
+    @Headers("Content-Type: application/json")
+    @GET("api/logs/bloodsugar")
+    fun getGraphBloodSugar(
+        @Query("date") date: String,
+        @Header("Authorization") token: String
+    ) : Call<GraphBloodSugarResponse>
+
+    @Headers("Content-Type: application/json")
+    @GET("api/logs/bloodsugar/average")
+    fun getBloodSugarAverage(
+        @Query("date") date: String,
+        @Header("Authorization") token: String
+    ):Call<GraphBloodSugarAverageResponse>
+
 }
 
 data class TokenData(val token: String)
+
+data class GraphBloodSugarAverageResponse(
+    val date : String,
+    @SerializedName("average") val average: Float,
+    @SerializedName("preAverage") val preAverage: Float,
+    @SerializedName("postAverage") val postAverage: Float
+
+
+)
+
+data class GraphBloodSugarResponse(
+    val date : String,
+    val count : Int,
+    val bloodSugars: List<GraphBloodSugars>
+)
+
+data class GraphBloodSugars(
+    val title: String,
+    val bloodSugar: Float
+)
+
+data class GraphWeightBMIResponse(
+    val year: Int,
+    val month: Int,
+    val dayWeight: List<GraphWeightBMIDate>,
+    val dayBodyFatPercentage: List<GraphWeightBMIDate>
+)
+
+data class GraphWeightBMIDate(
+    val date: String,
+    val value: Float
+)
+
 
 data class MedicationChecklistResponse(
     val date: String,
