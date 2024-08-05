@@ -36,7 +36,7 @@
 
         <!-- Example CheckBox items -->
         <CheckBox
-            android:id="@+id/mood_1"
+            android:id="@+id/mood_calm"
             android:layout_width="80dp"
             android:layout_height="24dp"
             android:text="차분한"
@@ -49,7 +49,7 @@
             android:layout_marginRight="8dp" />
 
         <CheckBox
-            android:id="@+id/mood_2"
+            android:id="@+id/mood_happy"
             android:layout_width="80dp"
             android:layout_height="24dp"
             android:text="행복한"
@@ -64,7 +64,7 @@
         <!-- Add more CheckBox items here as per your requirement -->
 
         <CheckBox
-            android:id="@+id/checkbox_direct_input"
+            android:id="@+id/moodCheckbox_directInput"
             android:layout_width="80dp"
             android:layout_height="24dp"
             android:text="직접 입력"
@@ -78,7 +78,7 @@
     </com.google.android.flexbox.FlexboxLayout>
 
     <EditText
-        android:id="@+id/direct_input_text"
+        android:id="@+id/mood_direct_input_text"
         android:layout_width="match_parent"
         android:layout_height="147dp"
         android:layout_marginTop="10dp"

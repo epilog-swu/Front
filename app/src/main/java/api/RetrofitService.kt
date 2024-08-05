@@ -5,6 +5,7 @@ import android.os.Parcel
 import android.os.Parcelable
 import com.epi.epilog.ApiResponse
 import okhttp3.ResponseBody
+import org.json.JSONObject
 import retrofit2.Call
 import retrofit2.http.Body
 import retrofit2.http.GET
@@ -63,7 +64,40 @@ interface RetrofitService {
         @Header("Authorization") token: String,
         @Body request: MedicationRequest
     ): Call<ApiResponse>
+
+    @Headers("Content-Type: application/json")
+    @POST("api/logs")
+    fun addDiary(
+        @Header("Authorization") token: String,
+        @Body request: DiaryRequest
+    ) : Call<ApiResponse>
+
 }
+
+data class DiaryRequest(
+    val date: String,
+    val occurrenceType: String,
+    val bloodSugar: String?,
+    val systolicBloodPressure: String?,
+    val diastolicBloodPressure: String?,
+    val heartRate: String?,
+    val weight: String?,
+    val bodyFatPercentage: String?,
+    val bodyPhoto: String?, // Assuming it's a URL or base64 string
+    val exercise: List<ExerciseEntry>,
+    val mood: List<MoodEntry>
+)
+
+data class ExerciseEntry(
+    val type: String,
+    val details: String?
+)
+
+data class MoodEntry(
+    val type: String,
+    val details: String?
+)
+
 
 data class TokenData(val token: String)
 
