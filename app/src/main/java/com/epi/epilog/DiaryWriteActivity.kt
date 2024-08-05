@@ -11,10 +11,10 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.Fragment
 import api.DiaryFragment
-import com.epi.epilog.presentation.theme.api.DiaryRequest
-import com.epi.epilog.presentation.theme.api.ExerciseEntry
-import com.epi.epilog.presentation.theme.api.MoodEntry
-import com.epi.epilog.presentation.theme.api.RetrofitService
+import com.epi.epilog.api.DiaryRequest
+import com.epi.epilog.api.ExerciseEntry
+import com.epi.epilog.api.MoodEntry
+import com.epi.epilog.api.RetrofitService
 import com.google.android.material.tabs.TabLayout
 import org.json.JSONArray
 import org.json.JSONObject

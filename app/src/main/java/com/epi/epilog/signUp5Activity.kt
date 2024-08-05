@@ -11,10 +11,10 @@ import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import com.epi.epilog.presentation.theme.api.Medication
-import com.epi.epilog.presentation.theme.api.RetrofitClient
-import com.epi.epilog.presentation.theme.api.SignUpRequest
-import com.epi.epilog.presentation.theme.api.SignUpResponse
+import com.epi.epilog.api.Medication
+import com.epi.epilog.api.RetrofitClient
+import com.epi.epilog.api.SignUpRequest
+import com.epi.epilog.api.SignUpResponse
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
