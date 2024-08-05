@@ -1,5 +1,6 @@
 package com.epi.epilog
 
+import android.app.Activity
 import android.os.Bundle
 import android.view.ViewGroup
 import android.widget.Button
@@ -20,10 +21,12 @@ class ActivityShowSuccessDialog : AppCompatActivity() {
         val dialogYesBtn: Button = findViewById(R.id.dialogOkBtn)
 
         dialogNoBtn.setOnClickListener {
+            setResult(Activity.RESULT_CANCELED)
             finish()
         }
 
         dialogYesBtn.setOnClickListener {
+            setResult(Activity.RESULT_OK)
             finish()
         }
     }

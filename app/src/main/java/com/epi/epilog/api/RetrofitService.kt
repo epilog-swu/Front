@@ -3,6 +3,9 @@ package com.epi.epilog.api
 import android.os.Parcel
 import android.os.Parcelable
 import com.epi.epilog.ApiResponse
+import okhttp3.ResponseBody
+import org.json.JSONObject
+
 import com.google.gson.annotations.SerializedName
 import retrofit2.Call
 import retrofit2.http.Body
@@ -61,6 +64,12 @@ interface RetrofitService {
         @Body request: MedicationRequest
     ): Call<ApiResponse>
 
+    @Headers("Content-Type: application/json")
+    @POST("api/logs")
+    fun addDiary(
+        @Header("Authorization") token: String,
+        @Body request: DiaryRequest
+    ) : Call<ApiResponse>
 
     //메인 그래프 2 정보 얻어오기
     @Headers("Content-Type: application/json")
@@ -84,7 +93,34 @@ interface RetrofitService {
         @Header("Authorization") token: String
     ):Call<GraphBloodSugarAverageResponse>
 
+
 }
+
+data class DiaryRequest(
+    val date: String?,
+    val occurenceType: String?,
+    val bloodSugar: String?,
+    val systolicBloodPressure: String?,
+    val diastolicBloodPressure: String?,
+    val heartRate: String?,
+    val weight: String?,
+    val bodyFatPercentage: String?,
+    val bodyPhoto: String?,
+    val exercise: List<ExerciseEntry>?,
+    val mood: List<MoodEntry>?
+)
+
+
+data class ExerciseEntry(
+    val type: String?,
+    val details: String?
+)
+
+data class MoodEntry(
+    val type: String?,
+    val details: String?
+)
+
 
 data class TokenData(val token: String)
 
