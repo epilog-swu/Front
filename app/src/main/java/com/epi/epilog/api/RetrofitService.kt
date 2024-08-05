@@ -98,7 +98,7 @@ interface RetrofitService {
 
 data class DiaryRequest(
     val date: String?,
-    val occurrenceType: String?,
+    val occurenceType: String?,
     val bloodSugar: String?,
     val systolicBloodPressure: String?,
     val diastolicBloodPressure: String?,

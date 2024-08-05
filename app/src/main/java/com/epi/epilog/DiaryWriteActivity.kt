@@ -125,24 +125,25 @@ class DiaryWriteActivity : AppCompatActivity() {
         val exercise = getFragmentData<DiaryFragmentExercise>()
         val mood = getFragmentData<DiaryFragmentMood>()
 
+        // DiaryRequest 생성 시 null 처리
         val diaryRequest = DiaryRequest(
             date = date,
-            occurrenceType = occurrenceType,
-            bloodSugar = bloodSugar?.getString("bloodSugar").takeIf { it?.isNotEmpty() == true },
-            systolicBloodPressure = bloodPressure?.getString("systolicBloodPressure").takeIf { it?.isNotEmpty() == true },
-            diastolicBloodPressure = bloodPressure?.getString("diastolicBloodPressure").takeIf { it?.isNotEmpty() == true },
-            heartRate = bloodPressure?.getString("heartRate").takeIf { it?.isNotEmpty() == true },
-            weight = weight?.getString("weight").takeIf { it?.isNotEmpty() == true },
-            bodyFatPercentage = weight?.getString("bodyFatPercentage").takeIf { it?.isNotEmpty() == true },
-            bodyPhoto = weight?.getString("bodyPhoto").takeIf { it?.isNotEmpty() == true },
-            exercise = exercise?.getJSONArray("exercise")?.let { parseExerciseEntries(it) }.takeIf { it?.isNotEmpty() == true },
-            mood = mood?.getJSONArray("mood")?.let { parseMoodEntries(it) }.takeIf { it?.isNotEmpty() == true }
+            occurenceType = occurrenceType,
+            bloodSugar = bloodSugar?.getString("bloodSugar")?.takeIf { it.isNotEmpty() },
+            systolicBloodPressure = bloodPressure?.getString("systolicBloodPressure")?.takeIf { it.isNotEmpty() },
+            diastolicBloodPressure = bloodPressure?.getString("diastolicBloodPressure")?.takeIf { it.isNotEmpty() },
+            heartRate = bloodPressure?.getString("heartRate")?.takeIf { it.isNotEmpty() },
+            weight = weight?.getString("weight")?.takeIf { it.isNotEmpty() },
+            bodyFatPercentage = weight?.getString("bodyFatPercentage")?.takeIf { it.isNotEmpty() },
+            bodyPhoto = weight?.getString("bodyPhoto")?.takeIf { it != "null" },
+            exercise = exercise?.getJSONArray("exercise")?.let { parseExerciseEntries(it) }?.takeIf { it.isNotEmpty() },
+            mood = mood?.getJSONArray("mood")?.let { parseMoodEntries(it) }?.takeIf { it.isNotEmpty() }
         )
+
 
         // Gson 인스턴스를 serializeNulls 옵션으로 생성
         val gson = GsonBuilder().serializeNulls().create()
         val requestDataJson = gson.toJson(diaryRequest)
-
 
         // 요청 데이터를 JSON 문자열로 변환하여 로그로 출력
         Log.d("RequestData", "Sending request data: $requestDataJson")
@@ -156,8 +157,6 @@ class DiaryWriteActivity : AppCompatActivity() {
                     if (apiResponse?.success == true) {
                         // 성공 처리
                         logResponseBody(response)
-                        val intent = Intent(this@DiaryWriteActivity, ActivityShowSuccessDialog::class.java)
-                        startActivity(intent)
                         overridePendingTransition(0, 0)
                     } else {
                         // 실패 처리
@@ -178,7 +177,8 @@ class DiaryWriteActivity : AppCompatActivity() {
         val list = mutableListOf<ExerciseEntry>()
         for (i in 0 until array.length()) {
             val item = array.getJSONObject(i)
-            list.add(ExerciseEntry(item.getString("type"), item.optString("details", null)))
+            val details = item.optString("details").takeIf { it != "null" }
+            list.add(ExerciseEntry(item.getString("type"), details))
         }
         return list
     }
@@ -187,10 +187,12 @@ class DiaryWriteActivity : AppCompatActivity() {
         val list = mutableListOf<MoodEntry>()
         for (i in 0 until array.length()) {
             val item = array.getJSONObject(i)
-            list.add(MoodEntry(item.getString("type"), item.optString("details", null)))
+            val details = item.optString("details").takeIf { it != "null" }
+            list.add(MoodEntry(item.getString("type"), details))
         }
         return list
     }
+
 
     private inline fun <reified T : DiaryFragment> getFragmentData(): JSONObject? {
         return fragments.find { it is T }?.let { (it as T).getData() }
