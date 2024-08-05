@@ -2,7 +2,10 @@ package com.epi.epilog
 
 import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
+import android.net.Uri
 import android.os.Bundle
+import android.provider.Settings
 import android.text.InputType
 import android.text.SpannableString
 import android.text.Spanned
@@ -14,6 +17,8 @@ import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import com.epi.epilog.presentation.theme.api.LoginRequest
 import com.epi.epilog.presentation.theme.api.RetrofitService
 import com.epi.epilog.presentation.theme.api.TokenData
@@ -34,6 +39,10 @@ class LoginActivity : AppCompatActivity() {
         setContentView(R.layout.activity_login_patient)
 
         initializeRetrofit()
+
+        // 권한 요청
+        checkAndRequestPermissions()
+
         val preButton: Button = findViewById(R.id.pre_button)
         val loginButton: Button = findViewById(R.id.login_button)
         val loginIdEditText: EditText = findViewById(R.id.id_edit)
@@ -83,19 +92,6 @@ class LoginActivity : AppCompatActivity() {
             val intent = Intent(this, signUp1Activity::class.java)
             startActivity(intent)
         }
-
-        // 로그인 상태 확인 후 바로 MainActivity로 이동
-        checkLoginState()
-    }
-
-    private fun checkLoginState() {
-        val sharedPreferences = getSharedPreferences("AppPrefs", Context.MODE_PRIVATE)
-        val authToken = sharedPreferences.getString("AuthToken", null)
-        if (!authToken.isNullOrEmpty()) {
-            val intent = Intent(this, MainActivity::class.java)
-            startActivity(intent)
-            finish()
-        }
     }
 
     private fun initializeRetrofit() {
@@ -115,20 +111,19 @@ class LoginActivity : AppCompatActivity() {
                     saveTokenToSession(responseBody)
                     Log.d("LoginActivity", "Token: $responseBody")
 
+                    // FCM 토큰을 서버에 전송
                     FirebaseMessaging.getInstance().token.addOnCompleteListener { task ->
                         if (!task.isSuccessful) {
                             Log.w("FCM", "Fetching FCM registration token failed", task.exception)
+                            // 로그인 성공 후 바로 메인 페이지로 이동
+                            navigateToMainActivity()
                             return@addOnCompleteListener
                         }
 
                         val fcmToken = task.result
                         Log.d("FCM", "FCM Token: $fcmToken")
 
-                        sendTokenToServer(fcmToken)
-
-                        val intent = Intent(this@LoginActivity, MainActivity::class.java)
-                        startActivity(intent)
-                        finish()
+                        sendTokenToServer(responseBody, fcmToken)
                     }
                 } else {
                     Toast.makeText(this@LoginActivity, "회원가입을 먼저 해주세요", Toast.LENGTH_SHORT).show()
@@ -146,12 +141,10 @@ class LoginActivity : AppCompatActivity() {
         sharedPreferences.edit().putString("AuthToken", token).apply()
     }
 
-    private fun sendTokenToServer(fcmToken: String) {
-        val sharedPreferences = getSharedPreferences("AppPrefs", Context.MODE_PRIVATE)
-        val authToken = sharedPreferences.getString("AuthToken", null)
-
+    private fun sendTokenToServer(authToken: String?, fcmToken: String) {
         if (authToken.isNullOrEmpty()) {
             Log.d("FCM", "Auth token is missing")
+            navigateToMainActivity()
             return
         }
 
@@ -169,12 +162,22 @@ class LoginActivity : AppCompatActivity() {
                 } else {
                     Log.d("FCM", "Error saving token on the server: ${response.errorBody()?.string()}")
                 }
+                // 로그인 성공 후 바로 메인 페이지로 이동
+                navigateToMainActivity()
             }
 
             override fun onFailure(call: Call<ApiResponse>, t: Throwable) {
                 Log.d("LoginActivity", "Failed to send token to server: ${t.message}")
+                // 로그인 성공 후 바로 메인 페이지로 이동
+                navigateToMainActivity()
             }
         })
+    }
+
+    private fun navigateToMainActivity() {
+        val intent = Intent(this@LoginActivity, MainActivity::class.java)
+        startActivity(intent)
+        finish()
     }
 
     private fun togglePasswordVisibility(editText: EditText) {
@@ -184,5 +187,63 @@ class LoginActivity : AppCompatActivity() {
             editText.inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_PASSWORD
         }
         editText.setSelection(editText.text.length)
+    }
+
+    // 권한 요청
+    private fun checkAndRequestPermissions() {
+        val permissions = arrayOf(
+            android.Manifest.permission.BODY_SENSORS,
+            android.Manifest.permission.POST_NOTIFICATIONS,
+            android.Manifest.permission.ACCESS_FINE_LOCATION,
+            android.Manifest.permission.ACCESS_COARSE_LOCATION
+        )
+
+        val permissionsNeeded = permissions.filter {
+            ContextCompat.checkSelfPermission(this, it) != PackageManager.PERMISSION_GRANTED
+        }
+
+        if (permissionsNeeded.isNotEmpty()) {
+            ActivityCompat.requestPermissions(this, permissionsNeeded.toTypedArray(), PERMISSION_REQUEST_CODE)
+        }
+    }
+
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        if (requestCode == PERMISSION_REQUEST_CODE) {
+            val perms = HashMap<String, Int>()
+            // Initialize the map with all permissions
+            perms[android.Manifest.permission.BODY_SENSORS] = PackageManager.PERMISSION_GRANTED
+            perms[android.Manifest.permission.POST_NOTIFICATIONS] = PackageManager.PERMISSION_GRANTED
+            perms[android.Manifest.permission.ACCESS_FINE_LOCATION] = PackageManager.PERMISSION_GRANTED
+            perms[android.Manifest.permission.ACCESS_COARSE_LOCATION] = PackageManager.PERMISSION_GRANTED
+
+            // Fill with actual results from user
+            if (grantResults.isNotEmpty()) {
+                for (i in permissions.indices) {
+                    perms[permissions[i]] = grantResults[i]
+                }
+
+                permissions.forEachIndexed { index, permission ->
+                    Log.d("LoginActivity", "Permission: $permission, Result: ${grantResults[index]}")
+                }
+
+                if (perms[android.Manifest.permission.BODY_SENSORS] == PackageManager.PERMISSION_GRANTED
+                    && perms[android.Manifest.permission.POST_NOTIFICATIONS] == PackageManager.PERMISSION_GRANTED) {
+                    // All permissions are granted
+                    Log.d("LoginActivity", "All permissions granted")
+                } else {
+                    Toast.makeText(this, "권한 설정을 해주세요", Toast.LENGTH_LONG).show()
+                    // 권한 설정 페이지로 이동
+                    val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
+                    val uri: Uri = Uri.fromParts("package", packageName, null)
+                    intent.data = uri
+                    startActivity(intent)
+                }
+            }
+        }
+    }
+
+    companion object {
+        const val PERMISSION_REQUEST_CODE = 100
     }
 }

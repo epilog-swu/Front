@@ -81,6 +81,10 @@ interface RetrofitService {
             @Header("Authorization") authToken: String,
             @Body tokenData: TokenData
         ): Call<ApiResponse>
+
+    @Headers("Content-Type: application/json")
+    @GET("/auth/test")
+    fun testApi(@Header("Authorization") authToken: String): Call<Void>
 }
 
 data class TokenData(val token: String)
