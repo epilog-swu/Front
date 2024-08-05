@@ -9,6 +9,8 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.Fragment
 import com.google.android.material.tabs.TabLayout
+import java.text.SimpleDateFormat
+import java.util.Locale
 
 class DiaryWriteActivity : AppCompatActivity() {
 
@@ -20,6 +22,23 @@ class DiaryWriteActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_diary_write)
+
+        val selectedDate = intent.getStringExtra("date")
+        val occurrenceType = intent.getStringExtra("occurrenceType")
+        val selectedTime = intent.getStringExtra("time")
+
+        Log.d("DiaryWriteActivity", "Intent data: date=$selectedDate, occurrenceType=$occurrenceType, time=$selectedTime")
+
+        // 날짜 포맷팅
+        val formattedDate = formatDateString(selectedDate)
+
+        // 출력할 텍스트 생성
+        val outputText = "$formattedDate ${occurrenceType ?: ""}"
+
+        // TextView에 출력
+        val textView: TextView = findViewById(R.id.diary_write_day)
+        textView.text = outputText
+
 
         // Toolbar 설정
         val toolbar: Toolbar = findViewById(R.id.toolbar)
@@ -67,9 +86,21 @@ class DiaryWriteActivity : AppCompatActivity() {
             }
         }
 
+        //TODO : 수정버튼 눌렀을 시에 그냥 캘린더 화면으로 돌아가는 것도 나쁘지 않아보임.....
         editButton.setOnClickListener {
             val intent = Intent(this, DiaryEditActivity::class.java)
             startActivity(intent)
+        }
+    }
+
+    private fun formatDateString(dateString: String?): String {
+        return try {
+            val originalFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+            val targetFormat = SimpleDateFormat("yyyy년 M월 d일", Locale.getDefault())
+            val date = originalFormat.parse(dateString)
+            targetFormat.format(date)
+        } catch (e: Exception) {
+            dateString ?: ""
         }
     }
 
