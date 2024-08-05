@@ -97,26 +97,27 @@ interface RetrofitService {
 }
 
 data class DiaryRequest(
-    val date: String,
-    val occurrenceType: String,
+    val date: String?,
+    val occurrenceType: String?,
     val bloodSugar: String?,
     val systolicBloodPressure: String?,
     val diastolicBloodPressure: String?,
     val heartRate: String?,
     val weight: String?,
     val bodyFatPercentage: String?,
-    val bodyPhoto: String?, // Assuming it's a URL or base64 string
-    val exercise: List<ExerciseEntry>,
-    val mood: List<MoodEntry>
+    val bodyPhoto: String?,
+    val exercise: List<ExerciseEntry>?,
+    val mood: List<MoodEntry>?
 )
 
+
 data class ExerciseEntry(
-    val type: String,
+    val type: String?,
     val details: String?
 )
 
 data class MoodEntry(
-    val type: String,
+    val type: String?,
     val details: String?
 )
 

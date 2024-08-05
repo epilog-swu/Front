@@ -16,6 +16,8 @@ import com.epi.epilog.api.ExerciseEntry
 import com.epi.epilog.api.MoodEntry
 import com.epi.epilog.api.RetrofitService
 import com.google.android.material.tabs.TabLayout
+import com.google.gson.Gson
+import com.google.gson.GsonBuilder
 import org.json.JSONArray
 import org.json.JSONObject
 import retrofit2.Call
@@ -115,6 +117,8 @@ class DiaryWriteActivity : AppCompatActivity() {
         val date = intent.getStringExtra("date") ?: ""
         val occurrenceType = intent.getStringExtra("occurrenceType") ?: ""
 
+        Log.d("saveAllData", "Date: $date, OccurrenceType: $occurrenceType") // 로그 추가
+
         val bloodSugar = getFragmentData<DiaryFragmentBloodSugar>()
         val bloodPressure = getFragmentData<DiaryFragmentBloodPressure>()
         val weight = getFragmentData<DiaryFragmentWeight>()
@@ -124,16 +128,24 @@ class DiaryWriteActivity : AppCompatActivity() {
         val diaryRequest = DiaryRequest(
             date = date,
             occurrenceType = occurrenceType,
-            bloodSugar = bloodSugar?.getString("bloodSugar"),
-            systolicBloodPressure = bloodPressure?.getString("systolicBloodPressure"),
-            diastolicBloodPressure = bloodPressure?.getString("diastolicBloodPressure"),
-            heartRate = bloodPressure?.getString("heartRate"),
-            weight = weight?.getString("weight"),
-            bodyFatPercentage = weight?.getString("bodyFatPercentage"),
-            bodyPhoto = weight?.getString("bodyPhoto"),
-            exercise = exercise?.getJSONArray("exercise")?.let { parseExerciseEntries(it) } ?: emptyList(),
-            mood = mood?.getJSONArray("mood")?.let { parseMoodEntries(it) } ?: emptyList()
+            bloodSugar = bloodSugar?.getString("bloodSugar").takeIf { it?.isNotEmpty() == true },
+            systolicBloodPressure = bloodPressure?.getString("systolicBloodPressure").takeIf { it?.isNotEmpty() == true },
+            diastolicBloodPressure = bloodPressure?.getString("diastolicBloodPressure").takeIf { it?.isNotEmpty() == true },
+            heartRate = bloodPressure?.getString("heartRate").takeIf { it?.isNotEmpty() == true },
+            weight = weight?.getString("weight").takeIf { it?.isNotEmpty() == true },
+            bodyFatPercentage = weight?.getString("bodyFatPercentage").takeIf { it?.isNotEmpty() == true },
+            bodyPhoto = weight?.getString("bodyPhoto").takeIf { it?.isNotEmpty() == true },
+            exercise = exercise?.getJSONArray("exercise")?.let { parseExerciseEntries(it) }.takeIf { it?.isNotEmpty() == true },
+            mood = mood?.getJSONArray("mood")?.let { parseMoodEntries(it) }.takeIf { it?.isNotEmpty() == true }
         )
+
+        // Gson 인스턴스를 serializeNulls 옵션으로 생성
+        val gson = GsonBuilder().serializeNulls().create()
+        val requestDataJson = gson.toJson(diaryRequest)
+
+
+        // 요청 데이터를 JSON 문자열로 변환하여 로그로 출력
+        Log.d("RequestData", "Sending request data: $requestDataJson")
 
         // Retrofit을 사용하여 서버에 데이터 전송
         val token = getTokenFromSession()
@@ -186,7 +198,7 @@ class DiaryWriteActivity : AppCompatActivity() {
 
 
     private fun initializeRetrofit() {
-        val gson = com.google.gson.GsonBuilder().setLenient().create()
+        val gson = GsonBuilder().serializeNulls().setLenient().create()
         val retrofit = Retrofit.Builder()
             .baseUrl("http://epilog-develop-env.eba-imw3vi3g.ap-northeast-2.elasticbeanstalk.com/")
             .addConverterFactory(GsonConverterFactory.create(gson))

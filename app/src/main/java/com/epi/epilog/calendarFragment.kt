@@ -18,7 +18,6 @@ import androidx.viewpager2.adapter.FragmentStateAdapter
 import com.epi.epilog.databinding.CalendarMonthYearBinding
 import com.epi.epilog.databinding.EpiDialogCustomBinding
 import com.epi.epilog.databinding.FragmentCalendarBinding
-import com.epi.epilog.databinding.FragmentGraphBinding
 import com.epi.epilog.databinding.MainCalendarBinding
 import com.kizitonwose.calendar.core.CalendarDay
 import com.kizitonwose.calendar.core.CalendarMonth
@@ -119,9 +118,13 @@ class CalendarPage : Fragment() {
     private val binding get() = _binding!!
 
     //기간 선택 (비)활성화 변수
-    private var isDateSelectionEnabled: Boolean = false
+    private var isRangeSelectionEnabled: Boolean = false
     private var rangeStartDate: LocalDate? = null
     private var rangeEndDate: LocalDate? = null
+
+    // 초기화 시 오늘 날짜를 선택하도록 selectedDate를 오늘 날짜로 설정
+    val today = LocalDate.now()
+    var selectedDate: LocalDate? = today
 
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreateView(
@@ -138,6 +141,7 @@ class CalendarPage : Fragment() {
         _binding = null
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -173,15 +177,15 @@ class CalendarPage : Fragment() {
         binding.calendarView.setup(startMonth, endMonth, firstDayOfWeek)
         binding.calendarView.scrollToMonth(currentMonth)
 
-        // Setting the DayBinder
         binding.calendarView.dayBinder = object : MonthDayBinder<DayViewContainer> {
             override fun create(view: View) = DayViewContainer(view)
             override fun bind(container: DayViewContainer, day: CalendarDay) {
                 container.textView.text = day.date.dayOfMonth.toString()
 
-                // Apply original background here
+                // 기본 배경 설정
                 container.textView.setBackgroundResource(R.drawable.calendar_day_bg)
 
+                // 현재 달에 해당하는 날짜인지 확인
                 if (day.position == DayPosition.MonthDate) {
                     when {
                         day.date == rangeStartDate || day.date == rangeEndDate -> {
@@ -194,55 +198,54 @@ class CalendarPage : Fragment() {
                             container.textView.setTextColor(Color.BLACK)
                         }
 
+                        day.date == selectedDate -> {
+                            container.textView.setBackgroundResource(R.drawable.calendar_today_bg)
+                            container.textView.setTextColor(Color.BLACK)
+                        }
+
                         else -> {
                             container.textView.setBackgroundResource(R.drawable.calendar_day_bg)
                             container.textView.setTextColor(Color.BLACK)
                         }
                     }
-                    container.textView.setOnClickListener {
-                        onDateSelected(day.date)
 
-                        if (isDateSelectionEnabled) {
-                            //바텀시트2 보이기
-                        } else {
-                            //바텀시트1보이기
+                    // 날짜가 선택됐을 때
+                    container.textView.setOnClickListener {
+                        if (!isRangeSelectionEnabled) {
+                            selectedDate = day.date
+                            // 바텀시트1보이기
                             showBottomSheet(day.date.toString())
+                            binding.calendarView.notifyCalendarChanged()
+                        } else {
+                            onDateSelected(day.date)
+                            // 바텀시트2 보이기
                         }
                     }
                 } else {
                     container.textView.setTextColor(Color.GRAY)
-                    //container.textView.setBackgroundColor(Color.TRANSPARENT)
                     container.textView.setOnClickListener(null)
                 }
             }
         }
 
         // MonthHeaderBinder를 통해 요일 정보 바인딩
-        binding.calendarView.monthHeaderBinder =
-            object : MonthHeaderFooterBinder<MonthViewContainer> {
-                override fun create(view: View) = MonthViewContainer(view)
-                override fun bind(container: MonthViewContainer, month: CalendarMonth) {
-                    val daysOfWeek = daysOfWeek(firstDayOfWeek = firstDayOfWeekFromLocale())
-                    container.textViewSunday.text =
-                        daysOfWeek[0].getDisplayName(TextStyle.SHORT, Locale.KOREAN)
-                    container.textViewMonday.text =
-                        daysOfWeek[1].getDisplayName(TextStyle.SHORT, Locale.KOREAN)
-                    container.textViewTuesday.text =
-                        daysOfWeek[2].getDisplayName(TextStyle.SHORT, Locale.KOREAN)
-                    container.textViewWednesday.text =
-                        daysOfWeek[3].getDisplayName(TextStyle.SHORT, Locale.KOREAN)
-                    container.textViewThursday.text =
-                        daysOfWeek[4].getDisplayName(TextStyle.SHORT, Locale.KOREAN)
-                    container.textViewFriday.text =
-                        daysOfWeek[5].getDisplayName(TextStyle.SHORT, Locale.KOREAN)
-                    container.textViewSaturday.text =
-                        daysOfWeek[6].getDisplayName(TextStyle.SHORT, Locale.KOREAN)
-                }
+        binding.calendarView.monthHeaderBinder = object : MonthHeaderFooterBinder<MonthViewContainer> {
+            override fun create(view: View) = MonthViewContainer(view)
+            override fun bind(container: MonthViewContainer, month: CalendarMonth) {
+                val daysOfWeek = daysOfWeek(firstDayOfWeek = firstDayOfWeekFromLocale())
+                container.textViewSunday.text = daysOfWeek[0].getDisplayName(TextStyle.SHORT, Locale.KOREAN)
+                container.textViewMonday.text = daysOfWeek[1].getDisplayName(TextStyle.SHORT, Locale.KOREAN)
+                container.textViewTuesday.text = daysOfWeek[2].getDisplayName(TextStyle.SHORT, Locale.KOREAN)
+                container.textViewWednesday.text = daysOfWeek[3].getDisplayName(TextStyle.SHORT, Locale.KOREAN)
+                container.textViewThursday.text = daysOfWeek[4].getDisplayName(TextStyle.SHORT, Locale.KOREAN)
+                container.textViewFriday.text = daysOfWeek[5].getDisplayName(TextStyle.SHORT, Locale.KOREAN)
+                container.textViewSaturday.text = daysOfWeek[6].getDisplayName(TextStyle.SHORT, Locale.KOREAN)
             }
+        }
 
         //기간선택하기를 누르면, 활성화해주고, 범위선택
         binding.pdfRangeBtn.setOnClickListener {
-            isDateSelectionEnabled = true
+            isRangeSelectionEnabled = true
 
             // 기간선택 끝났는지 확인
             if (rangeStartDate != null && rangeEndDate != null) {
@@ -300,7 +303,7 @@ class CalendarPage : Fragment() {
 
         //취소하기를 누르면
         binding.pdfCancelBtn.setOnClickListener {
-            isDateSelectionEnabled = false
+            isRangeSelectionEnabled = false
 
             //버튼 (비)활성화
             if (binding.pdfCancelBtn.visibility == View.VISIBLE) {
@@ -318,14 +321,11 @@ class CalendarPage : Fragment() {
     }
 
     fun setDateSelectionEnabled(enabled: Boolean) {
-        isDateSelectionEnabled = enabled
+        isRangeSelectionEnabled = enabled
     }
 
     private fun onDateSelected(date: LocalDate) {
-        if (!isDateSelectionEnabled) {
-            //Toast.makeText(context, "기간 선택이 비활성화되어 있습니다.", Toast.LENGTH_SHORT).show()
-            return
-        } else {
+        if (isRangeSelectionEnabled) {
             if (rangeStartDate == null) {
                 rangeStartDate = date
             } else if (rangeEndDate == null) {
@@ -350,7 +350,6 @@ class CalendarPage : Fragment() {
                 putString("date", date)
             }
         }
-
         bottomSheetFragment.show(parentFragmentManager, bottomSheetFragment.tag)
     }
 }
