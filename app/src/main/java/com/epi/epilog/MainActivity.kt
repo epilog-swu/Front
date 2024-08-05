@@ -92,9 +92,9 @@ class MainPagerAdapter(activity: AppCompatActivity) : FragmentStateAdapter(activ
     override fun createFragment(position: Int): Fragment {
         return when (position) {
             0 -> CalendarFragment()
-            1 -> MedicineChecklistFragment()  //TODO: medicine checklist fragment로 바꿔주세요!
+            1 -> MedicineChecklistFragment()
             2 -> MealChecklistFragment()
-            3 -> MealChecklistFragment () // TODO : Mypage fragment로 바꿔주세요!
+            3 -> MyPageFragment ()
             else -> throw IllegalStateException("Unexpected position $position")
         }
     }

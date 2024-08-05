@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/fragment_medicine_checklist"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
@@ -67,7 +68,8 @@
         app:layout_constraintTop_toBottomOf="@id/weekcalendar_layout"
         app:layout_constraintBottom_toTopOf="@id/buttonLayout"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent">
+        app:layout_constraintEnd_toEndOf="parent"
+        tools:ignore="DuplicateIds">
 
         <LinearLayout
             android:id="@+id/medicine_content_layout"
@@ -75,93 +77,9 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="오늘 먹어야 하는\n약을 확인해보세요"
-                android:layout_marginTop="10dp"
-                android:layout_marginStart="40px"
-                android:textColor="#000"
-                android:textSize="18dp"
-                android:textStyle="bold"/>
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="복용이 확인되지 않은 약이 있어요 워치에 알람보내기"
-                android:layout_marginTop="5dp"
-                android:layout_marginStart="40px"
-                android:textColor="@color/덜진한회색"
-                android:textSize="10dp"
-                android:textStyle="bold"/>
-
-            <!-- Include red_box -->
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:padding="8dp">
-                <LinearLayout
-                    android:id="@+id/red_box"
-                    android:layout_width="match_parent"
-                    android:layout_height="92dp"
-                    android:layout_marginStart="8dp"
-                    android:layout_marginEnd="8dp"
-                    android:orientation="horizontal"
-                    android:background="@drawable/medicine_redbox"
-                    android:gravity="center_vertical"
-                    android:padding="40px"
-                    android:layout_marginTop="20px">
-
-                    <include layout="@layout/fragment_medicine_checklist_item" />
-
-                </LinearLayout>
-
-                <TextView
-                    android:id="@+id/textView9"
-                    android:layout_width="116dp"
-                    android:layout_height="22dp"
-                    android:layout_alignEnd="@id/red_box"
-                    android:layout_marginEnd="2dp"
-                    android:layout_marginBottom="10px"
-                    android:background="@drawable/red_badge"
-                    android:padding="5px"
-                    android:text="복용시간 지남"
-                    android:textAlignment="center"
-                    android:textColor="#fff"
-                    android:textSize="12dp" />
-
-            </RelativeLayout>
-
-            <!-- Include orange_box -->
-            <LinearLayout
-                android:id="@+id/orange_box"
-                android:layout_width="match_parent"
-                android:layout_height="92dp"
-                android:layout_marginStart="15dp"
-                android:layout_marginEnd="15dp"
-                android:orientation="horizontal"
-                android:background="@drawable/medicine_orangebox"
-                android:gravity="center_vertical"
-                android:padding="40px"
-                android:layout_marginTop="20px">
-
-                <include layout="@layout/fragment_medicine_checklist_item" />
-            </LinearLayout>
-
-            <!-- Include purple_box -->
-            <LinearLayout
-                android:id="@+id/purple_box"
-                android:layout_width="match_parent"
-                android:layout_height="92dp"
-                android:layout_marginStart="15dp"
-                android:layout_marginEnd="15dp"
-                android:orientation="horizontal"
-                android:background="@drawable/medicine_purplebox"
-                android:gravity="center_vertical"
-                android:padding="40px"
-                android:layout_marginTop="50px">
-
-                <include layout="@layout/fragment_medicine_checklist_item" />
-            </LinearLayout>
+            <include
+                android:id="@+id/header_view"
+                layout="@layout/fragment_medicine_checklist_header" />
 
         </LinearLayout>
     </ScrollView>

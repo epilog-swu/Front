@@ -65,6 +65,9 @@ interface RetrofitService {
     ): Call<ApiResponse>
 
     @Headers("Content-Type: application/json")
+    @GET("/auth/test")
+    fun testApi(@Header("Authorization") authToken: String): Call<Void>
+
     @POST("api/logs")
     fun addDiary(
         @Header("Authorization") token: String,

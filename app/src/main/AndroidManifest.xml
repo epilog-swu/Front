@@ -1,6 +1,9 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
-
+    <uses-permission android:name="android.permission.BODY_SENSORS" />
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
     <application
         android:networkSecurityConfig="@xml/network_secutiry_config"
         android:allowBackup="true"
@@ -19,16 +22,16 @@
         <activity android:name=".signUp4Activity"/>
         <activity android:name=".signUp5Activity"/>
         <activity android:name=".DiaryWriteActivity"/>
-        <activity android:name=".startActivity"/>
-        <activity android:name=".DiaryEditActivity"/>
-        <activity android:name=".MainActivity"/>
-        <activity android:name=".LoginActivity"
+        <activity android:name=".startActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".DiaryEditActivity"/>
+        <activity android:name=".MainActivity"/>
+        <activity android:name=".LoginActivity"/>
 
         <activity android:name=".ActivityShowSuccessDialog"
             android:theme="@style/TransparentTheme" />

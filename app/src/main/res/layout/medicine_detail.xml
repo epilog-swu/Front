@@ -44,7 +44,7 @@
         app:layout_constraintEnd_toEndOf="parent">
 
         <ImageView
-            android:layout_marginEnd="40dp"
+            android:layout_marginEnd="70dp"
             android:layout_width="30dp"
             android:layout_height="40dp"
             android:src="@drawable/prev"
@@ -58,13 +58,13 @@
             android:gravity="center_horizontal">
 
             <ImageView
-                android:layout_width="wrap_content"
+                android:layout_width="150dp"
                 android:layout_height="wrap_content"
                 android:src="@drawable/medicine"/>
         </LinearLayout>
 
         <ImageView
-            android:layout_marginStart="40dp"
+            android:layout_marginStart="70dp"
             android:layout_width="30dp"
             android:layout_height="40dp"
             android:src="@drawable/next"
@@ -232,7 +232,7 @@
                     android:layout_marginStart="8dp"
                     android:text="복용 알람이 켜져있습니다"
                     android:textSize="14sp"
-                    android:textColor="#000"/>
+                    android:textColor="@color/덜진한회색"/>
             </LinearLayout>
         </LinearLayout>
     </ScrollView>
