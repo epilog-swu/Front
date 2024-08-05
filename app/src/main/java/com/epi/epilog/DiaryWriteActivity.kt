@@ -1,5 +1,6 @@
 package com.epi.epilog
 
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
@@ -94,15 +95,15 @@ class DiaryWriteActivity : AppCompatActivity() {
 
         saveButton.setOnClickListener {
             if (isAnyFragmentFilledOut()) {
-                val intent = Intent(this,ActivityShowSuccessDialog::class.java)
-                startActivity(intent)
-                saveAllData()
+                val intent = Intent(this, ActivityShowSuccessDialog::class.java)
+                startActivityForResult(intent, REQUEST_CODE_SUCCESS_DIALOG)
             } else {
                 val intent = Intent(this, ActivityShowFailDialog::class.java)
                 startActivity(intent)
                 overridePendingTransition(0, 0)
             }
         }
+
 
         editButton.setOnClickListener {
             val intent = Intent(this, DiaryEditActivity::class.java)
@@ -112,6 +113,26 @@ class DiaryWriteActivity : AppCompatActivity() {
         // 레트로핏 초기화
         initializeRetrofit()
     }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == REQUEST_CODE_SUCCESS_DIALOG) {
+            if (resultCode == Activity.RESULT_OK) {
+                saveAllData()
+
+                // 홈 화면으로 이동
+                val intent = Intent(this, MainActivity::class.java)
+                intent.putExtra("targetFragment", 0)  // 0은 CalendarFragment의 인덱스
+                startActivity(intent)
+                finish()
+            }
+        }
+    }
+
+    companion object {
+        const val REQUEST_CODE_SUCCESS_DIALOG = 1
+    }
+
 
     private fun saveAllData() {
         val date = intent.getStringExtra("date") ?: ""
