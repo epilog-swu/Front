@@ -17,9 +17,9 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.core.view.children
 import androidx.fragment.app.Fragment
-import com.epi.epilog.presentation.theme.api.ChecklistItem
-import com.epi.epilog.presentation.theme.api.MedicationChecklistResponse
-import com.epi.epilog.presentation.theme.api.RetrofitClient
+import com.epi.epilog.api.ChecklistItem
+import com.epi.epilog.api.MedicationChecklistResponse
+import com.epi.epilog.api.RetrofitClient
 import com.kizitonwose.calendar.core.WeekDay
 import com.kizitonwose.calendar.core.atStartOfMonth
 import com.kizitonwose.calendar.core.daysOfWeek

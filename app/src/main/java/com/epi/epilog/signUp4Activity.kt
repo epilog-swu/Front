@@ -8,8 +8,7 @@ import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.core.view.marginStart
-import com.epi.epilog.presentation.theme.api.Medication
+import com.epi.epilog.api.Medication
 
 class signUp4Activity : AppCompatActivity() {
 

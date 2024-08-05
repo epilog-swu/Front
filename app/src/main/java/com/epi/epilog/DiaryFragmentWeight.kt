@@ -8,21 +8,42 @@ import android.graphics.drawable.BitmapDrawable
 import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.ImageView
 import androidx.fragment.app.Fragment
+import api.DiaryFragment
+import org.json.JSONException
+import org.json.JSONObject
 import java.io.IOException
 
-class DiaryFragmentWeight : Fragment() {
+class DiaryFragmentWeight : Fragment(), DiaryFragment {
 
     private var weightEditText: EditText? = null
     private var bodyFatEditText: EditText? = null
     private var uploadImageView: ImageView? = null
     private val PICK_IMAGE_REQUEST = 1
-    private val IMAGE_SIZE = 140 // 크롭할 이미지의 너비와 높이
+    private val IMAGE_SIZE = 140 // 크롭할 이미지의 너비와
+
+    override fun getData(): JSONObject {
+        val data = JSONObject()
+        try {
+            data.put("weight", weightEditText?.text.toString())
+            data.put("bodyFatPercentage", bodyFatEditText?.text.toString())
+            //TODO : 일단 이미지 빼고.. 나중에 추가
+            data.put("bodyPhoto", JSONObject.NULL)
+
+        } catch (e: JSONException) {
+            Log.e("final_weight_error", "JSONException in getData: ${e.message}")
+        }
+
+        Log.d("DiaryFragmentWeight", "getData: $data") // 추가된 로그
+
+        return data
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -68,7 +89,8 @@ class DiaryFragmentWeight : Fragment() {
         return Bitmap.createScaledBitmap(bitmap, width, height, true)
     }
 
-    fun isFilledOut(): Boolean {
+
+    override fun isFilledOut(): Boolean {
         val weight = weightEditText?.text?.toString() ?: ""
         val bodyFat = bodyFatEditText?.text?.toString() ?: ""
         return weight.isNotEmpty()  || bodyFat.isNotEmpty()

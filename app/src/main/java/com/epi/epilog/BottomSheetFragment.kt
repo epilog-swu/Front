@@ -1,12 +1,15 @@
 package com.epi.epilog
 
+import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.epi.epilog.databinding.FragmentMainBsdNodiaryBinding
+import java.time.LocalDate
 
 class BottomSheetFragment : BottomSheetDialogFragment() {
 
@@ -16,6 +19,13 @@ class BottomSheetFragment : BottomSheetDialogFragment() {
 
     private var _binding: FragmentMainBsdNodiaryBinding? = null
     private val binding get() = _binding!!
+
+    private var selectedDate: String? = null
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        selectedDate = arguments?.getString("date") ?: LocalDate.now().toString()
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -34,7 +44,11 @@ class BottomSheetFragment : BottomSheetDialogFragment() {
 
         // 추가적인 설정과 클릭 리스너 등 설정
         binding.writeDiaryBtn.setOnClickListener {
-            // 일지 추가 버튼 클릭 처리
+            // 일지 추가 버튼 클릭시
+            val intent = Intent(requireContext(), DiaryEditActivity::class.java)
+            intent.putExtra("date", selectedDate)
+            Log.d("bottomsheetFrag","selectedDate : $selectedDate")
+            startActivity(intent)
 
             dismiss() // 바텀시트 닫기
         }

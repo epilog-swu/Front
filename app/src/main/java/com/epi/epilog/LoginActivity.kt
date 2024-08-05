@@ -19,9 +19,9 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
-import com.epi.epilog.presentation.theme.api.LoginRequest
-import com.epi.epilog.presentation.theme.api.RetrofitService
-import com.epi.epilog.presentation.theme.api.TokenData
+import com.epi.epilog.api.LoginRequest
+import com.epi.epilog.api.RetrofitService
+import com.epi.epilog.api.TokenData
 import com.google.firebase.messaging.FirebaseMessaging
 import com.google.gson.GsonBuilder
 import retrofit2.Call

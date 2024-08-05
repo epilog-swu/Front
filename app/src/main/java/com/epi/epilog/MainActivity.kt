@@ -24,6 +24,7 @@ class MainActivity : AppCompatActivity() {
 
         setContentView(binding.root)
 
+
         with(binding) {
             viewPagerMain.adapter = mainPageAdapter
 
@@ -57,6 +58,13 @@ class MainActivity : AppCompatActivity() {
         if (savedInstanceState == null) {
             binding.viewPagerMain.currentItem = 0 // 첫 번째 페이지로 설정
         }
+
+        // 인텐트로부터 targetFragment가 전달된 경우 해당 프래그먼트로 이동
+        intent?.getIntExtra("targetFragment", -1)?.let { targetFragment ->
+            if (targetFragment != -1) {
+                binding.viewPagerMain.currentItem = targetFragment
+            }
+        }
         // 텍스트 숨기기
         hideChipNavigationBarText(binding.mainLayoutBottomNavigation)
     }
@@ -74,6 +82,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
 }
+
 
 class MainPagerAdapter(activity: AppCompatActivity) : FragmentStateAdapter(activity) {
     override fun getItemCount(): Int {
