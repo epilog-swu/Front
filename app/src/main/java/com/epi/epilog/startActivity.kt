@@ -6,9 +6,8 @@ import android.os.Bundle
 import android.util.Log
 import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
-<<<<<<< HEAD
-import com.epi.epilog.presentation.theme.api.RetrofitService
-import com.epi.epilog.presentation.theme.api.TokenData
+import com.epi.epilog.api.RetrofitService
+import com.epi.epilog.api.TokenData
 import com.google.firebase.messaging.FirebaseMessaging
 import com.google.gson.GsonBuilder
 import retrofit2.Call
@@ -16,8 +15,7 @@ import retrofit2.Callback
 import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
-=======
->>>>>>> origin/main
+
 
 class startActivity : AppCompatActivity() {
 

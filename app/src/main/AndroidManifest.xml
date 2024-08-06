@@ -22,15 +22,15 @@
         <activity android:name=".signUp4Activity"/>
         <activity android:name=".signUp5Activity"/>
         <activity android:name=".DiaryWriteActivity"/>
-        <activity android:name=".startActivity"
-            android:exported="true">
+        <activity android:name=".startActivity"/>
+        <activity android:name=".DiaryEditActivity"/>
+        <activity android:name=".MainActivity" android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+
         </activity>
-        <activity android:name=".DiaryEditActivity"/>
-        <activity android:name=".MainActivity"/>
         <activity android:name=".LoginActivity"/>
 
         <activity android:name=".ActivityShowSuccessDialog"
