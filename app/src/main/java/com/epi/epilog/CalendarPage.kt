@@ -263,7 +263,9 @@ class CalendarPage : Fragment() {
             return
         }
 
-        val dateString = selectedDate?.format(DateTimeFormatter.ISO_LOCAL_DATE)
+        // 연도와 월을 기반으로 해당 월의 첫 번째 날짜 생성
+        val firstDateOfMonth = LocalDate.of(year, month, 1)
+        val dateString = firstDateOfMonth.format(DateTimeFormatter.ISO_LOCAL_DATE)
 
         Log.d("CalendarPage", "date String : $dateString")
 
