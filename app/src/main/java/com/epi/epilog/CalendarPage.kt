@@ -129,9 +129,17 @@ class CalendarPage : Fragment() {
                         }
 
                         else -> {
-                            container.textView.setBackgroundResource(R.drawable.calendar_day_bg)
+                            val diaryCount = diaryCountsMap[day.date] ?: 0
+                            when {
+                                diaryCount in 1..2 -> container.textView.setBackgroundResource(R.drawable.calendar_day_count1_bg)
+                                diaryCount in 3..6 -> container.textView.setBackgroundResource(R.drawable.calendar_day_count3_bg)
+                                diaryCount == 7 -> container.textView.setBackgroundResource(R.drawable.calendar_selectday_bg) // count7 파일 = selectdaybg와 동일
+                                else -> container.textView.setBackgroundResource(R.drawable.calendar_day_bg) // Default color for other counts
+                            }
                             container.textView.setTextColor(Color.BLACK)
                         }
+
+
                     }
 
                     // 날짜가 선택됐을 때
