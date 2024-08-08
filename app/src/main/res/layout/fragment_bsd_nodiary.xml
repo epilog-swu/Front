@@ -22,7 +22,7 @@ app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior
     android:layout_marginTop="5dp"/>
 
 <TextView
-    android:id="@+id/btm_sheet_dlg_no_diary_title"
+    android:id="@+id/btm_sheet_dlg_yes_diary_title"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:layout_gravity="center_horizontal"
@@ -49,7 +49,7 @@ app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior
     android:text="2024년 4월 10일"
     android:textSize="14dp"
     android:textColor="@color/black"
-    app:layout_constraintTop_toBottomOf="@id/btm_sheet_dlg_no_diary_title"
+    app:layout_constraintTop_toBottomOf="@id/btm_sheet_dlg_yes_diary_title"
     app:layout_constraintStart_toStartOf="parent"
     app:layout_constraintEnd_toEndOf="parent"/>
 

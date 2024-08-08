@@ -151,7 +151,6 @@ class CalendarPage : Fragment() {
                             binding.calendarView.notifyCalendarChanged()
                         } else {
                             onDateSelected(day.date)
-                            // 바텀시트2 보이기
                         }
                     }
                 } else {
@@ -341,9 +340,11 @@ class CalendarPage : Fragment() {
     }
 
     private fun showBottomSheet(date: String) {
+        val diaryCount = diaryCountsMap[LocalDate.parse(date)] ?: 0
         val bottomSheetFragment = BottomSheetFragment().apply {
             arguments = Bundle().apply {
-                putString("date", date)
+                putString("date", date) //바텀시트 호출할 때 날짜 정보 넘겨주기
+                putInt("diaryCount", diaryCount) //바텀시트 호출할 때 diaryCount 정보 넘겨주시
             }
         }
         bottomSheetFragment.show(parentFragmentManager, bottomSheetFragment.tag)
