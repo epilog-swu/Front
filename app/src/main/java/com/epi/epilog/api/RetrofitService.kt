@@ -119,7 +119,6 @@ interface RetrofitService {
 }
 
 //일자별 icon 조회 data class
-
 data class DiaryIconResponse(
     val date: String?,
     val count: Int,

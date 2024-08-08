@@ -1,15 +1,24 @@
 package com.epi.epilog
 
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
+import android.widget.Toast
+import com.epi.epilog.api.DiaryIconResponse
+import com.epi.epilog.api.RetrofitClient
+import com.epi.epilog.api.titleKeyWordEntry
 import com.epi.epilog.databinding.FragmentBsdNodiaryBinding
 import com.epi.epilog.databinding.FragmentBsdYesDiaryBinding
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 import java.time.LocalDate
 
 class BottomSheetFragment : BottomSheetDialogFragment() {
@@ -105,9 +114,68 @@ class BottomSheetFragment : BottomSheetDialogFragment() {
         else{
             // 설정할 텍스트는 arguments에서 가져오거나 다른 방식으로 설정할 수 있습니다.
             val date = arguments?.getString("date")
-            bindingYesDiary.btmSheetDlgYesDiaryTitle.text = date
-            //아이콘 동적으로 추가
+            bindingYesDiary.btmSheetDlgNoDiaryDate.text = date
+            if (date != null) {
+                fetchDiaryIcons(date)
+            }
         }
+    }
+
+    private fun fetchDiaryIcons(date: String) {
+        val token = getTokenFromSession()
+        Log.d("fetchDiaryIcons", "Fetching diary icons for date: $date with token: $token") // date와 token 로그 출력
+        RetrofitClient.retrofitService.getDiaryIcon(date, token).enqueue(object :
+            Callback<DiaryIconResponse> {
+            override fun onResponse(call: Call<DiaryIconResponse>, response: Response<DiaryIconResponse>) {
+                if (response.isSuccessful) {
+                    val diaryIcons = response.body()
+                    diaryIcons?.let {
+                        populateIcons(it.logs)
+                        Log.d("fetchDiaryIcons", "Response body: $it")
+                    }
+                } else {
+                    Toast.makeText(context, "Failed to load icons: ${response.message()}", Toast.LENGTH_SHORT).show()
+                }
+            }
+
+            override fun onFailure(call: Call<DiaryIconResponse>, t: Throwable) {
+                Toast.makeText(context, "Error: ${t.message}", Toast.LENGTH_SHORT).show()
+            }
+        })
+    }
+
+    private fun populateIcons(logs: List<titleKeyWordEntry>) {
+        val iconContainer = bindingYesDiary.yesDiaryIconContainer
+        logs.forEach { log ->
+            log.keyword.forEach { keyword ->
+                val iconRes = getIconResourceForKeyword(keyword)
+                if (iconRes != null) {
+                    val imageView = ImageView(context)
+                    imageView.setImageResource(iconRes)
+                    iconContainer.addView(imageView)
+                }
+            }
+        }
+    }
+
+
+    private fun getIconResourceForKeyword(keyword: String): Int? {
+        // 키워드에 따라 아이콘 리소스를 반환하는 로직을 작성합니다.
+        return when (keyword) {
+            "혈압" -> R.drawable.icon_blood_pressure
+            "혈당" -> R.drawable.icon_blood_sugar
+            "몸무게" -> R.drawable.icon_weight
+            "기분" -> R.drawable.icon_mood
+            "운동" -> R.drawable.icon_exercise
+            else -> null
+        }
+    }
+
+
+    private fun getTokenFromSession(): String {
+        val sharedPreferences = context?.getSharedPreferences("AppPrefs", Context.MODE_PRIVATE)
+        val token = sharedPreferences?.getString("AuthToken", "") ?: ""
+        return "Bearer $token"
     }
 
     override fun onDestroyView() {
