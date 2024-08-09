@@ -358,12 +358,13 @@ class GraphPage : Fragment() {
         val xAxis = lineChart.xAxis
         xAxis.position = XAxis.XAxisPosition.BOTTOM
         xAxis.granularity = 1f
+        xAxis.setDrawLabels(false)
         //xAxis.valueFormatter = IndexAxisValueFormatter(getDaysOfMonth(getDaysInCurrentMonth()))
 
         // Y축 설정
         val leftAxis = lineChart.axisLeft
         leftAxis.axisMinimum = 0f
-        leftAxis.axisMaximum = 100f
+        leftAxis.axisMaximum = 150f
         leftAxis.granularity = 30f // 간격 설정
         leftAxis.axisLineColor = Color.parseColor("#827DA1")
         leftAxis.textColor = Color.parseColor("#827DA1")
