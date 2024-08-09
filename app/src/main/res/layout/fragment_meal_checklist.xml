@@ -116,7 +116,7 @@
             <!--오늘의 섭취/권장 칼로리-->
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/calculate_oneday_energy_layout"
-                android:layout_width="334dp"
+                android:layout_width="match_parent"
                 android:layout_height="100dp"
                 android:layout_margin="10dp"
                 android:background="@drawable/meal_today_cal_box"
@@ -127,11 +127,11 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="40dp"
                     android:layout_marginTop="10dp"
                     android:text="섭취 칼로리 kcal"
                     android:textColor="@color/black"
                     android:textSize="12sp"
+                    app:layout_constraintEnd_toEndOf="@id/meal_today_cal_box_line"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
@@ -152,11 +152,11 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
-                    android:layout_marginEnd="40dp"
                     android:text="권장 칼로리 kcal"
                     android:textColor="@color/black"
                     android:textSize="12sp"
                     app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@id/meal_today_cal_box_line"
                     app:layout_constraintTop_toTopOf="parent" />
 
                 <!--실제 오늘 섭취 칼로리 -->
@@ -193,98 +193,109 @@
                 android:layout_margin="10dp"
                 android:background="@drawable/meal_pie_graph_box">
 
-
-                <!-- 오늘의 탄수화물-->
                 <LinearLayout
                     android:id="@+id/meal_carbohydrate_graph_container"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="20dp"
-                    android:layout_marginTop="10dp"
-                    android:orientation="vertical"
+                    android:orientation="horizontal"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent">
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintEnd_toStartOf="@id/meal_protein_graph_container"
+                    app:layout_constraintBottom_toBottomOf="parent">
 
-                    <TextView
-                        android:id="@+id/meal_carbohydrate_tv"
+
+                    <!-- 오늘의 탄수화물-->
+                    <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_gravity="center_horizontal"
                         android:layout_marginTop="10dp"
-                        android:text="탄수화물(g)"
-                        android:textColor="@color/black"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" />
+                        android:orientation="vertical">
 
-                    <com.github.mikephil.charting.charts.PieChart
-                        android:id="@+id/meal_carbohydrate_pie"
-                        android:layout_width="75dp"
-                        android:layout_height="75dp"
-                        android:layout_gravity="center_horizontal"
-                        android:layout_marginTop="2dp"
-                        android:layout_marginBottom="10dp"
-                        app:layout_constraintDimensionRatio="1:1" />
+                        <TextView
+                            android:id="@+id/meal_carbohydrate_tv"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_horizontal"
+                            android:layout_marginTop="10dp"
+                            android:text="탄수화물(g)"
+                            android:textColor="@color/black"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+
+                        <com.github.mikephil.charting.charts.PieChart
+                            android:id="@+id/meal_carbohydrate_pie"
+                            android:layout_width="75dp"
+                            android:layout_height="75dp"
+                            android:layout_gravity="center_horizontal"
+                            android:layout_marginTop="2dp"
+                            android:layout_marginBottom="10dp"
+                            app:layout_constraintDimensionRatio="1:1" />
+
+                    </LinearLayout>
+
+                    <!--탄수화물과 단백질 사이 line-->
+                    <ImageView
+                        android:id="@+id/meal_carbohydrate_line"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="10dp"
+                        android:layout_gravity="center_vertical"
+                        android:src="@drawable/meal_today_cal_box_line" />
 
                 </LinearLayout>
 
-                <!--탄수화물과 단백질 사이 line-->
-                <ImageView
-                    android:id="@+id/meal_carbohydrate_line"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="10dp"
-                    android:src="@drawable/meal_today_cal_box_line"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toStartOf="@id/meal_protein_graph_container"
-                    app:layout_constraintStart_toEndOf="@id/meal_carbohydrate_graph_container"
-                    app:layout_constraintTop_toTopOf="parent" />
-
-                <!-- 오늘의 단백질-->
                 <LinearLayout
                     android:id="@+id/meal_protein_graph_container"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="20dp"
-                    android:layout_marginTop="10dp"
-                    android:orientation="vertical"
-                    app:layout_constraintStart_toEndOf="@id/meal_carbohydrate_line"
-                    app:layout_constraintTop_toTopOf="parent">
+                    android:orientation="horizontal"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toEndOf="@id/meal_carbohydrate_graph_container"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintEnd_toStartOf="@id/meal_fat_graph_container">
 
-                    <TextView
-                        android:id="@+id/meal_protein_tv"
+                    <!-- 오늘의 단백질-->
+                    <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_gravity="center_horizontal"
                         android:layout_marginTop="10dp"
-                        android:text="단백질(g)"
-                        android:textColor="@color/black"
-                        app:layout_constraintEnd_toEndOf="@id/meal_protein_line"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" />
+                        android:orientation="vertical">
 
-                    <com.github.mikephil.charting.charts.PieChart
-                        android:id="@+id/meal_protein_pie"
-                        android:layout_width="75dp"
-                        android:layout_height="75dp"
-                        android:layout_gravity="center_horizontal"
-                        android:layout_marginTop="2dp"
-                        android:layout_marginBottom="10dp"
-                        app:layout_constraintDimensionRatio="1:1" />
+                        <TextView
+                            android:id="@+id/meal_protein_tv"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_horizontal"
+                            android:layout_marginTop="10dp"
+                            android:text="단백질(g)"
+                            android:textColor="@color/black"
+                            app:layout_constraintEnd_toEndOf="@id/meal_protein_line"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+
+                        <com.github.mikephil.charting.charts.PieChart
+                            android:id="@+id/meal_protein_pie"
+                            android:layout_width="75dp"
+                            android:layout_height="75dp"
+                            android:layout_gravity="center_horizontal"
+                            android:layout_marginTop="2dp"
+                            android:layout_marginBottom="10dp"
+                            app:layout_constraintDimensionRatio="1:1" />
+
+                    </LinearLayout>
+
+                    <!--단백질과 지방 사이 line-->
+                    <ImageView
+                        android:id="@+id/meal_protein_line"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginStart="10dp"
+                        android:src="@drawable/meal_today_cal_box_line" />
 
                 </LinearLayout>
 
-                <!--단백질과 지방 사이 line-->
-                <ImageView
-                    android:id="@+id/meal_protein_line"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="10dp"
-                    android:src="@drawable/meal_today_cal_box_line"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toStartOf="@id/meal_fat_graph_container"
-                    app:layout_constraintStart_toEndOf="@id/meal_protein_graph_container"
-                    app:layout_constraintTop_toTopOf="parent" />
 
                 <!-- 오늘의 지방-->
                 <LinearLayout
@@ -292,11 +303,11 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
-                    android:layout_marginEnd="10dp"
                     android:orientation="vertical"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toEndOf="@id/meal_protein_line"
-                    app:layout_constraintTop_toTopOf="parent">
+                    app:layout_constraintStart_toEndOf="@id/meal_protein_graph_container"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent">
 
                     <TextView
                         android:id="@+id/meal_fat_tv"
@@ -362,7 +373,7 @@
 
                 <LinearLayout
                     android:id="@+id/red_box"
-                    android:layout_width="334dp"
+                    android:layout_width="match_parent"
                     android:layout_height="92dp"
                     android:layout_marginStart="8dp"
                     android:layout_marginTop="5dp"
@@ -417,10 +428,10 @@
                     android:background="@drawable/red_badge"
                     android:padding="5px"
                     android:text="식사시간 지남"
-                    android:visibility="visible"
                     android:textAlignment="center"
                     android:textColor="#fff"
-                    android:textSize="12dp" />
+                    android:textSize="12dp"
+                    android:visibility="visible" />
             </RelativeLayout>
 
             <LinearLayout
@@ -477,11 +488,11 @@
             </LinearLayout>
 
             <LinearLayout
-                android:layout_width="330dp"
+                android:layout_width="match_parent"
                 android:layout_height="92dp"
                 android:layout_marginStart="15dp"
-                android:layout_marginEnd="15dp"
                 android:layout_marginTop="15dp"
+                android:layout_marginEnd="15dp"
                 android:background="@drawable/meal_checklist_see_meal_btn"
                 android:gravity="center_vertical"
                 android:orientation="horizontal"
