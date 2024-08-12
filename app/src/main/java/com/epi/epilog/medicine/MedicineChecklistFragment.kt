@@ -8,6 +8,7 @@ import android.text.SpannableString
 import android.text.Spanned
 import android.text.style.UnderlineSpan
 import android.util.Log
+import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -42,20 +43,24 @@ import java.time.YearMonth
 import java.time.format.DateTimeFormatter
 import java.util.Locale
 
-
 class MedicineChecklistFragment : Fragment() {
 
     private var selectedDate: LocalDate? = LocalDate.now() // 오늘 날짜로 초기화
     private lateinit var weekCalendarView: WeekCalendarView
     private lateinit var subTitle: TextView
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View? {
         val view = inflater.inflate(R.layout.fragment_medicine_checklist, container, false)
 
+        // Toolbar 설정
         val toolbar: Toolbar = view.findViewById(R.id.toolbar)
         (activity as? AppCompatActivity)?.setSupportActionBar(toolbar)
         (activity as? AppCompatActivity)?.supportActionBar?.setDisplayShowTitleEnabled(false)
+
+        val toolbarTitle: TextView = view.findViewById(R.id.toolbar_title)
+        toolbarTitle.text = "복용 약 관리"
 
         weekCalendarView = view.findViewById(R.id.meal_calendarView)
         initWeekCalendarView(view)
@@ -73,15 +78,15 @@ class MedicineChecklistFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
         val alarmTextView = view.findViewById<TextView>(R.id.alarm_text_view)
         val text = "워치에 알람보내기"
         val spannableString = SpannableString(text)
         spannableString.setSpan(UnderlineSpan(), 0, text.length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
         alarmTextView.text = spannableString
 
-    validateToken()
+        validateToken()
     }
+
     private fun validateToken() {
         val token = getTokenFromSession()
         RetrofitClient.retrofitService.testApi("Bearer $token").enqueue(object : Callback<Void> {
@@ -113,9 +118,6 @@ class MedicineChecklistFragment : Fragment() {
         return sharedPreferences?.getString("AuthToken", "") ?: ""
     }
 
-
-
-
     private fun selectDate(date: LocalDate) {
         selectedDate = date
         weekCalendarView.notifyDateChanged(date)
@@ -146,11 +148,8 @@ class MedicineChecklistFragment : Fragment() {
 
     private fun updateChecklistUI(checklist: List<ChecklistItem>) {
         val medicineContentLayout = view?.findViewById<LinearLayout>(R.id.medicine_content_layout)
-        medicineContentLayout?.removeAllViews() // Clears any existing views
+        medicineContentLayout?.removeAllViews()
 
-        // Adding the header again at the top
-        val headerView = layoutInflater.inflate(R.layout.fragment_medicine_checklist_header, medicineContentLayout, false)
-        medicineContentLayout?.addView(headerView)
 
         val now = LocalDateTime.now()
         val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss", Locale.getDefault())
@@ -168,18 +167,13 @@ class MedicineChecklistFragment : Fragment() {
             medicineCheckbox.isChecked = item.isComplete
 
             itemView.background = when {
-                item.isComplete -> ContextCompat.getDrawable(requireContext(),
-                    R.drawable.background_yellow
-                )
-                now.isAfter(goalTime) -> ContextCompat.getDrawable(requireContext(),
-                    R.drawable.background_red
-                )
+                item.isComplete -> ContextCompat.getDrawable(requireContext(), R.drawable.background_yellow)
+                now.isAfter(goalTime) -> ContextCompat.getDrawable(requireContext(), R.drawable.background_red)
                 else -> ContextCompat.getDrawable(requireContext(), R.drawable.medicine_background)
             }
 
             applyStrikeThrough(medicineName, medicineTime, item.isComplete)
 
-            // Show BottomSheet on item click
             itemView.setOnClickListener {
                 val bottomSheetFragment = MedicineBottomSheetFragment()
                 bottomSheetFragment.show(parentFragmentManager, bottomSheetFragment.tag)
@@ -204,15 +198,9 @@ class MedicineChecklistFragment : Fragment() {
         }
     }
 
-
-
     private fun initWeekCalendarView(view: View) {
-        setupDayBinder()
-        setupCalendarView()
-        setupDayTitles(view)
-    }
+        Log.d("MedicineChecklistFragment", "initWeekCalendarView 시작")
 
-    private fun setupDayBinder() {
         weekCalendarView.dayBinder = object : WeekDayBinder<DayViewContainer> {
             override fun create(view: View) = DayViewContainer(view)
 
@@ -228,9 +216,7 @@ class MedicineChecklistFragment : Fragment() {
                 }
             }
         }
-    }
 
-    private fun setupCalendarView() {
         val currentDate = LocalDate.now()
         val currentMonth = YearMonth.now()
         val startDate = currentMonth.minusMonths(100).atStartOfMonth()
@@ -239,18 +225,29 @@ class MedicineChecklistFragment : Fragment() {
 
         weekCalendarView.setup(startDate, endDate, daysOfWeek.first())
         weekCalendarView.scrollToWeek(currentDate)
-    }
 
-    private fun setupDayTitles(view: View) {
         val titlesContainer = view.findViewById<ViewGroup>(R.id.app_calendar_day_titles_container)
-        titlesContainer?.let { container ->
-            val daysOfWeek = daysOfWeek(firstDayOfWeek = DayOfWeek.SUNDAY)
-            container.children.toList().map { it as TextView }.forEachIndexed { index, textView ->
-                val dayOfWeek = daysOfWeek[index]
-                val title = dayOfWeek.getDisplayName(java.time.format.TextStyle.SHORT, Locale.getDefault())
-                textView.text = title
-            }
-        } ?: Log.e("MedicineChecklistFragment", "")
+        if (titlesContainer == null) {
+            Log.e("MedicineChecklistFragment", "titlesContainer is null")
+        } else {
+            Log.d("MedicineChecklistFragment", "titlesContainer is not null")
+        }
+
+        titlesContainer?.children?.map { it as TextView }?.forEachIndexed { index, textView ->
+            val dayOfWeek = daysOfWeek[index]
+            val title = dayOfWeek.getDisplayName(java.time.format.TextStyle.SHORT, Locale.getDefault())
+            textView.text = title
+            textView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 6f)
+
+            val layoutParams = textView.layoutParams as ViewGroup.MarginLayoutParams
+            layoutParams.marginStart = 5
+            layoutParams.topMargin = 5
+            textView.layoutParams = layoutParams
+        } ?: run {
+            Toast.makeText(context, "Titles container not found", Toast.LENGTH_SHORT).show()
+        }
+
+        Log.d("MedicineChecklistFragment", "initWeekCalendarView 끝")
     }
 
     private fun onDateSelected(date: LocalDate) {

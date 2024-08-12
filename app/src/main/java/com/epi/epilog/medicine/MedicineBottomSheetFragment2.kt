@@ -34,7 +34,7 @@ class MedicineBottomSheetFragment2 : BottomSheetDialogFragment() {
             val selectedHour = binding.timePicker.hour
             val selectedMinute = binding.timePicker.minute
             // 시간 설정 처리
-            Toast.makeText(context, "Selected time: $selectedHour:$selectedMinute", Toast.LENGTH_SHORT).show()
+            Toast.makeText(context, "선택된 시간: $selectedHour:$selectedMinute", Toast.LENGTH_SHORT).show()
             dismiss()
         }
 

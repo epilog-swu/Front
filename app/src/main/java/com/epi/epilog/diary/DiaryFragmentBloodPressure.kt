@@ -1,4 +1,4 @@
-package com.epi.epilog
+package com.epi.epilog.diary
 
 import android.os.Bundle
 import android.util.Log
@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import android.widget.EditText
 import androidx.fragment.app.Fragment
 import api.DiaryFragment
+import com.epi.epilog.R
 import org.json.JSONException
 import org.json.JSONObject
 

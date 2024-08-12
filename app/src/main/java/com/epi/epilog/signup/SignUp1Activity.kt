@@ -1,4 +1,4 @@
-package com.epi.epilog
+package com.epi.epilog.signup
 
 import android.content.Intent
 import android.os.Bundle
@@ -12,6 +12,8 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
+import com.epi.epilog.ApiResponse
+import com.epi.epilog.R
 import com.epi.epilog.api.RetrofitClient
 import retrofit2.Call
 import retrofit2.Callback

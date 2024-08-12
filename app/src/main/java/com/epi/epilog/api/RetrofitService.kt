@@ -69,11 +69,28 @@ interface RetrofitService {
     @GET("/auth/test")
     fun testApi(@Header("Authorization") authToken: String): Call<Void>
 
+    //일지 등록 API
     @POST("api/logs")
     fun addDiary(
         @Header("Authorization") token: String,
         @Body request: DiaryRequest
     ) : Call<ApiResponse>
+
+    //메인 캘린더 월(일)별 일지 개수 조회 API
+    @Headers("Content-Type: application/json")
+    @GET("api/logs/count")
+    fun getDiaryCount(
+        @Query("date") date: String,
+        @Header("Authorization") token: String
+    ) : Call<DiaryCountResponse>
+
+    //메인 캘린더 일자별 일지 icon 조회 API
+    @Headers("Content-Type: application/json")
+    @GET("api/logs")
+    fun getDiaryIcon(
+        @Query("date") date: String,
+        @Header("Authorization") token: String
+    ) : Call<DiaryIconResponse>
 
     //메인 그래프 2 정보 얻어오기
     @Headers("Content-Type: application/json")
@@ -83,6 +100,7 @@ interface RetrofitService {
         @Header("Authorization") token: String
     ): Call<GraphWeightBMIResponse>
 
+    //메인 그래프 1 정보 얻어오기
     @Headers("Content-Type: application/json")
     @GET("api/logs/bloodsugar")
     fun getGraphBloodSugar(
@@ -90,6 +108,7 @@ interface RetrofitService {
         @Header("Authorization") token: String
     ) : Call<GraphBloodSugarResponse>
 
+    //메인 그래프 TV 정보 얻어오기
     @Headers("Content-Type: application/json")
     @GET("api/logs/bloodsugar/average")
     fun getBloodSugarAverage(
@@ -108,6 +127,32 @@ interface RetrofitService {
 
 }
 
+//일자별 icon 조회 data class
+data class DiaryIconResponse(
+    val date: String?,
+    val count: Int,
+    val logs: List<titleKeyWordEntry>
+)
+//일자별 시간 - 키워드 Entry
+data class titleKeyWordEntry(
+    val id: Int,
+    val title: String,
+    val keyword: List<String>
+)
+
+//월(일)별 일지 조회 data class
+data class DiaryCountResponse(
+    val year: Int,
+    val month: Int,
+    val day: List<dayEntry>
+)
+
+//일별 일지 개수 조회를 위한Entry
+data class dayEntry(
+    val date: String?,
+    val count: Int
+)
+//일지 등록 data class
 data class DiaryRequest(
     val date: String?,
     val occurenceType: String?,
@@ -122,12 +167,13 @@ data class DiaryRequest(
     val mood: List<MoodEntry>?
 )
 
-
+//일지 등록 , 운동 entry
 data class ExerciseEntry(
     val type: String?,
     val details: String?
 )
 
+//일지 등록 , 기분 entry
 data class MoodEntry(
     val type: String?,
     val details: String?
@@ -141,8 +187,6 @@ data class GraphBloodSugarAverageResponse(
     @SerializedName("average") val average: Float,
     @SerializedName("preAverage") val preAverage: Float,
     @SerializedName("postAverage") val postAverage: Float
-
-
 )
 
 data class GraphBloodSugarResponse(
