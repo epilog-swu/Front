@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--나중에 식단보기를 클릭하면 보여지는 아이템 리스트들(상세정보)-->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/meal_detail_total"
+    android:id="@+id/diary_detail_bloodsugar"
     android:layout_width="310dp"
     android:layout_height="190dp"
     android:orientation="vertical"
