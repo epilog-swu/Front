@@ -1,4 +1,4 @@
-package com.epi.epilog
+package com.epi.epilog.signup
 
 import android.content.Intent
 import android.os.Bundle
@@ -12,6 +12,8 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
+import com.epi.epilog.ApiResponse
+import com.epi.epilog.R
 import com.epi.epilog.api.RetrofitClient
 import retrofit2.Call
 import retrofit2.Callback
@@ -107,34 +109,35 @@ class signUp1Activity : AppCompatActivity() {
         val userId = editTextText.text.toString().trim()
         RetrofitClient.retrofitService.validateId(userId).enqueue(object : Callback<ApiResponse> {
             override fun onResponse(call: Call<ApiResponse>, response: Response<ApiResponse>) {
+                Log.d("API_RESPONSE", "Response: $response")
                 if (response.isSuccessful) {
                     val body = response.body()
                     Log.d("API_RESPONSE", "Response body: $body")
-
                     if (body?.success == true) {
                         proceedToNextStep()
                     } else {
                         idErrorTextView.visibility = View.VISIBLE
-                        Toast.makeText(
-                            this@signUp1Activity,
-                            body?.message ?: "아이디 중복 확인 실패",
-                            Toast.LENGTH_SHORT
-                        ).show()
+                        Toast.makeText(this@signUp1Activity, body?.message ?: "ID already exists", Toast.LENGTH_SHORT).show()
                     }
                 } else {
-                    Toast.makeText(this@signUp1Activity, "아이디 중복 확인 실패", Toast.LENGTH_SHORT).show()
+                    Log.e("API_ERROR", "Error response: ${response.errorBody()?.string()}")
+                    Log.e("API_ERROR", "Error code: ${response.code()}")
+                    Toast.makeText(this@signUp1Activity, "ID validation failed with code ${response.code()}", Toast.LENGTH_SHORT).show()
                 }
             }
 
             override fun onFailure(call: Call<ApiResponse>, t: Throwable) {
+                // Log exception
+                Log.e("API_FAILURE", "Network or server failure: ${t.localizedMessage}")
                 Toast.makeText(
                     this@signUp1Activity,
-                    "아이디 중복 확인 실패: ${t.message}",
+                    "Network or server error: ${t.message}",
                     Toast.LENGTH_SHORT
                 ).show()
             }
         })
     }
+
 
     private fun proceedToNextStep() {
         val loginId = editTextText.text.toString().trim()

@@ -14,12 +14,12 @@ import com.epi.epilog.api.RetrofitClient
 import com.epi.epilog.api.titleKeyWordEntry
 import com.epi.epilog.databinding.FragmentBsdNodiaryBinding
 import com.epi.epilog.databinding.FragmentBsdYesDiaryBinding
+import com.epi.epilog.diary.DiaryEditActivity
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-import java.time.LocalDate
 
 class BottomSheetFragment : BottomSheetDialogFragment() {
 

@@ -1,6 +1,9 @@
 package com.epi.epilog.meal
 
 import android.os.Bundle
+import android.text.SpannableString
+import android.text.Spanned
+import android.text.style.UnderlineSpan
 import android.util.Log
 import android.util.TypedValue
 import android.view.LayoutInflater
@@ -37,6 +40,11 @@ class MealChecklistFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        val alarmTextView = view.findViewById<TextView>(R.id.alarm_text_view)
+        val text = "워치에 알람보내기"
+        val spannableString = SpannableString(text)
+        spannableString.setSpan(UnderlineSpan(), 0, text.length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+        alarmTextView.text = spannableString
 
         weekCalendarView = view.findViewById(R.id.meal_calendarView)
         if (weekCalendarView == null) {
@@ -46,7 +54,6 @@ class MealChecklistFragment : Fragment() {
         }
 
         initWeekCalendarView(view)
-        //initClickListeners(view)
     }
 
     private fun initWeekCalendarView(view: View) {
@@ -57,13 +64,17 @@ class MealChecklistFragment : Fragment() {
 
             override fun bind(container: DayViewContainer, data: WeekDay) {
                 container.textView.text = data.date.dayOfMonth.toString()
-                container.textView.setOnClickListener {
-                    onDateSelected(data.date)
-                }
-                if (data.date == selectedDate) {
+
+                if (data.date == LocalDate.now()) {
+                    container.textView.setBackgroundResource(R.drawable.app_week_cal_selected_date) // Purple background for today
+                } else if (data.date == selectedDate) {
                     container.textView.setBackgroundResource(R.drawable.app_week_cal_selected_date)
                 } else {
                     container.textView.setBackgroundResource(0)
+                }
+
+                container.textView.setOnClickListener {
+                    onDateSelected(data.date)
                 }
             }
         }
@@ -78,12 +89,6 @@ class MealChecklistFragment : Fragment() {
         weekCalendarView.scrollToWeek(currentDate)
 
         val titlesContainer = view.findViewById<ViewGroup>(R.id.app_calendar_day_titles_container)
-        if (titlesContainer == null) {
-            Log.e("MealChecklistFragment", "titlesContainer is null")
-        } else {
-            Log.d("MealChecklistFragment", "titlesContainer is not null")
-        }
-
         titlesContainer?.children?.map { it as TextView }?.forEachIndexed { index, textView ->
             val dayOfWeek = daysOfWeek[index]
             val title = dayOfWeek.getDisplayName(java.time.format.TextStyle.SHORT, Locale.getDefault())
@@ -101,43 +106,18 @@ class MealChecklistFragment : Fragment() {
         Log.d("MealChecklistFragment", "initWeekCalendarView 끝")
     }
 
-    //클릭 리스너 모음
-//    private fun initClickListeners(view: View) {
-//        val calculateOnedayEnergyLayout = view.findViewById<LinearLayout>(R.id.calculate_oneday_energy_layout)
-//        calculateOnedayEnergyLayout.setOnClickListener {
-//            val intent = Intent(context, ActivityMealManageSex::class.java)
-//            startActivity(intent)
-//        }
-//    }
-
     private fun onDateSelected(date: LocalDate) {
         val currentSelection = selectedDate
-        if (currentSelection == date) {
-            selectedDate = null
-        } else {
-            selectedDate = date
-            Toast.makeText(context, "선택된 날짜: $date", Toast.LENGTH_SHORT).show()
-            onDateSelectedCallback(date)
-        }
+        selectedDate = if (currentSelection == date) null else date
 
         weekCalendarView.notifyDateChanged(date)
         if (currentSelection != null) {
             weekCalendarView.notifyDateChanged(currentSelection)
         }
-    }
 
-    private fun onDateSelectedCallback(date: LocalDate) {
-        // Implement your callback logic here
-    }
-
-    fun getSelectedDate(): LocalDate? {
-        return selectedDate
-    }
-
-    fun selectDate(date: LocalDate) {
-        selectedDate = date
-        weekCalendarView.notifyDateChanged(date)
         Toast.makeText(context, "선택된 날짜: $date", Toast.LENGTH_SHORT).show()
+
+        // Implement any additional callback logic here
     }
 
     private class DayViewContainer(view: View) : ViewContainer(view) {
