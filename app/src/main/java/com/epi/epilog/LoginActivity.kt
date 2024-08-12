@@ -21,8 +21,6 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.epi.epilog.api.LoginRequest
 import com.epi.epilog.api.RetrofitService
-import com.epi.epilog.api.TokenData
-import com.google.firebase.messaging.FirebaseMessaging
 import com.google.gson.GsonBuilder
 import retrofit2.Call
 import retrofit2.Callback
@@ -110,68 +108,25 @@ class LoginActivity : AppCompatActivity() {
                     val responseBody = response.body()
                     saveTokenToSession(responseBody)
                     Log.d("LoginActivity", "Token: $responseBody")
-
-                    // FCM 토큰을 서버에 전송
-                    FirebaseMessaging.getInstance().token.addOnCompleteListener { task ->
-                        if (!task.isSuccessful) {
-                            Log.w("FCM", "Fetching FCM registration token failed", task.exception)
-                            // 로그인 성공 후 바로 메인 페이지로 이동
-                            navigateToMainActivity()
-                            return@addOnCompleteListener
-                        }
-
-                        val fcmToken = task.result
-                        Log.d("FCM", "FCM Token: $fcmToken")
-
-                        sendTokenToServer(responseBody, fcmToken)
-                    }
+                    navigateToMainActivity()
                 } else {
-                    Toast.makeText(this@LoginActivity, "회원가입을 먼저 해주세요", Toast.LENGTH_SHORT).show()
+                    // 로그인 실패 시 응답 코드 로그 출력
+                    Log.d("LoginActivity", "Login failed with HTTP status code: ${response.code()}")
+                    Toast.makeText(this@LoginActivity, "로그인 실패: HTTP status code ${response.code()}", Toast.LENGTH_SHORT).show()
                 }
             }
 
             override fun onFailure(call: Call<String>, t: Throwable) {
+                Log.d("LoginActivity", "로그인 실패: ${t.message}")
                 Toast.makeText(this@LoginActivity, "로그인 실패: ${t.message}", Toast.LENGTH_SHORT).show()
             }
         })
     }
 
+
     private fun saveTokenToSession(token: String?) {
         val sharedPreferences = getSharedPreferences("AppPrefs", Context.MODE_PRIVATE)
         sharedPreferences.edit().putString("AuthToken", token).apply()
-    }
-
-    private fun sendTokenToServer(authToken: String?, fcmToken: String) {
-        if (authToken.isNullOrEmpty()) {
-            Log.d("FCM", "Auth token is missing")
-            navigateToMainActivity()
-            return
-        }
-
-        val tokenData = TokenData(token = fcmToken)
-        val call = retrofitService.postToken("Bearer $authToken", tokenData)
-        call.enqueue(object : Callback<ApiResponse> {
-            override fun onResponse(call: Call<ApiResponse>, response: Response<ApiResponse>) {
-                if (response.isSuccessful) {
-                    val tokenResponse = response.body()
-                    if (tokenResponse?.success == true) {
-                        Log.d("FCM", "Token saved successfully on the server: ${tokenResponse.message}")
-                    } else {
-                        Log.d("FCM", "Failed to save token on the server: ${tokenResponse?.message}")
-                    }
-                } else {
-                    Log.d("FCM", "Error saving token on the server: ${response.errorBody()?.string()}")
-                }
-                // 로그인 성공 후 바로 메인 페이지로 이동
-                navigateToMainActivity()
-            }
-
-            override fun onFailure(call: Call<ApiResponse>, t: Throwable) {
-                Log.d("LoginActivity", "Failed to send token to server: ${t.message}")
-                // 로그인 성공 후 바로 메인 페이지로 이동
-                navigateToMainActivity()
-            }
-        })
     }
 
     private fun navigateToMainActivity() {

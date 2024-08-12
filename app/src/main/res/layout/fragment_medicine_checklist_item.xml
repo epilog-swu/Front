@@ -4,7 +4,10 @@
     android:orientation="horizontal"
     android:gravity="center_vertical"
     android:padding="40px"
-    android:layout_marginBottom="15dp">
+    android:layout_marginStart="12dp"
+    android:layout_marginEnd="12dp"
+    android:layout_marginTop="10dp"
+    android:layout_marginBottom="10dp">
 
     <ImageView
         android:layout_width="57dp"
@@ -25,7 +28,7 @@
             android:text="Time"
             android:textColor="#000"
             android:textSize="16dp"
-            android:textStyle="bold" />
+           />
 
         <TextView
             android:id="@+id/medicine_name"
@@ -34,7 +37,7 @@
             android:text="Medicine Name"
             android:textColor="#000"
             android:textSize="14dp"
-            android:textStyle="bold" />
+          />
     </LinearLayout>
 
     <CheckBox

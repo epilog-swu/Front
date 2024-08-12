@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/fragment_medicine_checklist"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <!-- Toolbar -->
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"
         android:layout_width="0dp"
@@ -27,7 +29,7 @@
             android:textSize="18sp" />
     </androidx.appcompat.widget.Toolbar>
 
-    <!-- 달력 -->
+    <!-- Calendar Layout -->
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/weekcalendar_layout"
         android:layout_width="match_parent"
@@ -61,6 +63,7 @@
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
+    <!-- ScrollView for medicine checklist -->
     <ScrollView
         android:id="@+id/scrollView"
         android:layout_width="match_parent"
@@ -68,8 +71,7 @@
         app:layout_constraintTop_toBottomOf="@id/weekcalendar_layout"
         app:layout_constraintBottom_toTopOf="@id/buttonLayout"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        tools:ignore="DuplicateIds">
+        app:layout_constraintEnd_toEndOf="parent">
 
         <LinearLayout
             android:id="@+id/medicine_content_layout"
@@ -77,13 +79,56 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <include
+
+            <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
                 android:id="@+id/header_view"
-                layout="@layout/fragment_medicine_checklist_header" />
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="오늘 먹어야 하는\n약을 확인해보세요"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginStart="40px"
+                    android:textColor="#000"
+                    android:textSize="18dp"
+                    android:textStyle="bold"/>
+
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="14dp"
+                    android:layout_marginStart="13dp"
+                    android:gravity="center"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="복용이 확인되지 않은 약이 있어요"
+                        android:textColor="@color/덜진한회색"
+                        android:textStyle="bold"
+                        android:textSize="10dp" />
+
+                    <TextView
+                        android:id="@+id/alarm_text_view"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="워치에 알람보내기"
+                        android:layout_marginStart="5dp"
+                        android:textColor="@color/덜진한회색"
+                        android:textStyle="bold"
+                        android:textSize="10dp" />
+
+                </LinearLayout>
+            </LinearLayout>
 
         </LinearLayout>
     </ScrollView>
 
+    <!-- Bottom buttons -->
     <LinearLayout
         android:id="@+id/buttonLayout"
         android:layout_width="match_parent"
@@ -93,6 +138,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent">
+
         <Button
             android:id="@+id/add_existing_medicine_button"
             android:layout_width="310dp"
@@ -103,10 +149,8 @@
             android:gravity="center"
             android:text="기존 약 관리하기"
             android:textColor="@color/메인보라"
-            android:textSize="18dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
+            android:textSize="18dp" />
+
         <Button
             android:id="@+id/add_medicine_button"
             android:layout_width="310dp"
@@ -117,10 +161,7 @@
             android:gravity="center"
             android:text="약 추가하기"
             android:textColor="@color/white"
-            android:textSize="18dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
+            android:textSize="18dp" />
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

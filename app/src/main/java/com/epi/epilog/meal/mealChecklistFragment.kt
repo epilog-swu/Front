@@ -1,6 +1,9 @@
 package com.epi.epilog.meal
 
 import android.os.Bundle
+import android.text.SpannableString
+import android.text.Spanned
+import android.text.style.UnderlineSpan
 import android.util.Log
 import android.util.TypedValue
 import android.view.LayoutInflater
@@ -37,6 +40,11 @@ class MealChecklistFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        val alarmTextView = view.findViewById<TextView>(R.id.alarm_text_view) // Assuming you have assigned an ID to the TextView
+        val text = "워치에 알람보내기"
+        val spannableString = SpannableString(text)
+        spannableString.setSpan(UnderlineSpan(), 0, text.length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+        alarmTextView.text = spannableString
 
         weekCalendarView = view.findViewById(R.id.meal_calendarView)
         if (weekCalendarView == null) {

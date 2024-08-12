@@ -1,4 +1,4 @@
-package com.epi.epilog
+package com.epi.epilog.medicine
 
 import android.app.DatePickerDialog
 import android.content.Context
@@ -14,6 +14,9 @@ import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
+import com.epi.epilog.ApiResponse
+import com.epi.epilog.MainActivity
+import com.epi.epilog.R
 import com.epi.epilog.api.Medication
 import com.epi.epilog.api.MedicationRequest
 import com.epi.epilog.api.RetrofitService
@@ -168,7 +171,9 @@ class MedicineAddModifyActivity : AppCompatActivity() {
     }
 
     private fun getSelectedDaysOfWeek(): List<String> {
-        return daysOfWeekTextViews.filter { it.background.constantState == ContextCompat.getDrawable(this, R.drawable.light_purple_shape_2)?.constantState }
+        return daysOfWeekTextViews.filter { it.background.constantState == ContextCompat.getDrawable(this,
+            R.drawable.light_purple_shape_2
+        )?.constantState }
             .map { it.text.toString() }
     }
 
@@ -276,8 +281,12 @@ class MedicineAddModifyActivity : AppCompatActivity() {
 
         daysOfWeekTextViews.forEach { dayTextView ->
             dayTextView.setOnClickListener {
-                val selectedBackground: Drawable? = ContextCompat.getDrawable(this, R.drawable.light_purple_shape_2)
-                val defaultBackground: Drawable? = ContextCompat.getDrawable(this, R.drawable.light_purple_shape)
+                val selectedBackground: Drawable? = ContextCompat.getDrawable(this,
+                    R.drawable.light_purple_shape_2
+                )
+                val defaultBackground: Drawable? = ContextCompat.getDrawable(this,
+                    R.drawable.light_purple_shape
+                )
 
                 dayTextView.background = if (dayTextView.background.constantState == selectedBackground?.constantState) {
                     defaultBackground

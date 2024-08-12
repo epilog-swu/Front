@@ -102,15 +102,19 @@
                     android:layout_height="wrap_content"
                     android:text="식사가 확인되지 않았어요"
                     android:textColor="@color/덜진한회색"
+                    android:textStyle="bold"
                     android:textSize="10dp" />
 
                 <TextView
+                    android:id="@+id/alarm_text_view"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="5dp"
                     android:text="워치에 알람보내기"
+                    android:layout_marginStart="5dp"
                     android:textColor="@color/덜진한회색"
+                    android:textStyle="bold"
                     android:textSize="10dp" />
+
             </LinearLayout>
 
             <!--오늘의 섭취/권장 칼로리-->
