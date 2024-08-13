@@ -354,7 +354,7 @@ class ActivityDiaryShowDetail : AppCompatActivity() {
 
 
     private fun getTokenFromSession(): String {
-        val sharedPreferences = getSharedPreferences("AppPrefs", Context.MODE_PRIVATE)
+        val sharedPreferences = getSharedPreferences("AppPrefs", MODE_PRIVATE)
         return "Bearer ${sharedPreferences.getString("AuthToken", "") ?: ""}"
     }
 
@@ -671,5 +671,4 @@ class ActivityDiaryShowDetail : AppCompatActivity() {
 
 
 }
-
 
