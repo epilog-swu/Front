@@ -1,4 +1,4 @@
-package com.epi.epilog.signup
+package com.epi.epilog
 
 import android.content.Context
 import android.content.Intent
@@ -11,7 +11,6 @@ import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import com.epi.epilog.R
 import com.epi.epilog.api.Medication
 import com.epi.epilog.api.RetrofitClient
 import com.epi.epilog.api.SignUpRequest
@@ -73,7 +72,7 @@ class signUp5Activity : AppCompatActivity() {
 
                         Log.d("signUp5Activity", "전달 값 : loginId=$loginId, password=$password, name=$name, stature=$stature, weight=$weight, gender=$gender, protectorName=$protectorName, protectorPhone=$protectorPhone, medications=$medications")
 
-                        val intent = Intent(this@signUp5Activity, com.epi.epilog.startActivity::class.java)
+                        val intent = Intent(this@signUp5Activity, startActivity::class.java)
                         startActivity(intent)
                         finish()
                     } else {

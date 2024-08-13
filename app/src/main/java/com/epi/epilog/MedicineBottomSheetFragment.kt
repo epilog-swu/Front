@@ -1,10 +1,9 @@
-package com.epi.epilog.medicine
+package com.epi.epilog
 
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.epi.epilog.R
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.epi.epilog.databinding.FragmentMedicineSelectBottomBinding

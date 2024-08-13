@@ -1,11 +1,11 @@
-package com.epi.epilog.medicine
+package com.epi.epilog
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import com.epi.epilog.R
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.epi.epilog.databinding.FragmentMedicineSelectBottom2Binding
@@ -34,7 +34,7 @@ class MedicineBottomSheetFragment2 : BottomSheetDialogFragment() {
             val selectedHour = binding.timePicker.hour
             val selectedMinute = binding.timePicker.minute
             // 시간 설정 처리
-            Toast.makeText(context, "선택된 시간: $selectedHour:$selectedMinute", Toast.LENGTH_SHORT).show()
+            Toast.makeText(context, "Selected time: $selectedHour:$selectedMinute", Toast.LENGTH_SHORT).show()
             dismiss()
         }
 

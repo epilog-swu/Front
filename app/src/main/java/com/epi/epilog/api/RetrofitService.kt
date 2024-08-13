@@ -17,7 +17,6 @@ import retrofit2.http.Query
 
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
-import retrofit2.http.Streaming
 
 
 object RetrofitClient {
@@ -37,29 +36,29 @@ object RetrofitClient {
 
 interface RetrofitService {
     @Headers("Content-Type: application/json")
-    @POST("/api/auth/login")
+    @POST("com/epi/epilog/api/auth/login")
     fun login(@Body request: LoginRequest): Call<String>
 
     @Headers("Content-Type: application/json")
-    @POST("/api/auth/signup")
+    @POST("/com/epi/epilog/api/auth/signup")
     fun signUp(@Body request: SignUpRequest): Call<SignUpResponse>
 
     @Headers("Content-Type: application/json")
-    @GET("/api/auth/validation")
+    @GET("com/epi/epilog/api/auth/validation")
     fun validateId(@Query("id") userId: String): Call<ApiResponse>
 
     @Headers("Content-Type: application/json")
-    @GET("/api/medicines")
+    @GET("com/epi/epilog/api/medicines")
     fun getMedicationChecklist(@Query("date") date: String, @Header("Authorization") token: String): Call<MedicationChecklistResponse>
 
-    @POST("/api/fcm/token")
+    @POST("/com/epi/epilog/api/fcm/token")
     fun postToken(
         @Header("Authorization") authToken:  String,
         @Body tokenData: TokenData
     ): Call<ApiResponse>
 
     @Headers("Content-Type: application/json")
-    @POST("/api/medications")
+    @POST("com/epi/epilog/api/medications")
     fun addMedication(
         @Header("Authorization") token: String,
         @Body request: MedicationRequest
@@ -116,14 +115,6 @@ interface RetrofitService {
         @Header("Authorization") token: String
     ):Call<GraphBloodSugarAverageResponse>
 
-    @Streaming
-    @GET("/api/logs/convert")
-    fun downloadPDF(
-        @Query("start") startDate: String,
-        @Query("end") endDate: String,
-        @Header("Authorization") authToken: String,
-        @Header("Content-Type") contentType: String = "application/pdf"
-    ): Call<ResponseBody>
 
 }
 

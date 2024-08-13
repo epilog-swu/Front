@@ -1,4 +1,4 @@
-package com.epi.epilog.diary
+package com.epi.epilog
 
 import android.os.Bundle
 import android.util.Log
@@ -10,7 +10,6 @@ import android.widget.EditText
 import android.widget.RelativeLayout
 import androidx.fragment.app.Fragment
 import api.DiaryFragment
-import com.epi.epilog.R
 import org.json.JSONArray
 import org.json.JSONException
 import org.json.JSONObject
@@ -45,24 +44,12 @@ class DiaryFragmentExercise : Fragment(), DiaryFragment {
 
     private fun setUpRelativeLayouts(view: View) {
         val relativeLayouts = listOf(
-            view.findViewById<RelativeLayout>(R.id.checkbox_layout_walk) to view.findViewById<CheckBox>(
-                R.id.checkbox_walk
-            ),
-            view.findViewById<RelativeLayout>(R.id.checkbox_layout_stretching) to view.findViewById<CheckBox>(
-                R.id.checkbox_stretching
-            ),
-            view.findViewById<RelativeLayout>(R.id.checkbox_layout_yoga) to view.findViewById<CheckBox>(
-                R.id.checkbox_yoga
-            ),
-            view.findViewById<RelativeLayout>(R.id.checkbox_layout_dance) to view.findViewById<CheckBox>(
-                R.id.checkbox_dance
-            ),
-            view.findViewById<RelativeLayout>(R.id.checkbox_layout_swim) to view.findViewById<CheckBox>(
-                R.id.checkbox_swim
-            ),
-            view.findViewById<RelativeLayout>(R.id.checkbox_layout_direct_input) to view.findViewById<CheckBox>(
-                R.id.checkbox_direct_input
-            )
+            view.findViewById<RelativeLayout>(R.id.checkbox_layout_walk) to view.findViewById<CheckBox>(R.id.checkbox_walk),
+            view.findViewById<RelativeLayout>(R.id.checkbox_layout_stretching) to view.findViewById<CheckBox>(R.id.checkbox_stretching),
+            view.findViewById<RelativeLayout>(R.id.checkbox_layout_yoga) to view.findViewById<CheckBox>(R.id.checkbox_yoga),
+            view.findViewById<RelativeLayout>(R.id.checkbox_layout_dance) to view.findViewById<CheckBox>(R.id.checkbox_dance),
+            view.findViewById<RelativeLayout>(R.id.checkbox_layout_swim) to view.findViewById<CheckBox>(R.id.checkbox_swim),
+            view.findViewById<RelativeLayout>(R.id.checkbox_layout_direct_input) to view.findViewById<CheckBox>(R.id.checkbox_direct_input)
         )
 
         for ((layout, checkBox) in relativeLayouts) {

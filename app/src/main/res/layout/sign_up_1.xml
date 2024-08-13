@@ -5,7 +5,7 @@
     android:id="@+id/sign_up_1"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".signup.signUp1Activity">
+    tools:context=".signUp1Activity">
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"

@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="오늘 먹어야 하는\n약을 확인해보세요"
+        android:layout_marginTop="10dp"
+        android:layout_marginStart="40px"
+        android:textColor="#000"
+        android:textSize="18dp"
+        android:textStyle="bold"/>
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="복용이 확인되지 않은 약이 있어요 워치에 알람보내기"
+        android:layout_marginTop="5dp"
+        android:layout_marginStart="40px"
+        android:layout_marginBottom="20dp"
+        android:textColor="@color/덜진한회색"
+        android:textSize="10dp"
+        android:textStyle="bold"/>
+</LinearLayout>

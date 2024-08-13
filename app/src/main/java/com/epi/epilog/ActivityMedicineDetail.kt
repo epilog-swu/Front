@@ -1,4 +1,4 @@
-package com.epi.epilog.medicine
+package com.epi.epilog
 
 class ActivityMedicineDetail {
 }

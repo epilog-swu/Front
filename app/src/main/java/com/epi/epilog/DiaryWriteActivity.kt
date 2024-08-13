@@ -1,4 +1,4 @@
-package com.epi.epilog.diary
+package com.epi.epilog
 
 import android.app.Activity
 import android.content.Context
@@ -12,16 +12,12 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.Fragment
 import api.DiaryFragment
-import com.epi.epilog.ActivityShowFailDialog
-import com.epi.epilog.ActivityShowSuccessDialog
-import com.epi.epilog.ApiResponse
-import com.epi.epilog.MainActivity
-import com.epi.epilog.R
 import com.epi.epilog.api.DiaryRequest
 import com.epi.epilog.api.ExerciseEntry
 import com.epi.epilog.api.MoodEntry
 import com.epi.epilog.api.RetrofitService
 import com.google.android.material.tabs.TabLayout
+import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import org.json.JSONArray
 import org.json.JSONObject

@@ -1,4 +1,4 @@
-package com.epi.epilog.diary
+package com.epi.epilog
 
 import android.content.Intent
 import android.os.Bundle
@@ -8,7 +8,6 @@ import android.widget.Button
 import android.widget.GridLayout
 import android.widget.TimePicker
 import androidx.appcompat.app.AppCompatActivity
-import com.epi.epilog.R
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale

@@ -1,24 +1,16 @@
 package com.epi.epilog
 
-import android.content.Context
-import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import androidx.viewpager2.widget.ViewPager2
-import com.epi.epilog.api.RetrofitClient.retrofitService
 import com.epi.epilog.databinding.ActivityMainBinding
 import com.epi.epilog.meal.MealChecklistFragment
 import com.ismaeldivita.chipnavigation.ChipNavigationBar
-import com.epi.epilog.medicine.MedicineChecklistFragment
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
 
 
 class MainActivity : AppCompatActivity() {
@@ -32,7 +24,6 @@ class MainActivity : AppCompatActivity() {
 
         setContentView(binding.root)
 
-        validateTokenAndNavigate()
 
         with(binding) {
             viewPagerMain.adapter = mainPageAdapter
@@ -77,36 +68,7 @@ class MainActivity : AppCompatActivity() {
         // 텍스트 숨기기
         hideChipNavigationBarText(binding.mainLayoutBottomNavigation)
     }
-    //토큰 유효성 검사
-    private fun validateTokenAndNavigate() {
-        val token = getTokenFromPreferences()
-        if (token.isNullOrEmpty()) {
-            redirectToLogin()
-        } else {
-            retrofitService.testApi("Bearer $token").enqueue(object : Callback<Void> {
-                override fun onResponse(call: Call<Void>, response: Response<Void>) {
-                    if (!response.isSuccessful) {
-                        redirectToLogin()
-                    } else {
-                    }
-                }
 
-                override fun onFailure(call: Call<Void>, t: Throwable) {
-                    Toast.makeText(this@MainActivity, "Error: ${t.message}", Toast.LENGTH_SHORT).show()
-                }
-            })
-        }
-    }
-
-    private fun getTokenFromPreferences(): String? {
-        val sharedPreferences = getSharedPreferences("AppPrefs", Context.MODE_PRIVATE)
-        return sharedPreferences.getString("AuthToken", null)
-    }
-
-    private fun redirectToLogin() {
-        startActivity(Intent(this, LoginActivity::class.java))
-        finish()
-    }
     private fun hideChipNavigationBarText(chipNavigationBar: ChipNavigationBar) {
         val menuView = chipNavigationBar.getChildAt(0) as ViewGroup
         for (i in 0 until menuView.childCount) {

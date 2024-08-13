@@ -1,8 +1,10 @@
-package com.epi.epilog.diary
+package com.epi.epilog
 
 import android.app.Activity
 import android.content.Intent
 import android.graphics.Bitmap
+import android.graphics.Matrix
+import android.graphics.drawable.BitmapDrawable
 import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
@@ -14,7 +16,6 @@ import android.widget.EditText
 import android.widget.ImageView
 import androidx.fragment.app.Fragment
 import api.DiaryFragment
-import com.epi.epilog.R
 import org.json.JSONException
 import org.json.JSONObject
 import java.io.IOException

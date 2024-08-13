@@ -23,7 +23,8 @@
             android:layout_gravity="center"
             android:text="일지 작성"
             android:textColor="@android:color/black"
-            android:textSize="18sp" />
+            android:textSize="18sp"
+            android:textStyle="bold"/>
     </androidx.appcompat.widget.Toolbar>
 
     <!-- Scrollable Content -->

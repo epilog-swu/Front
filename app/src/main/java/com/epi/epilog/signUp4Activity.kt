@@ -1,4 +1,4 @@
-package com.epi.epilog.signup
+package com.epi.epilog
 
 import android.content.Intent
 import android.os.Bundle
@@ -8,7 +8,6 @@ import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.constraintlayout.widget.ConstraintLayout
-import com.epi.epilog.R
 import com.epi.epilog.api.Medication
 
 class signUp4Activity : AppCompatActivity() {
