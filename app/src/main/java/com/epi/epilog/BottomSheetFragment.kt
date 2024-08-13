@@ -297,6 +297,14 @@ class BottomSheetFragment : BottomSheetDialogFragment() {
             }
         }
 
+        // 여기서 클릭 리스너 추가
+        diaryEntryView.setOnClickListener {
+            val intent = Intent(requireContext(), ActivityDiaryShowDetail::class.java)
+            intent.putExtra("id", log.id)  // 선택된 일지의 id 정보를 전달
+            startActivity(intent)
+            dismiss()  // 바텀시트를 닫음
+        }
+
         return diaryEntryView
     }
 

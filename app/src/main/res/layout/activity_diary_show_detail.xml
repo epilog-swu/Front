@@ -113,7 +113,7 @@
 
             <!-- Date and Time Section -->
             <TextView
-                android:id="@+id/diary_detail_meal_tv"
+                android:id="@+id/diary_detail_title_tv"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="30dp"
@@ -135,9 +135,10 @@
                 android:background="@drawable/diary_container_shape"
                 android:orientation="vertical"
                 android:padding="8dp"
+                android:visibility="visible"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/diary_detail_meal_tv">
+                app:layout_constraintTop_toBottomOf="@id/diary_detail_title_tv">
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -169,6 +170,7 @@
                 android:layout_marginTop="16dp"
                 android:background="@drawable/diary_container_shape"
                 android:scrollbars="none"
+                android:visibility="visible"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/diary_detail_bloodsugar">
@@ -194,17 +196,20 @@
                 android:background="@drawable/diary_container_shape"
                 android:orientation="vertical"
                 android:padding="16dp"
+                android:visibility="visible"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/diary_detail_bloodsugar_graph">
 
                 <TextView
+                    android:id="@+id/systolic_plain_tv"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="수축기 혈압"
                     android:textColor="@android:color/black"
                     android:textSize="14sp"
                     android:textStyle="bold"
+                    android:visibility="visible"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
@@ -219,12 +224,14 @@
                     app:layout_constraintTop_toTopOf="parent" />
 
                 <TextView
+                    android:id="@+id/diastolic_plain_tv"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="이완기 혈압"
                     android:textColor="@android:color/black"
                     android:textSize="14sp"
                     android:textStyle="bold"
+                    android:visibility="visible"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/systolic_bp" />
 
@@ -239,12 +246,14 @@
                     app:layout_constraintTop_toBottomOf="@id/systolic_bp" />
 
                 <TextView
+                    android:id="@+id/heart_rate_plain_tv"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="심박수"
                     android:textColor="@android:color/black"
                     android:textSize="14sp"
                     android:textStyle="bold"
+                    android:visibility="visible"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/diastolic_bp" />
 
@@ -269,11 +278,13 @@
                 android:background="@drawable/diary_container_shape"
                 android:orientation="vertical"
                 android:padding="16dp"
+                android:visibility="visible"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/bloodPressureLayout">
 
                 <TextView
+                    android:id="@+id/diary_detail_weight_plain_tv"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="몸무게"
@@ -284,7 +295,7 @@
                     app:layout_constraintTop_toTopOf="parent" />
 
                 <TextView
-                    android:id="@+id/weight"
+                    android:id="@+id/diary_detail_weight"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="50kg"
@@ -294,6 +305,7 @@
                     app:layout_constraintTop_toTopOf="parent" />
 
                 <TextView
+                    android:id="@+id/diary_detail_BMI_plain_tv"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="체지방률"
@@ -301,27 +313,27 @@
                     android:textSize="14sp"
                     android:textStyle="bold"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/weight" />
+                    app:layout_constraintTop_toBottomOf="@id/diary_detail_weight" />
 
                 <TextView
-                    android:id="@+id/body_fat_percentage"
+                    android:id="@+id/diary_detail_BMI"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="25%"
                     android:textColor="@android:color/black"
                     android:textSize="14sp"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/weight" />
+                    app:layout_constraintTop_toBottomOf="@id/diary_detail_weight" />
 
                 <ImageView
-                    android:id="@+id/body_image"
+                    android:id="@+id/diary_detail_body_image"
                     android:layout_width="100dp"
                     android:layout_height="100dp"
                     android:layout_marginStart="16dp"
                     android:src="@drawable/body_img"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/body_fat_percentage" />
+                    app:layout_constraintTop_toBottomOf="@id/diary_detail_BMI" />
             </androidx.constraintlayout.widget.ConstraintLayout>
 
             <!-- 몸무게 및 체지방율 라인차트 -->
@@ -332,6 +344,7 @@
                 android:layout_marginTop="16dp"
                 android:background="@drawable/diary_container_shape"
                 android:scrollbars="none"
+                android:visibility="visible"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/bodyMeasurementLayout">
@@ -356,6 +369,7 @@
                 android:background="@drawable/diary_container_shape"
                 android:orientation="vertical"
                 android:padding="16dp"
+                android:visibility="visible"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/diary_detail_weightBMI_graph">
@@ -424,6 +438,7 @@
                 android:background="@drawable/diary_container_shape"
                 android:orientation="vertical"
                 android:padding="16dp"
+                android:visibility="visible"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/exerciseLayout">
@@ -557,6 +572,7 @@
                 android:background="@drawable/diary_container_shape"
                 android:orientation="vertical"
                 android:padding="16dp"
+                android:visibility="visible"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/moodLayout">
