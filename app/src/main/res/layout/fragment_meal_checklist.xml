@@ -102,15 +102,19 @@
                     android:layout_height="wrap_content"
                     android:text="식사가 확인되지 않았어요"
                     android:textColor="@color/덜진한회색"
+                    android:textStyle="bold"
                     android:textSize="10dp" />
 
                 <TextView
+                    android:id="@+id/alarm_text_view"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="5dp"
                     android:text="워치에 알람보내기"
+                    android:layout_marginStart="5dp"
                     android:textColor="@color/덜진한회색"
+                    android:textStyle="bold"
                     android:textSize="10dp" />
+
             </LinearLayout>
 
             <!--오늘의 섭취/권장 칼로리-->
@@ -587,15 +591,15 @@
 
         <Button
             android:id="@+id/goto_meal_manage_btn"
-            android:layout_width="310dp"
-            android:layout_height="56dp"
+            android:layout_width="330dp"
+            android:layout_height="50dp"
             android:layout_gravity="center"
             android:layout_marginTop="10dp"
             android:background="@drawable/purple_button_shape"
             android:gravity="center"
             android:text="식사 시간 관리하기"
             android:textColor="@color/white"
-            android:textSize="18dp"
+            android:textSize="15dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />

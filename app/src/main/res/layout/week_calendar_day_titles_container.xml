@@ -1,5 +1,3 @@
-<?xml version="1.0" encoding="utf-8"?>
-
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/app_calendar_day_titles_container"
     android:layout_width="match_parent"
@@ -8,17 +6,11 @@
     android:orientation="horizontal">
 
     <include layout="@layout/week_calendar_day_title_text" />
-
     <include layout="@layout/week_calendar_day_title_text" />
-
     <include layout="@layout/week_calendar_day_title_text" />
-
     <include layout="@layout/week_calendar_day_title_text" />
-
     <include layout="@layout/week_calendar_day_title_text" />
-
     <include layout="@layout/week_calendar_day_title_text" />
-
     <include layout="@layout/week_calendar_day_title_text" />
 
 </LinearLayout>

@@ -27,7 +27,6 @@
             android:text="복용 약 관리"
             android:textColor="@color/black"
             android:textSize="18sp"
-            android:textStyle="bold"
             tools:ignore="HardcodedText"/>
     </LinearLayout>
 
@@ -44,7 +43,7 @@
         app:layout_constraintEnd_toEndOf="parent">
 
         <ImageView
-            android:layout_marginEnd="70dp"
+            android:layout_marginEnd="20dp"
             android:layout_width="30dp"
             android:layout_height="40dp"
             android:src="@drawable/prev"
@@ -64,7 +63,7 @@
         </LinearLayout>
 
         <ImageView
-            android:layout_marginStart="70dp"
+            android:layout_marginStart="20dp"
             android:layout_width="30dp"
             android:layout_height="40dp"
             android:src="@drawable/next"
@@ -90,7 +89,8 @@
             android:layout_height="wrap_content"
             android:background="@drawable/border"
             android:orientation="vertical"
-            android:padding="16dp">
+            android:padding="25dp"
+            android:layout_margin="5dp">
 
             <TextView
                 android:id="@+id/medicine_name"
@@ -98,7 +98,7 @@
                 android:layout_height="wrap_content"
                 android:text="카바마제핀"
                 android:textColor="#000"
-                android:textSize="18sp"
+                android:textSize="20sp"
                 android:textStyle="bold"/>
 
             <TextView
@@ -107,16 +107,16 @@
                 android:layout_height="wrap_content"
                 android:text="복용 시간"
                 android:layout_marginTop="16dp"
+                android:layout_marginBottom="10dp"
                 android:textColor="#000"
-                android:textSize="16sp"
+                android:textSize="18sp"
                 android:textStyle="bold"/>
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:layout_marginTop="8dp"
-               >
+                android:gravity="center_vertical">
 
                 <TextView
                     android:id="@+id/badgeCavamazepine"
@@ -126,7 +126,8 @@
                     android:text="7시 30분"
                     android:layout_marginEnd="10dp"
                     android:textColor="#000"
-                    android:textSize="12sp" />
+                    android:textSize="14sp"
+                    android:gravity="center" />
 
                 <TextView
                     android:id="@+id/badgePhenytoin"
@@ -135,7 +136,9 @@
                     android:background="@drawable/badge"
                     android:text="12시 30분"
                     android:textColor="#000"
-                    android:textSize="12sp"/>
+                    android:textSize="14sp"
+                    android:gravity="center" />
+
             </LinearLayout>
 
             <TextView
@@ -145,7 +148,7 @@
                 android:text="복용 기간"
                 android:layout_marginTop="16dp"
                 android:textColor="#000"
-                android:textSize="16sp"
+                android:textSize="20sp"
                 android:textStyle="bold"/>
 
             <TextView
@@ -154,7 +157,7 @@
                 android:layout_height="wrap_content"
                 android:text="2024년 3월 28일 - 2024년 5월 28일\n월, 화, 수, 목, 금, 토, 일"
                 android:layout_marginTop="8dp"
-                android:textSize="14sp"
+                android:textSize="16sp"
                 android:textColor="#000"/>
 
             <TextView
@@ -164,7 +167,7 @@
                 android:text="효능"
                 android:layout_marginTop="16dp"
                 android:textColor="#000"
-                android:textSize="16sp"
+                android:textSize="20sp"
                 android:textStyle="bold"/>
 
             <TextView
@@ -173,7 +176,7 @@
                 android:layout_height="wrap_content"
                 android:text="이 약은 심근경색, 뇌경색, 불안정형 협심증에서 혈전 생성 억제와?관상동맥 우회술(CABG) 또는 경피경관 관상동맥 성형술(PTCA) 후 혈전 생성 억제와 고위험군환자(허혈성 심장질환의 가족력, 고혈압, 고콜레스테롤혈증, 비만, 당뇨 등 복합적 위험인자를 가진 환자)에서 심혈관계 위험성 감소에 사용합니다."
                 android:layout_marginTop="8dp"
-                android:textSize="14sp"
+                android:textSize="16sp"
                 android:textColor="#000"/>
 
             <TextView
@@ -183,7 +186,7 @@
                 android:text="주의사항"
                 android:layout_marginTop="16dp"
                 android:textColor="#000"
-                android:textSize="16sp"
+                android:textSize="18sp"
                 android:textStyle="bold"/>
 
             <TextView
@@ -192,7 +195,7 @@
                 android:layout_height="wrap_content"
                 android:text="매일 세잔 이상 정기적 음주자가 이 약 또는 다른 해열진통제를 복용할 때는 의사 또는 약사와 상의하십시오. 위장출혈을 일으킬 수 있습니다."
                 android:layout_marginTop="8dp"
-                android:textSize="14sp"
+                android:textSize="16sp"
                 android:textColor="#000"/>
 
             <TextView
@@ -202,7 +205,7 @@
                 android:text="보관방법"
                 android:layout_marginTop="16dp"
                 android:textColor="#000"
-                android:textSize="16sp"
+                android:textSize="18sp"
                 android:textStyle="bold"/>
 
             <TextView
@@ -211,7 +214,7 @@
                 android:layout_height="wrap_content"
                 android:text="습기를 피해 실온에서 보관하십시오.\n어린이의 손이 닿지 않는 곳에 보관하십시오."
                 android:layout_marginTop="8dp"
-                android:textSize="14sp"
+                android:textSize="16sp"
                 android:textColor="#000"/>
 
             <LinearLayout
@@ -231,7 +234,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
                     android:text="복용 알람이 켜져있습니다"
-                    android:textSize="14sp"
+                    android:textSize="16sp"
                     android:textColor="@color/덜진한회색"/>
             </LinearLayout>
         </LinearLayout>

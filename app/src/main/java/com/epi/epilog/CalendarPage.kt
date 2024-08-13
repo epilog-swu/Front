@@ -1,9 +1,11 @@
 package com.epi.epilog
 
 import android.content.Context
+import android.content.Intent
 import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
+import android.os.Environment
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -14,8 +16,6 @@ import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import com.epi.epilog.api.DiaryCountResponse
-import com.epi.epilog.api.GraphBloodSugarAverageResponse
-import com.epi.epilog.api.GraphWeightBMIResponse
 import com.epi.epilog.api.RetrofitClient
 import com.epi.epilog.databinding.CalendarMonthYearBinding
 import com.epi.epilog.databinding.EpiDialogCustomBinding
@@ -28,9 +28,19 @@ import com.kizitonwose.calendar.core.firstDayOfWeekFromLocale
 import com.kizitonwose.calendar.view.MonthDayBinder
 import com.kizitonwose.calendar.view.MonthHeaderFooterBinder
 import com.kizitonwose.calendar.view.ViewContainer
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import okhttp3.ResponseBody
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import java.io.File
+import java.io.FileOutputStream
+import java.io.IOException
+import java.io.InputStream
+import java.io.OutputStream
 import java.time.LocalDate
 import java.time.YearMonth
 import java.time.format.DateTimeFormatter
@@ -41,7 +51,7 @@ class CalendarPage : Fragment() {
     private var _binding: FragmentCalendarBinding? = null
     private val binding get() = _binding!!
 
-    //기간 선택 (비)활성화 변수
+    // 기간 선택 (비)활성화 변수
     private var isRangeSelectionEnabled: Boolean = false
     private var rangeStartDate: LocalDate? = null
     private var rangeEndDate: LocalDate? = null
@@ -69,6 +79,29 @@ class CalendarPage : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        // Validate token before setting up the calendar
+        validateTokenAndProceed()
+    }
+
+    private fun validateTokenAndProceed() {
+        val token = getAuthToken()
+        RetrofitClient.retrofitService.testApi("Bearer $token").enqueue(object : Callback<Void> {
+            override fun onResponse(call: Call<Void>, response: Response<Void>) {
+                if (response.isSuccessful) {
+                    setupCalendarView() // Proceed with calendar setup if the token is valid
+                } else {
+                    redirectToLogin() // Redirect to login if the token is invalid
+                }
+            }
+
+            override fun onFailure(call: Call<Void>, t: Throwable) {
+                Toast.makeText(context, "Network error: ${t.message}", Toast.LENGTH_LONG).show()
+                redirectToLogin()
+            }
+        })
+    }
+
+    private fun setupCalendarView() {
         // MonthYear 레이아웃 포함
         val calendarMonthYearBinding = CalendarMonthYearBinding.bind(binding.MonthYear.root)
 
@@ -133,13 +166,11 @@ class CalendarPage : Fragment() {
                             when {
                                 diaryCount in 1..2 -> container.textView.setBackgroundResource(R.drawable.calendar_day_count1_bg)
                                 diaryCount in 3..6 -> container.textView.setBackgroundResource(R.drawable.calendar_day_count3_bg)
-                                diaryCount == 7 -> container.textView.setBackgroundResource(R.drawable.calendar_selectday_bg) // count7 파일 = selectdaybg와 동일
-                                else -> container.textView.setBackgroundResource(R.drawable.calendar_day_bg) // Default color for other counts
+                                diaryCount == 7 -> container.textView.setBackgroundResource(R.drawable.calendar_selectday_bg)
+                                else -> container.textView.setBackgroundResource(R.drawable.calendar_day_bg)
                             }
                             container.textView.setTextColor(Color.BLACK)
                         }
-
-
                     }
 
                     // 날짜가 선택됐을 때
@@ -183,23 +214,24 @@ class CalendarPage : Fragment() {
             }
         }
 
-        //기간선택하기를 누르면, 활성화해주고, 범위선택
+        setupPdfGeneration() // Setup PDF generation buttons and logic
+    }
+
+    private fun setupPdfGeneration() {
+        // 기간선택하기를 누르면, 활성화해주고, 범위선택
         binding.pdfRangeBtn.setOnClickListener {
             isRangeSelectionEnabled = true
 
-            // 기간선택 끝났는지 확인
             if (rangeStartDate != null && rangeEndDate != null) {
                 Toast.makeText(
                     context,
                     "Selected range: $rangeStartDate to $rangeEndDate",
                     Toast.LENGTH_SHORT
                 ).show()
-                // Add your PDF generation logic here
             } else {
                 Toast.makeText(context, "범위를 선택해주세요", Toast.LENGTH_SHORT).show()
             }
 
-            //버튼 활성화
             if (binding.pdfRangeBtn.visibility == View.VISIBLE) {
                 binding.pdfDownloadBtn.visibility = View.VISIBLE
                 binding.pdfCancelBtn.visibility = View.VISIBLE
@@ -207,22 +239,18 @@ class CalendarPage : Fragment() {
             }
         }
 
-        //PDF 변환하기를 누르면, 기간 선택하고 대화상자 생성
+        // PDF 변환하기를 누르면, 기간 선택하고 대화상자 생성
         binding.pdfDownloadBtn.setOnClickListener {
-            // rangeStartDate와 rangeEndDate를 이용하여 날짜 범위 문자열 생성
             if (rangeStartDate != null && rangeEndDate != null) {
                 val dateFormatter = DateTimeFormatter.ofPattern("yyyy년 M월 d일", Locale.getDefault())
 
-                // 커스텀 대화상자 생성
                 val inflater = LayoutInflater.from(requireContext())
                 val dialogBinding = EpiDialogCustomBinding.inflate(inflater)
 
-                // 대화상자 빌더 설정
                 val dialogBuilder =
                     AlertDialog.Builder(requireContext(), R.style.RoundCornerDialogStyle)
                 dialogBuilder.setView(dialogBinding.root)
 
-                // 대화상자 메시지 설정
                 dialogBinding.dialogMessageTV.text =
                     "$rangeStartDate 부터 $rangeEndDate \n 까지의 일지를 PDF로 변환하시겠습니까?"
 
@@ -230,7 +258,12 @@ class CalendarPage : Fragment() {
 
                 dialogBinding.dialogCancleBtn.setOnClickListener { alertDialog.dismiss() }
                 dialogBinding.dialogOkBtn.setOnClickListener {
-                    // PDF 변환 로직 추가
+                    val authToken = getAuthToken()
+                    downloadAndSavePDF(
+                        rangeStartDate!!.format(DateTimeFormatter.ISO_LOCAL_DATE),
+                        rangeEndDate!!.format(DateTimeFormatter.ISO_LOCAL_DATE),
+                        authToken
+                    )
                     Toast.makeText(context, "PDF로 변환 중...", Toast.LENGTH_SHORT).show()
                     alertDialog.dismiss()
                 }
@@ -241,11 +274,10 @@ class CalendarPage : Fragment() {
             }
         }
 
-        //취소하기를 누르면
+        // 취소하기를 누르면
         binding.pdfCancelBtn.setOnClickListener {
             isRangeSelectionEnabled = false
 
-            //버튼 (비)활성화
             if (binding.pdfCancelBtn.visibility == View.VISIBLE) {
                 binding.pdfDownloadBtn.visibility = View.INVISIBLE
                 binding.pdfCancelBtn.visibility = View.INVISIBLE
@@ -255,10 +287,105 @@ class CalendarPage : Fragment() {
             rangeStartDate = null
             rangeEndDate = null
 
-            // CalendarView를 업데이트하여 모든 날짜의 배경을 초기화
             binding.calendarView.notifyCalendarChanged()
         }
     }
+    private fun downloadAndSavePDF(startDate: String, endDate: String, token: String) {
+        Log.d("CalendarPage", "Start Date: $startDate")
+        Log.d("CalendarPage", "End Date: $endDate")
+
+        val call =
+            RetrofitClient.retrofitService.downloadPDF(startDate, endDate, "Bearer $token")
+        call.enqueue(object : Callback<ResponseBody> {
+            override fun onResponse(
+                call: Call<ResponseBody>,
+                response: Response<ResponseBody>
+            ) {
+                if (response.isSuccessful) {
+                    response.body()?.let { responseBody ->
+                        // Coroutine을 사용해 백그라운드 스레드에서 파일 저장 작업을 수행
+                        CoroutineScope(Dispatchers.IO).launch {
+                            saveFileToStorage(responseBody)
+                        }
+                    } ?: run {
+                        Toast.makeText(
+                            context,
+                            "Failed to download PDF: Empty response body",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
+                } else {
+                    Toast.makeText(
+                        context,
+                        "Failed to download PDF: ${response.message()}",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+            }
+
+            override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
+                Toast.makeText(context, "Network error: ${t.message}", Toast.LENGTH_SHORT)
+                    .show()
+            }
+        })
+    }
+
+    private fun getAuthToken(): String {
+        val sharedPrefs = context?.getSharedPreferences("AppPrefs", Context.MODE_PRIVATE)
+        return sharedPrefs?.getString("AuthToken", "") ?: ""
+    }
+
+    private suspend fun saveFileToStorage(body: ResponseBody) {
+        try {
+            val file = File(
+                Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS),
+                "downloaded_report.pdf"
+            )
+            var inputStream: InputStream? = null
+            var outputStream: OutputStream? = null
+            try {
+                inputStream = body.byteStream()
+                outputStream = FileOutputStream(file)
+                outputStream.use { output ->
+                    val buffer = ByteArray(4 * 1024) // buffer size
+                    var read: Int
+                    while (inputStream.read(buffer).also { read = it } != -1) {
+                        output.write(buffer, 0, read)
+                    }
+                    output.flush()
+                }
+
+                // 파일 저장 후 결과를 메인 스레드에서 UI로 알림
+                withContext(Dispatchers.Main) {
+                    Toast.makeText(context, "PDF downloaded successfully!", Toast.LENGTH_LONG)
+                        .show()
+                }
+            } catch (e: IOException) {
+                e.printStackTrace()
+                withContext(Dispatchers.Main) {
+                    Toast.makeText(
+                        context,
+                        "Failed to save the file: ${e.message}",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+            } finally {
+                inputStream?.close()
+                outputStream?.close()
+            }
+        } catch (e: IOException) {
+            e.printStackTrace()
+            withContext(Dispatchers.Main) {
+                Toast.makeText(
+                    context,
+                    "Failed to save the file: ${e.message}",
+                    Toast.LENGTH_SHORT
+                )
+                    .show()
+            }
+        }
+    }
+
 
     private val diaryCountsMap = mutableMapOf<LocalDate, Int>()
 
@@ -270,53 +397,50 @@ class CalendarPage : Fragment() {
             return
         }
 
-        // 연도와 월을 기반으로 해당 월의 첫 번째 날짜 생성
         val firstDateOfMonth = LocalDate.of(year, month, 1)
         val dateString = firstDateOfMonth.format(DateTimeFormatter.ISO_LOCAL_DATE)
 
-        Log.d("CalendarPage", "date String : $dateString")
-
-        if (dateString != null) {
-            RetrofitClient.retrofitService.getDiaryCount(dateString, token).enqueue(object :
-                Callback<DiaryCountResponse> {
-                override fun onResponse(
-                    call: Call<DiaryCountResponse>,
-                    response: Response<DiaryCountResponse>
-                ) {
-                    if (response.isSuccessful) {
-                        val responseBody = response.body()
-                        if (responseBody != null) {
-                            diaryCountsMap.clear()
-                            for (dayEntry in responseBody.day) {
-                                val date = LocalDate.parse(dayEntry.date)
-                                diaryCountsMap[date] = dayEntry.count
-                            }
-                            binding.calendarView.notifyCalendarChanged()
-                            // 성공적인 응답을 로그로 출력
-                            Log.d("CalendarPage", "Successful API response: $responseBody")
-
-                        } else {
-                            Toast.makeText(context, "Response body is null", Toast.LENGTH_SHORT).show()
+        RetrofitClient.retrofitService.getDiaryCount(dateString, token).enqueue(object :
+            Callback<DiaryCountResponse> {
+            override fun onResponse(
+                call: Call<DiaryCountResponse>,
+                response: Response<DiaryCountResponse>
+            ) {
+                if (response.isSuccessful) {
+                    val responseBody = response.body()
+                    if (responseBody != null) {
+                        diaryCountsMap.clear()
+                        for (dayEntry in responseBody.day) {
+                            val date = LocalDate.parse(dayEntry.date)
+                            diaryCountsMap[date] = dayEntry.count
                         }
+                        binding.calendarView.notifyCalendarChanged()
                     } else {
-                        Log.e(
-                            "calendarDiaryCount",
-                            "Failed with status code: ${response.code()}, message: ${response.message()}"
-                        )
-                        Toast.makeText(
-                            context,
-                            "Failed to load calendarDiaryCount data: ${response.message()}",
-                            Toast.LENGTH_SHORT
-                        ).show()
+                        Toast.makeText(context, "Response body is null", Toast.LENGTH_SHORT).show()
                     }
+                } else {
+                    Log.e(
+                        "calendarDiaryCount",
+                        "Failed with status code: ${response.code()}, message: ${response.message()}"
+                    )
+                    Toast.makeText(
+                        context,
+                        "Failed to load calendarDiaryCount data: ${response.message()}",
+                        Toast.LENGTH_SHORT
+                    ).show()
                 }
+            }
 
-                override fun onFailure(call: Call<DiaryCountResponse>, t: Throwable) {
-                    Toast.makeText(context, "Error: ${t.message}", Toast.LENGTH_SHORT).show()
-                }
-            })
-        }
+            override fun onFailure(call: Call<DiaryCountResponse>, t: Throwable) {
+                Toast.makeText(context, "Error: ${t.message}", Toast.LENGTH_SHORT).show()
+            }
+        })
+    }
 
+    private fun redirectToLogin() {
+        val intent = Intent(context, LoginActivity::class.java)
+        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+        startActivity(intent)
     }
 
     private fun onDateSelected(date: LocalDate) {
@@ -343,20 +467,18 @@ class CalendarPage : Fragment() {
         val diaryCount = diaryCountsMap[LocalDate.parse(date)] ?: 0
         val bottomSheetFragment = BottomSheetFragment().apply {
             arguments = Bundle().apply {
-                putString("date", date) //바텀시트 호출할 때 날짜 정보 넘겨주기
-                putInt("diaryCount", diaryCount) //바텀시트 호출할 때 diaryCount 정보 넘겨주시
+                putString("date", date)
+                putInt("diaryCount", diaryCount)
             }
         }
         bottomSheetFragment.show(parentFragmentManager, bottomSheetFragment.tag)
     }
 
-
-    //토큰 가져오기
     private fun getTokenFromSession(): String {
         val sharedPreferences = context?.getSharedPreferences("AppPrefs", Context.MODE_PRIVATE)
         val token = sharedPreferences?.getString("AuthToken", "") ?: ""
         Log.d("GraphWeightBMIFragment", "Fetched token from session: $token")
-        return "Bearer $token"  // Ensure token is prefixed with "Bearer "
+        return "Bearer $token"
     }
 
     private class DayViewContainer(view: View) : ViewContainer(view) {

@@ -26,7 +26,7 @@
             android:gravity="center"
             android:text="혈당을 입력해주세요"
             android:textColor="@color/black"
-            android:textSize="16sp"
+            android:textSize="18sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.496"
             app:layout_constraintStart_toStartOf="parent"
@@ -59,7 +59,7 @@
             android:layout_marginEnd="30dp"
             android:text="mg/dL"
             android:textColor="@color/black"
-            android:textSize="10sp"
+            android:textSize="12sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/bloodSugarEditText"
             app:layout_constraintTop_toTopOf="parent" />

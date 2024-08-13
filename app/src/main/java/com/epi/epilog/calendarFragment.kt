@@ -98,4 +98,3 @@ private class ViewPagerAdapter(fragmentManager: FragmentManager, lifecycle: Life
         }
     }
 }
-
