@@ -28,10 +28,17 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+<<<<<<< HEAD
         <activity android:name=".diary.DiaryEditActivity"/>
         <activity android:name=".MainActivity" android:exported="true"/>
 
         <activity android:name=".LoginActivity" android:exported="true"/>
+=======
+        <activity android:name=".LoginActivity"/>
+        <activity android:name=".ActivityDiaryShowDetail">
+        </activity>
+
+>>>>>>> origin/main
 
         <activity android:name=".ActivityShowSuccessDialog"
             android:theme="@style/TransparentTheme" />

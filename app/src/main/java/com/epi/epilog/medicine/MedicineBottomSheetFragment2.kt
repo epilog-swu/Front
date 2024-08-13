@@ -30,7 +30,7 @@ class MedicineBottomSheetFragment2 : BottomSheetDialogFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.writeDiaryBtn.setOnClickListener {
+        binding.noDiaryWriteDiaryBtn.setOnClickListener {
             val selectedHour = binding.timePicker.hour
             val selectedMinute = binding.timePicker.minute
             // 시간 설정 처리
