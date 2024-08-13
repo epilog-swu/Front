@@ -301,6 +301,7 @@ class BottomSheetFragment : BottomSheetDialogFragment() {
         diaryEntryView.setOnClickListener {
             val intent = Intent(requireContext(), ActivityDiaryShowDetail::class.java)
             intent.putExtra("id", log.id)  // 선택된 일지의 id 정보를 전달
+            intent.putExtra("selectedDate", selectedDate)
             startActivity(intent)
             dismiss()  // 바텀시트를 닫음
         }

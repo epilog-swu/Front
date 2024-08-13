@@ -126,6 +126,55 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/iconsLayout" />
 
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/diary_detail_fall_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:background="@drawable/diary_container_shape"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/diary_detail_title_tv"
+                android:visibility="visible"
+                android:padding="8dp">
+
+                <TextView
+                    android:id="@+id/diary_detail_fall_plain_tv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:text="낙상"
+                    android:textColor="@color/black"
+                    android:textSize="14sp"
+                    android:textStyle="bold"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"/>
+
+                <TextView
+                    android:id="@+id/diary_detail_fall_address"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="test주소"
+                    android:textColor="@color/black"
+                    android:textSize="14sp"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginStart="10dp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/diary_detail_fall_plain_tv"/>
+
+                <ImageView
+                    android:id="@+id/diary_detail_fall_mapimg"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/diary_detail_fall_img"
+                    android:contentDescription="MapImage"
+                    tools:layout_editor_absoluteX="8dp"
+                    tools:layout_editor_absoluteY="8dp"
+                    app:layout_constraintTop_toBottomOf="@id/diary_detail_fall_address"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"/>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
             <!-- Nutrition Details Section -->
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/diary_detail_bloodsugar"
@@ -133,12 +182,11 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20dp"
                 android:background="@drawable/diary_container_shape"
-                android:orientation="vertical"
                 android:padding="8dp"
                 android:visibility="visible"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/diary_detail_title_tv">
+                app:layout_constraintTop_toBottomOf="@id/diary_detail_fall_layout">
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -331,6 +379,7 @@
                     android:layout_height="100dp"
                     android:layout_marginStart="16dp"
                     android:src="@drawable/body_img"
+                    android:visibility="gone"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/diary_detail_BMI" />
@@ -406,26 +455,8 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/exercise">
 
-                    <TextView
-                        android:id="@+id/yoga"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginEnd="8dp"
-                        android:background="@drawable/badge"
-                        android:text="요가"
-                        android:textColor="@android:color/black"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" />
+                    <!--배지 요소 동적 추가-->
 
-                    <TextView
-                        android:id="@+id/stretching"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:background="@drawable/badge"
-                        android:text="적합 스트레칭"
-                        android:textColor="@android:color/black"
-                        app:layout_constraintStart_toEndOf="@id/yoga"
-                        app:layout_constraintTop_toTopOf="parent" />
                 </androidx.constraintlayout.widget.ConstraintLayout>
             </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -466,7 +497,7 @@
                     app:layout_constraintTop_toBottomOf="@id/moodHeader" />
 
                 <androidx.constraintlayout.widget.ConstraintLayout
-                    android:id="@+id/moodBadgeLayout1"
+                    android:id="@+id/moodBadgeLayout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
@@ -474,142 +505,58 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/mood">
-
-                    <TextView
-                        android:id="@+id/calm"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginEnd="8dp"
-                        android:background="@drawable/badge"
-                        android:text="차분한"
-                        android:textColor="@android:color/black"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" />
-
-                    <TextView
-                        android:id="@+id/happy"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginEnd="8dp"
-                        android:background="@drawable/badge"
-                        android:text="행복한"
-                        android:textColor="@android:color/black"
-                        app:layout_constraintStart_toEndOf="@id/calm"
-                        app:layout_constraintTop_toTopOf="parent" />
-
-                    <TextView
-                        android:id="@+id/energetic"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginEnd="8dp"
-                        android:background="@drawable/badge"
-                        android:text="기운찬"
-                        android:textColor="@android:color/black"
-                        app:layout_constraintStart_toEndOf="@id/happy"
-                        app:layout_constraintTop_toTopOf="parent" />
-
-                    <TextView
-                        android:id="@+id/worried"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:background="@drawable/badge"
-                        android:text="걱정스러운"
-                        android:textColor="@android:color/black"
-                        app:layout_constraintStart_toEndOf="@id/energetic"
-                        app:layout_constraintTop_toTopOf="parent" />
+                    <!--mood 배지 요소 동적으로 추가 -->
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
-                <androidx.constraintlayout.widget.ConstraintLayout
-                    android:id="@+id/moodBadgeLayout2"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
-                    android:orientation="horizontal"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/moodBadgeLayout1">
-
-                    <TextView
-                        android:id="@+id/sad"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginEnd="8dp"
-                        android:background="@drawable/badge"
-                        android:text="우울한"
-                        android:textColor="@android:color/black"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" />
-
-                    <TextView
-                        android:id="@+id/optimal"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginEnd="8dp"
-                        android:background="@drawable/badge"
-                        android:text="최적한"
-                        android:textColor="@android:color/black"
-                        app:layout_constraintStart_toEndOf="@id/sad"
-                        app:layout_constraintTop_toTopOf="parent" />
-
-                    <TextView
-                        android:id="@+id/lack_of_energy"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:background="@drawable/badge"
-                        android:text="에너지 부족"
-                        android:textColor="@android:color/black"
-                        app:layout_constraintStart_toEndOf="@id/optimal"
-                        app:layout_constraintTop_toTopOf="parent" />
-                </androidx.constraintlayout.widget.ConstraintLayout>
             </androidx.constraintlayout.widget.ConstraintLayout>
 
             <!-- Medication Section -->
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/medicationLayout"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:background="@drawable/diary_container_shape"
-                android:orientation="vertical"
-                android:padding="16dp"
-                android:visibility="visible"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/moodLayout">
+            <!--            <androidx.constraintlayout.widget.ConstraintLayout-->
+            <!--                android:id="@+id/medicationLayout"-->
+            <!--                android:layout_width="match_parent"-->
+            <!--                android:layout_height="wrap_content"-->
+            <!--                android:layout_marginTop="16dp"-->
+            <!--                android:background="@drawable/diary_container_shape"-->
+            <!--                android:orientation="vertical"-->
+            <!--                android:padding="16dp"-->
+            <!--                android:visibility="visible"-->
+            <!--                app:layout_constraintEnd_toEndOf="parent"-->
+            <!--                app:layout_constraintStart_toStartOf="parent"-->
+            <!--                app:layout_constraintTop_toBottomOf="@id/moodLayout">-->
 
-                <TextView
-                    android:id="@+id/medicationHeader"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="복약"
-                    android:textColor="@android:color/black"
-                    android:textSize="14sp"
-                    android:textStyle="bold"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+            <!--                <TextView-->
+            <!--                    android:id="@+id/medicationHeader"-->
+            <!--                    android:layout_width="wrap_content"-->
+            <!--                    android:layout_height="wrap_content"-->
+            <!--                    android:text="복약"-->
+            <!--                    android:textColor="@android:color/black"-->
+            <!--                    android:textSize="14sp"-->
+            <!--                    android:textStyle="bold"-->
+            <!--                    app:layout_constraintStart_toStartOf="parent"-->
+            <!--                    app:layout_constraintTop_toTopOf="parent" />-->
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="카바마제핀"
-                    android:textColor="@android:color/black"
-                    android:textSize="14sp"
-                    android:textStyle="bold"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/medicationHeader" />
+            <!--                <TextView-->
+            <!--                    android:layout_width="wrap_content"-->
+            <!--                    android:layout_height="wrap_content"-->
+            <!--                    android:text="카바마제핀"-->
+            <!--                    android:textColor="@android:color/black"-->
+            <!--                    android:textSize="14sp"-->
+            <!--                    android:textStyle="bold"-->
+            <!--                    app:layout_constraintStart_toStartOf="parent"-->
+            <!--                    app:layout_constraintTop_toBottomOf="@id/medicationHeader" />-->
 
-                <TextView
-                    android:id="@+id/medicine_count"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="324dp"
-                    android:text="1정"
-                    android:textColor="@android:color/black"
-                    android:textSize="14sp"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/medicationHeader" />
+            <!--                <TextView-->
+            <!--                    android:id="@+id/medicine_count"-->
+            <!--                    android:layout_width="wrap_content"-->
+            <!--                    android:layout_height="wrap_content"-->
+            <!--                    android:layout_marginStart="324dp"-->
+            <!--                    android:text="1정"-->
+            <!--                    android:textColor="@android:color/black"-->
+            <!--                    android:textSize="14sp"-->
+            <!--                    app:layout_constraintEnd_toEndOf="parent"-->
+            <!--                    app:layout_constraintTop_toBottomOf="@id/medicationHeader" />-->
 
-            </androidx.constraintlayout.widget.ConstraintLayout>
+            <!--            </androidx.constraintlayout.widget.ConstraintLayout>-->
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>
 

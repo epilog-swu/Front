@@ -115,7 +115,7 @@ class MedicineChecklistFragment : Fragment() {
                 val title = dayOfWeek.getDisplayName(java.time.format.TextStyle.SHORT, Locale.getDefault())
                 textView.text = title
             } ?: run {
-                Toast.makeText(context, "Titles container not found", Toast.LENGTH_SHORT).show()
+                //Toast.makeText(context, "Titles container not found", Toast.LENGTH_SHORT).show()
             }
         } ?: Log.e("MedicineChecklistFragment", "titlesContainer is null")
     }

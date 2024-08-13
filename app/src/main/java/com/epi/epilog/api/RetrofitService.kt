@@ -130,7 +130,7 @@ interface RetrofitService {
 data class DiaryDetailResponse(
     val title: String,
     val keyword: List<String>,
-    val fall: String?,
+    val fall: Fall?,
     val bloodSugar: String?,
     val systolicBloodPressure: String?,
     val diastolicBloodPressure: String?,
@@ -140,6 +140,10 @@ data class DiaryDetailResponse(
     val bodyPhoto: String?, //TODO : 나중에 객체로 수정 필요
     val exercise: Exercise?,
     val mood: Mood?
+)
+data class Fall(
+    val address: String?,
+    val mapImage: String?  // mapImage URL을 포함
 )
 
 data class Exercise(
