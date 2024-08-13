@@ -2,7 +2,6 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/main_bsd_nodiary_layout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     app:behavior_hideable="true"
@@ -11,7 +10,7 @@
     app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
 
     <ImageView
-        android:id="@+id/nodiary_bsd_small_line"
+        android:id="@+id/yesdiary_bsd_small_line"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:src="@drawable/main_bsd_small_line"
@@ -21,7 +20,7 @@
         app:layout_constraintEnd_toEndOf="parent"/>
 
     <TextView
-        android:id="@+id/btm_sheet_dlg_yes_diary_title"
+        android:id="@+id/btm_sheet_dlg_no_diary_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="25dp"
@@ -30,7 +29,7 @@
         android:textStyle="bold"
         android:textColor="@color/black"
         android:textSize="16sp"
-        app:layout_constraintTop_toBottomOf="@id/nodiary_bsd_small_line"
+        app:layout_constraintTop_toBottomOf="@id/yesdiary_bsd_small_line"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"/>
 
@@ -42,12 +41,12 @@
         android:layout_marginBottom="20dp"
         android:timePickerMode="spinner"
         android:visibility="visible"
-        app:layout_constraintTop_toBottomOf="@id/btm_sheet_dlg_yes_diary_title"
+        app:layout_constraintTop_toBottomOf="@id/btm_sheet_dlg_no_diary_title"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"/>
 
     <Button
-        android:id="@+id/write_diary_btn"
+        android:id="@+id/no_diary_write_diary_btn"
         android:layout_width="300dp"
         android:layout_height="50dp"
         android:layout_marginBottom="20dp"

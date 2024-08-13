@@ -17,6 +17,7 @@ import retrofit2.http.Query
 
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import retrofit2.http.Path
 
 
 object RetrofitClient {
@@ -75,6 +76,13 @@ interface RetrofitService {
         @Body request: DiaryRequest
     ) : Call<ApiResponse>
 
+    //일지 상세 조회 API
+    @GET("/api/logs/{logId}")
+    fun getDiaryDetail(
+        @Path("logId") logId: Int,
+        @Header("Authorization") token: String,
+    ) : Call <DiaryDetailResponse>
+
     //메인 캘린더 월(일)별 일지 개수 조회 API
     @Headers("Content-Type: application/json")
     @GET("api/logs/count")
@@ -117,6 +125,39 @@ interface RetrofitService {
 
 
 }
+
+//일지 상세 조회 data class
+data class DiaryDetailResponse(
+    val title: String,
+    val keyword: List<String>,
+    val fall: Fall?,
+    val bloodSugar: String?,
+    val systolicBloodPressure: String?,
+    val diastolicBloodPressure: String?,
+    val heartRate: String?,
+    val weight: Float?,
+    val bodyFatPercentage: Float?,
+    val bodyPhoto: String?, //TODO : 나중에 객체로 수정 필요
+    val exercise: Exercise?,
+    val mood: Mood?
+)
+data class Fall(
+    val address: String?,
+    val mapImage: String?  // mapImage URL을 포함
+)
+
+data class Exercise(
+    val type: String?,
+    val details: String?,
+    val keyword: List<String>?
+)
+
+data class Mood(
+    val type: String?,
+    val details: String?,
+    val keyword: List<String>?
+)
+
 
 //일자별 icon 조회 data class
 data class DiaryIconResponse(
