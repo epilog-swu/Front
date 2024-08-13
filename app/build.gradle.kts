@@ -57,12 +57,15 @@ dependencies {
 
 
     implementation ("com.google.android.gms:play-services-location:21.0.1")
+    implementation("com.github.bumptech.glide:glide:4.12.0")
+    annotationProcessor("com.github.bumptech.glide:compiler:4.12.0")
 
 
     //메인 달력 위해서 추가
     implementation("com.kizitonwose.calendar:view:2.5.1")
     implementation(libs.androidx.legacy.support.v4)
-    implementation(libs.androidx.recyclerview) // View
+    implementation(libs.androidx.recyclerview)
+    implementation(libs.annotations) // View
     coreLibraryDesugaring ("com.android.tools:desugar_jdk_libs:2.0.4")
 
     //그래프 라이브러리 추가

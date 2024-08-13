@@ -6,6 +6,7 @@ import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
 import android.util.TypedValue
+import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -102,6 +103,7 @@ class GraphPage : Fragment() {
             override fun bind(container: DayViewContainer, data: WeekDay) {
                 container.textView.text = data.date.dayOfMonth.toString()
                 container.textView.textSize = 14f // 텍스트 크기 변경
+                container.textView.gravity = Gravity.CENTER // 텍스트를 중앙에 배치
                 container.textView.setOnClickListener {
                     onDateSelected(data.date)
                 }
@@ -160,7 +162,7 @@ class GraphPage : Fragment() {
         }
 
         // Show toast message with the selected date
-        Toast.makeText(context, "Selected date: $date", Toast.LENGTH_SHORT).show()
+        Toast.makeText(context, "선택된 날짜: $date", Toast.LENGTH_SHORT).show()
 
 
         // 선택된 날짜에 따라 차트 업데이트
@@ -224,12 +226,12 @@ class GraphPage : Fragment() {
                     }
                 } else {
                     Log.e("GraphPage", "Failed with status code: ${response.code()}, message: ${response.message()}")
-                    Toast.makeText(context, "Failed to load average blood sugar: ${response.message()}", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(context, "혈당 데이터를 로드하는데 실패했습니다: ${response.message()}", Toast.LENGTH_SHORT).show()
                 }
             }
 
             override fun onFailure(call: Call<GraphBloodSugarAverageResponse>, t: Throwable) {
-                Toast.makeText(context, "Error: ${t.message}", Toast.LENGTH_SHORT).show()
+                Toast.makeText(context, "혈당 데이터를 로드하는데 실패했습니다: ${t.message}", Toast.LENGTH_SHORT).show()
             }
         })
     }
@@ -302,16 +304,16 @@ class GraphPage : Fragment() {
                         // TextView 업데이트
                         binding.graphDateRecordsCounts.text = " (${bloodSugarDatas.size})"
                     } else {
-                        Toast.makeText(context, "Response body is null", Toast.LENGTH_SHORT).show()
+                        //Toast.makeText(context, "Response body is null", Toast.LENGTH_SHORT).show()
                     }
                 } else {
                     Log.e("GraphWeightBMIFragment", "Failed with status code: ${response.code()}, message: ${response.message()}")
-                    Toast.makeText(context, "Failed to load blood sugar data: ${response.message()}", Toast.LENGTH_SHORT).show()
+                    //Toast.makeText(context, "Failed to load blood sugar data: ${response.message()}", Toast.LENGTH_SHORT).show()
                 }
             }
 
             override fun onFailure(call: Call<GraphBloodSugarResponse>, t: Throwable) {
-                Toast.makeText(context, "Error: ${t.message}", Toast.LENGTH_SHORT).show()
+                //Toast.makeText(context, "Error: ${t.message}", Toast.LENGTH_SHORT).show()
             }
         })
     }
@@ -462,7 +464,7 @@ class GraphPage : Fragment() {
         val token = getTokenFromSession()
 
         if (token.isBlank()) {
-            Toast.makeText(context, "Auth token is missing", Toast.LENGTH_SHORT).show()
+           // Toast.makeText(context, "Auth token is missing", Toast.LENGTH_SHORT).show()
             return
         }
 
@@ -489,14 +491,14 @@ class GraphPage : Fragment() {
                 } else {
                     // 상태 코드와 응답 메시지를 로그로 출력
                     Log.e("GraphWeightBMIFragment", "Failed with status code: ${response.code()}, message: ${response.message()}")
-                    Toast.makeText(context, "Failed to load weight and BMI data: ${response.message()}", Toast.LENGTH_SHORT).show()
+                    //Toast.makeText(context, "Failed to load weight and BMI data: ${response.message()}", Toast.LENGTH_SHORT).show()
                 }
             }
 
             // 네트워크 호출이 실패했을 때 호출되는 콜백
             override fun onFailure(call: Call<GraphWeightBMIResponse>, t: Throwable) {
                 // 실패 메시지를 토스트로 표시
-                Toast.makeText(context, "Error: ${t.message}", Toast.LENGTH_SHORT).show()
+                //Toast.makeText(context, "Error: ${t.message}", Toast.LENGTH_SHORT).show()
             }
         })
     }

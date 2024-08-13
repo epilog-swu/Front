@@ -33,6 +33,10 @@
 
         <activity android:name=".LoginActivity" android:exported="true"/>
 
+        <activity android:name=".ActivityDiaryShowDetail">
+        </activity>
+
+
         <activity android:name=".ActivityShowSuccessDialog"
             android:theme="@style/TransparentTheme" />
         <activity android:name=".ActivityShowFailDialog"
