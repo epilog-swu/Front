@@ -5,11 +5,11 @@ plugins {
 }
 
 android {
-    namespace = "com.epi.epilog"
+    namespace = "com.epi.epilog.presentation"
     compileSdk = 34
 
     defaultConfig {
-        applicationId = "com.epi.epilog"
+        applicationId = "com.epi.epilog.presentation"
         minSdk = 30
         targetSdk = 34
         versionCode = 1

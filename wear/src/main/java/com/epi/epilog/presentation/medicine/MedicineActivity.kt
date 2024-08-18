@@ -1,4 +1,4 @@
-package com.epi.epilog.presentation
+package com.epi.epilog.presentation.medicine
 
 import android.app.AlarmManager
 import android.app.NotificationChannel
@@ -8,7 +8,6 @@ import android.widget.Button
 import androidx.appcompat.app.AlertDialog
 import android.content.Context
 import android.content.Intent
-import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
@@ -21,7 +20,6 @@ import androidx.activity.ComponentActivity
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.epi.epilog.R
 import com.epi.epilog.presentation.theme.api.RetrofitService
 import com.google.gson.Gson
 import okhttp3.ResponseBody
@@ -35,6 +33,8 @@ import java.time.LocalDateTime
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 import android.provider.Settings
+import com.epi.epilog.presentation.R
+import com.epi.epilog.presentation.UpdateChecklistStatusRequest
 
 
 class MedicineActivity : ComponentActivity() {
@@ -333,9 +333,13 @@ class MedicineActivity : ComponentActivity() {
                 val goalTime = LocalDateTime.parse(checklistItem.goalTime, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"))
 
                 if(goalTime.isBefore(currentDateTime)){
-                    holder.checkBox.background = ContextCompat.getDrawable(context, R.drawable.checkbox_selector_red)
+                    holder.checkBox.background = ContextCompat.getDrawable(context,
+                        R.drawable.checkbox_selector_red
+                    )
                 } else {
-                    holder.checkBox.background = ContextCompat.getDrawable(context, R.drawable.checkbox_selector_yellow)
+                    holder.checkBox.background = ContextCompat.getDrawable(context,
+                        R.drawable.checkbox_selector_yellow
+                    )
                 }
 
 
@@ -352,7 +356,8 @@ class MedicineActivity : ComponentActivity() {
                         } else {
                             // 체크박스가 해제되었을 때 바로 서버로 데이터 전송
                             checklistItem.isComplete = false
-                            (context as MedicineActivity).updateChecklistStatus(checklistItem.id, State.상태없음, LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")))
+                            (context as MedicineActivity).updateChecklistStatus(checklistItem.id,
+                                State.상태없음, LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")))
                             (context as MedicineActivity).saveChecklistData() // 상태 변경 후 데이터 저장
                         }
                     }

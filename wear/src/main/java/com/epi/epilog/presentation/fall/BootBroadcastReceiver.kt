@@ -1,4 +1,4 @@
-package com.epi.epilog.presentation
+package com.epi.epilog.presentation.fall
 
 
 import android.content.BroadcastReceiver
@@ -6,7 +6,6 @@ import android.content.Context
 import android.content.Intent
 import android.os.Build
 import android.util.Log
-import com.epi.epilog.FallDetectionService
 
 class BootBroadcastReceiver : BroadcastReceiver() {
     override fun onReceive(context: Context, intent: Intent) {

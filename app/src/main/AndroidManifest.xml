@@ -35,13 +35,13 @@
 
         <activity android:name=".LoginActivity" android:exported="true"/>
 
-        <activity android:name=".ActivityDiaryShowDetail">
+        <activity android:name=".diary.ActivityDiaryShowDetail">
         </activity>
 
 
-        <activity android:name=".ActivityShowSuccessDialog"
+        <activity android:name=".diary.ActivityShowSuccessDialog"
             android:theme="@style/TransparentTheme" />
-        <activity android:name=".ActivityShowFailDialog"
+        <activity android:name=".diary.ActivityShowFailDialog"
             android:theme="@style/TransparentTheme" />
 <activity android:name=".medicine.MedicineAddModifyActivity"/>
         <activity android:name=".medicine.MedicineDetailActivity"/>

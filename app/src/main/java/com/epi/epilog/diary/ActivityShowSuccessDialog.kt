@@ -1,10 +1,11 @@
-package com.epi.epilog
+package com.epi.epilog.diary
 
 import android.app.Activity
 import android.os.Bundle
 import android.view.ViewGroup
 import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
+import com.epi.epilog.R
 
 class ActivityShowSuccessDialog : AppCompatActivity() {
 

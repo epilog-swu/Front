@@ -1,4 +1,4 @@
-package com.epi.epilog.presentation
+package com.epi.epilog.presentation.fall
 
 import android.Manifest
 import android.content.Intent
@@ -13,7 +13,7 @@ import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts.RequestPermission
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
-import com.epi.epilog.R
+import com.epi.epilog.presentation.R
 
 class SoundRecognizerActivity : AppCompatActivity() {
 

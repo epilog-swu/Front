@@ -1,7 +1,6 @@
-package com.epi.epilog.presentation
+package com.epi.epilog.presentation.meal
 
 import android.app.AlarmManager
-import android.app.Notification
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
@@ -17,11 +16,11 @@ import android.widget.Button
 import android.widget.CheckBox
 import androidx.activity.ComponentActivity
 import androidx.appcompat.app.AlertDialog
-import androidx.core.app.NotificationCompat
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.epi.epilog.R
+import com.epi.epilog.presentation.ApiResponse
+import com.epi.epilog.presentation.R
 import com.epi.epilog.presentation.theme.api.MealCheckItem
 import com.epi.epilog.presentation.theme.api.MealCheckListResponse
 import com.epi.epilog.presentation.theme.api.MealUpdateInfo
@@ -213,9 +212,13 @@ class MealActivity : ComponentActivity() {
 
             if (item.state == State.상태없음) {
                 if (goalTime.isBefore(currentDateTime) || goalTime.isEqual(currentDateTime)) {
-                    holder.checkBox.background = ContextCompat.getDrawable(context, R.drawable.checkbox_selector_red)
+                    holder.checkBox.background = ContextCompat.getDrawable(context,
+                        R.drawable.checkbox_selector_red
+                    )
                 } else {
-                    holder.checkBox.background = ContextCompat.getDrawable(context, R.drawable.checkbox_selector_yellow)
+                    holder.checkBox.background = ContextCompat.getDrawable(context,
+                        R.drawable.checkbox_selector_yellow
+                    )
                 }
             }
 

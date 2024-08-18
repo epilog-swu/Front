@@ -1,14 +1,10 @@
-package com.epi.epilog.presentation
+package com.epi.epilog.presentation.blood
 
 import android.os.Bundle
 import android.util.Log
-import android.view.View
-import android.widget.RadioGroup
 import android.widget.TextView
-import android.widget.TimePicker
-import androidx.activity.ComponentActivity
 import androidx.appcompat.app.AppCompatActivity
-import com.epi.epilog.R
+import com.epi.epilog.presentation.R
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 

@@ -1,4 +1,4 @@
-package com.epi.epilog
+package com.epi.epilog.main
 
 import android.content.Context
 import android.content.Intent
@@ -15,11 +15,13 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
+import com.epi.epilog.R
 import com.epi.epilog.api.DiaryIconResponse
 import com.epi.epilog.api.RetrofitClient
 import com.epi.epilog.api.titleKeyWordEntry
 import com.epi.epilog.databinding.FragmentBsdNodiaryBinding
 import com.epi.epilog.databinding.FragmentBsdYesDiaryBinding
+import com.epi.epilog.diary.ActivityDiaryShowDetail
 import com.epi.epilog.diary.DiaryEditActivity
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment

@@ -1,4 +1,4 @@
-package com.epi.epilog.presentation
+package com.epi.epilog.presentation.blood
 
 import android.content.Context
 import android.content.Intent
@@ -13,10 +13,11 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.ScrollView
 import android.widget.Toast
-import androidx.compose.ui.graphics.Color
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
-import com.epi.epilog.R
+import com.epi.epilog.presentation.ApiResponse
+import com.epi.epilog.presentation.MainActivity
+import com.epi.epilog.presentation.R
 import com.epi.epilog.presentation.theme.api.RetrofitService
 import com.google.gson.Gson
 import retrofit2.Call
@@ -58,15 +59,21 @@ class BloodSugarInputFragment : Fragment() {
                 try {
                     bloodSugarValue = s.toString().toInt()
                     if (bloodSugarValue > 350) {
-                        bloodSugarInput.setTextColor(ContextCompat.getColor(requireContext(), R.color.빨강))
+                        bloodSugarInput.setTextColor(ContextCompat.getColor(requireContext(),
+                            R.color.빨강
+                        ))
                         Toast.makeText(requireContext(), "혈당 수치는 350까지 기록 가능합니다!", Toast.LENGTH_SHORT).show()
                         submitButton.isEnabled = false
                     } else {
-                        bloodSugarInput.setTextColor(ContextCompat.getColor(requireContext(), R.color.검정색))
+                        bloodSugarInput.setTextColor(ContextCompat.getColor(requireContext(),
+                            R.color.검정색
+                        ))
                         submitButton.isEnabled = true
                     }
                 } catch (e: NumberFormatException) {
-                    bloodSugarInput.setTextColor(ContextCompat.getColor(requireContext(), R.color.검정색))
+                    bloodSugarInput.setTextColor(ContextCompat.getColor(requireContext(),
+                        R.color.검정색
+                    ))
                     submitButton.isEnabled = false
                 }
             }

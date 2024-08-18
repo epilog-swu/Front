@@ -107,7 +107,7 @@
 //        }
 //    }
 //}
-package com.epi.epilog.presentation
+package com.epi.epilog.presentation.blood
 
 import android.os.Bundle
 import android.util.Log
@@ -118,7 +118,7 @@ import android.widget.Button
 import android.widget.RadioGroup
 import android.widget.TimePicker
 import androidx.fragment.app.Fragment
-import com.epi.epilog.R
+import com.epi.epilog.presentation.R
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 

@@ -1,4 +1,4 @@
-package com.epi.epilog.presentation
+package com.epi.epilog.presentation.blood
 
 import com.google.gson.annotations.SerializedName
 

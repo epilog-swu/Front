@@ -1,4 +1,4 @@
-package com.epi.epilog
+package com.epi.epilog.diary
 
 import android.content.Context
 import android.graphics.Color
@@ -13,6 +13,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import com.bumptech.glide.Glide
+import com.epi.epilog.R
 import com.epi.epilog.api.DiaryDetailResponse
 import com.epi.epilog.api.GraphBloodSugarResponse
 import com.epi.epilog.api.GraphBloodSugars

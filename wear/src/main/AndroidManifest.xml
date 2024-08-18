@@ -1,6 +1,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    package="com.epi.epilog">
+    package="com.epi.epilog.presentation">
 
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
@@ -21,7 +21,6 @@
     <uses-feature android:name="android.hardware.type.watch" />
 
     <application
-        android:name=".presentation.MyApplication"
         android:networkSecurityConfig="@xml/network_secutiry_config"
         android:allowBackup="true"
         android:icon="@drawable/logo"
@@ -29,20 +28,20 @@
         android:supportsRtl="true"
         android:theme="@android:style/Theme.DeviceDefault">
 
-        <activity android:name=".presentation.MainActivity"
+        <activity android:name=".MainActivity"
             android:exported="true"
             android:theme="@style/Theme.AppCompat.DayNight.NoActionBar" >
         </activity>
 
         <service
-            android:name=".presentation.MyFirebaseMessagingService"
+            android:name=".fall.MyFirebaseMessagingService"
             android:exported="true">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT"/>
             </intent-filter>
         </service>
 
-        <activity android:name=".presentation.LoginActivity"
+        <activity android:name=".LoginActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -50,21 +49,21 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".presentation.MedicineActivity"
+        <activity android:name=".medicine.MedicineActivity"
             android:exported="true"
             android:theme="@style/Theme.AppCompat.DayNight.NoActionBar" />
 
-        <activity android:name=".presentation.BloodSugarActivity"
+        <activity android:name=".blood.BloodSugarActivity"
             android:exported="true"
             android:theme="@style/Theme.AppCompat.DayNight.NoActionBar" />
 
-        <activity android:name=".presentation.MealActivity"
+        <activity android:name=".meal.MealActivity"
             android:exported="true"
             android:theme="@style/Theme.AppCompat.DayNight.NoActionBar" />
 
-        <activity android:name=".presentation.SoundRecognizerActivity" />
+        <activity android:name=".fall.SoundRecognizerActivity" />
 
-        <activity android:name=".presentation.FallDetectionActivity"
+        <activity android:name=".fall.FallDetectionActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="com.epi.epilog.SHOW_FALL_DETECTION"/>
@@ -72,7 +71,7 @@
         </activity>
 
         <service
-            android:name=".FallDetectionService"
+            android:name=".fall.FallDetectionService"
             android:enabled="true"
             android:exported="true"
             android:foregroundServiceType="location"
@@ -80,7 +79,7 @@
         </service>
 
         <receiver
-            android:name=".presentation.BootBroadcastReceiver"
+            android:name=".fall.BootBroadcastReceiver"
             android:enabled="true"
             android:exported="true">
             <intent-filter>
@@ -96,8 +95,8 @@
             android:name="com.google.android.wearable.standalone"
             android:value="true" />
 
-        <receiver android:name=".presentation.MealNotificationReceiver" />
-        <receiver android:name=".presentation.MedicineNotificationReceiver" />
+        <receiver android:name=".meal.MealNotificationReceiver" />
+        <receiver android:name=".medicine.MedicineNotificationReceiver" />
 
     </application>
 </manifest>
