@@ -226,22 +226,25 @@ class ActivityDiaryShowDetail : AppCompatActivity() {
 
 
         // 운동 처리
-        val exerciseKeywords = diaryDetail.exercise?.keyword?.filter { it != "직접 입력" } ?: emptyList()
+        val exerciseKeywords = diaryDetail.exercise?.keyword?.filter { it != "직접입력" } ?: emptyList()
         if (exerciseKeywords.isNotEmpty()) {
             val exerciseComment = "오늘은 " + exerciseKeywords.joinToString(", ") + " 신체활동을 했습니다."
             binding.exercise.text = exerciseComment
+            binding.exerciseDetail.text = diaryDetail.exercise?.details
+            binding.exerciseDetail.visibility = View.VISIBLE
         } else {
             binding.exercise.text = "" // 키워드가 "직접입력"만 있는 경우, 코멘트는 생성하지 않음
             binding.exerciseLayout.visibility = View.GONE
-        }
-
-
-        if (diaryDetail.exercise?.keyword?.contains("직접 입력") == true) {
-            binding.exerciseDetail.text = diaryDetail.exercise.details
-            binding.exerciseDetail.visibility = View.VISIBLE
-        } else {
             binding.exerciseDetail.visibility = View.GONE
         }
+
+
+//        if (diaryDetail.exercise?.keyword?.contains("직접입력") == true) {
+//            binding.exerciseDetail.text = diaryDetail.exercise.details
+//            binding.exerciseDetail.visibility = View.VISIBLE
+//        } else {
+//            binding.exerciseDetail.visibility = View.GONE
+//        }
 
         // 운동 배지 추가
         binding.exerciseBadgeLayout.removeAllViews() // 기존 배지 제거
@@ -284,22 +287,25 @@ class ActivityDiaryShowDetail : AppCompatActivity() {
         }
 
         // 기분 처리
-        val moodKeywords = diaryDetail.mood?.keyword?.filter { it != "직접 입력" } ?: emptyList()
+        val moodKeywords = diaryDetail.mood?.keyword?.filter { it != "직접입력" } ?: emptyList()
         if (moodKeywords.isNotEmpty()) {
             val moodComment = "오늘은 " + moodKeywords.joinToString(", ") + "을(를) 느꼈습니다."
             binding.mood.text = moodComment
+            binding.moodDetail.text = diaryDetail.mood?.details
+            binding.moodDetail.visibility = View.VISIBLE
         } else {
             binding.mood.text = "" // 키워드가 "직접입력"만 있는 경우, 코멘트는 생성하지 않음
+            binding.moodDetail.visibility = View.GONE
             binding.moodLayout.visibility = View.GONE // 키워드가 없으면 상위 레이아웃 숨김
         }
 
 
-        if (diaryDetail.mood?.keyword?.contains("직접 입력") == true) {
-            binding.moodDetail.text = diaryDetail.mood.details
-            binding.moodDetail.visibility = View.VISIBLE
-        } else {
-            binding.moodDetail.visibility = View.GONE
-        }
+//        if (diaryDetail.mood?.keyword?.contains("직접 입력") == true) {
+//            binding.moodDetail.text = diaryDetail.mood.details
+//            binding.moodDetail.visibility = View.VISIBLE
+//        } else {
+//            binding.moodDetail.visibility = View.GONE
+//        }
 
         moodKeywords.forEachIndexed { index, keyword ->
             // 배지에 해당하는 TextView 생성

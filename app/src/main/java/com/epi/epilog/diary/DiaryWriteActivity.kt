@@ -203,11 +203,11 @@ class DiaryWriteActivity : AppCompatActivity() {
         val list = mutableListOf<ExerciseEntry>()
         for (i in 0 until array.length()) {
             val item = array.getJSONObject(i)
-            val type = item.getString("type")
+            val type = item.getString("type").replace("직접 입력", "직접입력")
             val details = item.optString("details").takeIf { it != "null" && it.isNotEmpty() }
 
             // "직접 입력" 타입일 경우, details가 있을 때만 추가
-            if (type != "직접 입력" || details != null) {
+            if (type != "직접입력" || details != null) {
                 list.add(ExerciseEntry(type, details))
             }
         }
@@ -218,11 +218,11 @@ class DiaryWriteActivity : AppCompatActivity() {
         val list = mutableListOf<MoodEntry>()
         for (i in 0 until array.length()) {
             val item = array.getJSONObject(i)
-            val type = item.getString("type")
+            val type = item.getString("type").replace("직접 입력", "직접입력") // 여기서 변경
             val details = item.optString("details").takeIf { it != "null" && it.isNotEmpty() }
 
             // "직접 입력" 타입일 경우, details가 있을 때만 추가
-            if (type != "직접 입력" || details != null) {
+            if (type != "직접입력" || details != null) {
                 list.add(MoodEntry(type, details))
             }
         }
