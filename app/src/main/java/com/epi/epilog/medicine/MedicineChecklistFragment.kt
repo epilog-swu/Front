@@ -244,7 +244,7 @@ class MedicineChecklistFragment : Fragment() {
             layoutParams.topMargin = 5
             textView.layoutParams = layoutParams
         } ?: run {
-            Toast.makeText(context, "Titles container not found", Toast.LENGTH_SHORT).show()
+            //Toast.makeText(context, "Titles container not found", Toast.LENGTH_SHORT).show()
         }
 
         Log.d("MedicineChecklistFragment", "initWeekCalendarView 끝")

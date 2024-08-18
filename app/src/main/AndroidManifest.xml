@@ -33,7 +33,7 @@
 
         <activity android:name=".LoginActivity" android:exported="true"/>
 
-        <activity android:name=".ActivityDiaryShowDetail">
+        <activity android:name=".diary.ActivityDiaryShowDetail">
         </activity>
 
 
