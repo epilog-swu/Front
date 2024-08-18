@@ -1,32 +1,27 @@
 package com.epi.epilog.presentation
 
-import CalendarInitializer
+import com.epi.epilog.presentation.calendar.CalendarInitializer
 import android.content.Context
 import android.content.Intent
-import android.graphics.Color
 import android.hardware.Sensor
-import android.hardware.SensorEvent
-import android.hardware.SensorEventListener
 import android.hardware.SensorManager
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
-import android.view.View
-import android.widget.FrameLayout
 import android.widget.TextView
 import androidx.activity.ComponentActivity
-import com.epi.epilog.FallDetectionService
-import com.epi.epilog.R
-import com.epi.epilog.databinding.ActivityMainBinding
-import com.epi.epilog.presentation.theme.Data
+import com.epi.epilog.presentation.calendar.ChartInitializer
+import com.epi.epilog.presentation.blood.BloodSugarActivity
+import com.epi.epilog.presentation.blood.BloodSugarDatas
+import com.epi.epilog.presentation.databinding.ActivityMainBinding
+import com.epi.epilog.presentation.fall.FallDetectionService
+import com.epi.epilog.presentation.meal.MealActivity
+import com.epi.epilog.presentation.medicine.MedicineActivity
 import com.epi.epilog.presentation.theme.api.RetrofitService
 import com.epi.epilog.presentation.theme.api.SensorData
 import com.github.mikephil.charting.charts.LineChart
 import com.github.mikephil.charting.data.Entry
 import com.github.mikephil.charting.data.LineData
-import com.github.mikephil.charting.data.LineDataSet
-import com.google.gson.Gson
-import com.google.gson.GsonBuilder
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.Call
@@ -69,7 +64,7 @@ class MainActivity : ComponentActivity() {
         chartInitializer = ChartInitializer(chart)
         chartInitializer.initChart()
 
-        // CalendarInitializer 사용
+        // calendar.CalendarInitializer 사용
         calendarInitializer = CalendarInitializer(this, weekCalendarView, this::onDateSelected)
         calendarInitializer.initWeekCalendarView()
 

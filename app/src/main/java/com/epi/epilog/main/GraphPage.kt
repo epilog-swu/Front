@@ -1,4 +1,4 @@
-package com.epi.epilog
+package com.epi.epilog.main
 
 
 import android.content.Context
@@ -14,14 +14,13 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.core.view.children
 import androidx.fragment.app.Fragment
+import com.epi.epilog.R
 import com.epi.epilog.api.GraphBloodSugarAverageResponse
 import com.epi.epilog.api.GraphBloodSugarResponse
 import com.epi.epilog.api.GraphBloodSugars
 import com.epi.epilog.api.GraphWeightBMIDate
 import com.epi.epilog.api.GraphWeightBMIResponse
-import com.epi.epilog.api.MedicationChecklistResponse
 import com.epi.epilog.api.RetrofitClient
-import com.epi.epilog.api.RetrofitService
 import com.epi.epilog.databinding.FragmentGraphBinding
 import com.github.mikephil.charting.charts.LineChart
 import com.github.mikephil.charting.components.Legend
@@ -47,7 +46,6 @@ import java.time.DayOfWeek
 import java.time.LocalDate
 import java.time.YearMonth
 import java.time.format.DateTimeFormatter
-import java.util.Calendar
 import java.util.Locale
 
 

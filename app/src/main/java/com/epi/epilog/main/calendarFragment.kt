@@ -1,4 +1,4 @@
-package com.epi.epilog
+package com.epi.epilog.main
 
 import android.content.res.ColorStateList
 import android.graphics.Color
@@ -7,31 +7,13 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
-import android.widget.Toast
 import androidx.annotation.RequiresApi
-import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.Lifecycle
 import androidx.viewpager2.adapter.FragmentStateAdapter
-import com.epi.epilog.databinding.CalendarMonthYearBinding
-import com.epi.epilog.databinding.EpiDialogCustomBinding
-import com.epi.epilog.databinding.FragmentCalendarBinding
+import com.epi.epilog.main.GraphPage
 import com.epi.epilog.databinding.MainCalendarBinding
-import com.kizitonwose.calendar.core.CalendarDay
-import com.kizitonwose.calendar.core.CalendarMonth
-import com.kizitonwose.calendar.core.DayPosition
-import com.kizitonwose.calendar.core.daysOfWeek
-import com.kizitonwose.calendar.core.firstDayOfWeekFromLocale
-import com.kizitonwose.calendar.view.MonthDayBinder
-import com.kizitonwose.calendar.view.MonthHeaderFooterBinder
-import com.kizitonwose.calendar.view.ViewContainer
-import java.time.LocalDate
-import java.time.YearMonth
-import java.time.format.DateTimeFormatter
-import java.time.format.TextStyle
-import java.util.Locale
 
 class CalendarFragment : Fragment() {
     private var _binding: MainCalendarBinding? = null

@@ -1,4 +1,4 @@
-package com.epi.epilog
+package com.epi.epilog.presentation.fall
 
 import android.Manifest
 import android.annotation.SuppressLint
@@ -28,8 +28,7 @@ import android.os.PowerManager
 import android.util.Log
 import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationCompat
-import com.epi.epilog.presentation.ApiResponse
-import com.epi.epilog.presentation.FallDetectionActivity
+import com.epi.epilog.presentation.R
 import com.epi.epilog.presentation.theme.api.LocationData
 import com.epi.epilog.presentation.theme.api.RetrofitService
 import com.epi.epilog.presentation.theme.api.SensorData
@@ -39,9 +38,6 @@ import com.google.gson.JsonObject
 import org.java_websocket.client.WebSocketClient
 import org.java_websocket.handshake.ServerHandshake
 import org.java_websocket.exceptions.WebsocketNotConnectedException
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.net.URI
@@ -155,7 +151,7 @@ class FallDetectionService : Service(), SensorEventListener, LocationListener {
                     val jsonObject = Gson().fromJson(message, JsonObject::class.java)
                     val success = jsonObject.get("success").asBoolean
                     val event = jsonObject.get("event").asString
-                    if (event == "fall" && success) {
+                    if (event == "com/epi/epilog/presentation/fall" && success) {
                         isDataTransmissionPaused = true
                         val intent = Intent(this@FallDetectionService, FallDetectionActivity::class.java)
                         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
@@ -224,11 +220,11 @@ class FallDetectionService : Service(), SensorEventListener, LocationListener {
 
             for ((index, chunk) in chunkedData.withIndex()) {
                 val jsonString = gson.toJson(mapOf(
-                    "event" to "fall",
+                    "event" to "com/epi/epilog/presentation/fall",
                     "chunkIndex" to index,
                     "totalChunks" to totalChunks,
                     "data" to mapOf(
-                        "fall" to chunk.map { mapOf(
+                        "com/epi/epilog/presentation/fall" to chunk.map { mapOf(
                             "accX" to roundToTwoDecimalPlaces(it.accX),
                             "accY" to roundToTwoDecimalPlaces(it.accY),
                             "accZ" to roundToTwoDecimalPlaces(it.accZ),

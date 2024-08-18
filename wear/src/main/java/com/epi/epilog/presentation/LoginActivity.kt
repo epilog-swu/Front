@@ -18,7 +18,6 @@ import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
-import com.epi.epilog.R
 import com.epi.epilog.presentation.theme.Data
 import com.epi.epilog.presentation.theme.api.RetrofitService
 import com.epi.epilog.presentation.theme.api.TokenData
@@ -50,15 +49,11 @@ class LoginActivity : ComponentActivity() {
         val loginButton = findViewById<Button>(R.id.button)
 
         loginButton.setOnClickListener {
-            if (isNetworkAvailable()) {
-                val code = codeInput.text.toString()
-                if (code.isNotEmpty()) {
-                    postData(code)
-                } else {
-                    showInvalidCodeDialog("코드를 입력하세요.")
-                }
+            val code = codeInput.text.toString()
+            if (code.isNotEmpty()) {
+                postData(code)
             } else {
-                Toast.makeText(this, "네트워크 연결을 확인하세요.", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, "코드를 입력하세요", Toast.LENGTH_SHORT).show()
             }
         }
 
@@ -84,13 +79,11 @@ class LoginActivity : ComponentActivity() {
                         Log.d(TAG, "Server Response: $it")
                         saveTokenToSession(it)
                         setLoggedIn(true)
-                        disableBatteryOptimization()
-                        getTokenAndNavigate()
+                        sendFCMTokenAndNavigate()
                     }
                 } else {
                     Log.d(TAG, "Error Response: ${response.errorBody()?.string()}")
-                    Log.d(TAG, "Response Code: ${response.code()}")
-                    showInvalidCodeDialog("코드 검증에 실패했습니다.")
+                    showInvalidCodeDialog()
                 }
             }
 
@@ -123,7 +116,7 @@ class LoginActivity : ComponentActivity() {
         retrofitService.testApi("Bearer $authToken").enqueue(object : Callback<Void> {
             override fun onResponse(call: Call<Void>, response: Response<Void>) {
                 if (response.isSuccessful) {
-                    getTokenAndNavigate()
+                    sendFCMTokenAndNavigate()
                 } else {
                     saveTokenToSession(null)
                 }
@@ -136,25 +129,24 @@ class LoginActivity : ComponentActivity() {
         })
     }
 
-    private fun getTokenAndNavigate() {
+    private fun sendFCMTokenAndNavigate() {
         FirebaseMessaging.getInstance().token.addOnCompleteListener { task ->
             if (!task.isSuccessful) {
                 Log.w(TAG, "Fetching FCM registration token failed", task.exception)
                 return@addOnCompleteListener
             }
 
-            val token = task.result
-            Log.d(TAG, "FCM Token: $token")
-            sendTokenToServer(token)
-            navigateToMainActivity()
+            val fcmToken = task.result
+            Log.d(TAG, "FCM Token: $fcmToken")
+            sendTokenToServer(fcmToken)
         }
     }
 
-    private fun sendTokenToServer(token: String) {
+    private fun sendTokenToServer(fcmToken: String) {
         val sharedPreferences = getSharedPreferences("AppPrefs", Context.MODE_PRIVATE)
         val authToken = sharedPreferences.getString("AuthToken", null) ?: return
 
-        val tokenData = TokenData(token = token)
+        val tokenData = TokenData(token = fcmToken)
         val call = retrofitService.postToken("Bearer $authToken", tokenData)
         call.enqueue(object : Callback<ApiResponse> {
             override fun onResponse(call: Call<ApiResponse>, response: Response<ApiResponse>) {
@@ -168,10 +160,12 @@ class LoginActivity : ComponentActivity() {
                 } else {
                     Log.d(TAG, "Error saving token on the server: ${response.errorBody()?.string()}")
                 }
+                navigateToMainActivity()
             }
 
             override fun onFailure(call: Call<ApiResponse>, t: Throwable) {
                 Log.d(TAG, "Failed to send token to server: ${t.message}")
+                navigateToMainActivity()
             }
         })
     }
@@ -182,24 +176,10 @@ class LoginActivity : ComponentActivity() {
         finish()
     }
 
-    private fun disableBatteryOptimization() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            val packageName = packageName
-            val pm = getSystemService(Context.POWER_SERVICE) as PowerManager
-            if (!pm.isIgnoringBatteryOptimizations(packageName)) {
-                val intent = Intent(Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS).apply {
-                    data = Uri.parse("package:$packageName")
-                }
-                startActivity(intent)
-            }
-        }
-    }
-
-    private fun showInvalidCodeDialog(message: String) {
+    private fun showInvalidCodeDialog() {
         val dialogView = layoutInflater.inflate(R.layout.login_modal, null)
         val dialog = AlertDialog.Builder(this)
             .setView(dialogView)
-            .setMessage(message)
             .create()
 
         dialogView.findViewById<Button>(R.id.button2).setOnClickListener {
@@ -207,18 +187,6 @@ class LoginActivity : ComponentActivity() {
         }
 
         dialog.show()
-    }
-
-    private fun isNetworkAvailable(): Boolean {
-        val connectivityManager = getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            val network = connectivityManager.activeNetwork ?: return false
-            val capabilities = connectivityManager.getNetworkCapabilities(network) ?: return false
-            return capabilities.hasTransport(NetworkCapabilities.TRANSPORT_WIFI) || capabilities.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR)
-        } else {
-            val networkInfo = connectivityManager.activeNetworkInfo ?: return false
-            return networkInfo.isConnected
-        }
     }
 
     // 권한 요청

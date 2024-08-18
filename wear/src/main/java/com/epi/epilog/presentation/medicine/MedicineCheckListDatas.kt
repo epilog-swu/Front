@@ -1,4 +1,4 @@
-package com.epi.epilog.presentation
+package com.epi.epilog.presentation.medicine
 
 import com.google.gson.annotations.SerializedName
 
