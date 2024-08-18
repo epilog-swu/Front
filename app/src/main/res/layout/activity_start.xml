@@ -1,64 +1,83 @@
-<?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/start_background"
-    android:weightSum="1">
+    android:background="@drawable/gradient_background"
+    android:weightSum="1"
+    android:id="@+id/startLayout">
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="0.7"
-        android:orientation="vertical">
+<LinearLayout
+android:layout_width="match_parent"
+android:layout_height="0dp"
+android:layout_weight="0.7"
+android:orientation="vertical"
+android:gravity="center">
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/app_name_capital"
-            android:textSize="50dp"
-            android:layout_gravity="center"
-            android:paddingTop="110dp"
-            android:textColor="#000"/>
+<TextView
+    android:id="@+id/appNameTextView"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:text="@string/app_name_capital"
+    android:textSize="50dp"
+    android:paddingTop="10dp"
+    android:layout_marginBottom="50dp"
+    android:layout_marginTop="-100dp"
+    android:textColor="#000"/>
 
-        <ImageView
-            android:layout_width="130dp"
-            android:layout_height="350dp"
-            android:layout_gravity="center"
-            android:src="@drawable/logo"
-            android:paddingTop="-10dp"/>
+<FrameLayout
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center"
+    android:visibility="gone"
+    android:id="@+id/logoFrame">
 
-    </LinearLayout>
+    <ImageView
+        android:id="@+id/ovalImage"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_marginLeft="30dp"
+        android:src="@drawable/start_oval"
+        android:visibility="gone"/>
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="0.3"
-        android:orientation="vertical"
-        android:gravity="bottom|center_horizontal"
-        android:paddingBottom="30dp">
-
-        <Button
-            android:id="@+id/signUpButton"
-            android:layout_width="330dp"
-            android:layout_height="56dp"
-            android:background="@drawable/purple_button_shape"
-            android:gravity="center"
-            android:text="회원가입"
-            android:layout_marginBottom="20dp"
-            android:textColor="@color/하얀색"
-            android:textSize="18dp" />
-
-        <Button
-            android:id="@+id/nextButton"
-            android:layout_width="330dp"
-            android:layout_height="56dp"
-            android:background="@drawable/white_button_shape"
-            android:gravity="center"
-            android:text="시작하기"
-            android:textColor="@color/main_purple"
-            android:textSize="18dp" />
-
-    </LinearLayout>
-
+    <ImageView
+        android:id="@+id/logoImage"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_gravity="center"
+        android:src="@drawable/logo"/>
+</FrameLayout>
 </LinearLayout>
+
+<LinearLayout
+android:layout_width="match_parent"
+android:layout_height="0dp"
+android:layout_weight="0.3"
+android:orientation="vertical"
+android:gravity="bottom|center_horizontal"
+android:paddingBottom="30dp"
+android:visibility="gone"
+android:id="@+id/buttonsLayout">
+
+<Button
+    android:id="@+id/signUpButton"
+    android:layout_width="330dp"
+    android:layout_height="56dp"
+    android:background="@drawable/purple_button_shape"
+    android:gravity="center"
+    android:text="회원가입"
+    android:layout_marginBottom="20dp"
+    android:textColor="@color/white"
+    android:textSize="18dp" />
+
+<Button
+    android:id="@+id/nextButton"
+    android:layout_width="330dp"
+    android:layout_height="56dp"
+    android:background="@drawable/white_button_shape"
+    android:gravity="center"
+    android:text="시작하기"
+    android:textColor="@color/main_purple"
+    android:textSize="18dp" />
+</LinearLayout>
+    </LinearLayout>

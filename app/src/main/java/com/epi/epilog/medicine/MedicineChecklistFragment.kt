@@ -27,6 +27,7 @@ import com.epi.epilog.R
 import com.epi.epilog.api.ChecklistItem
 import com.epi.epilog.api.MedicationChecklistResponse
 import com.epi.epilog.api.RetrofitClient
+import com.epi.epilog.meal.MealChecklistFragment
 import com.kizitonwose.calendar.core.WeekDay
 import com.kizitonwose.calendar.core.atStartOfMonth
 import com.kizitonwose.calendar.core.daysOfWeek
@@ -43,30 +44,27 @@ import java.time.YearMonth
 import java.time.format.DateTimeFormatter
 import java.util.Locale
 
+
 class MedicineChecklistFragment : Fragment() {
 
-    private var selectedDate: LocalDate? = LocalDate.now() // 오늘 날짜로 초기화
+    private var selectedDate: LocalDate? = LocalDate.now()
+    private var medicationId: Int? = null
     private lateinit var weekCalendarView: WeekCalendarView
-    private lateinit var subTitle: TextView
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View? {
         val view = inflater.inflate(R.layout.fragment_medicine_checklist, container, false)
 
-        // Toolbar 설정
-        val toolbar: Toolbar = view.findViewById(R.id.toolbar)
-        (activity as? AppCompatActivity)?.setSupportActionBar(toolbar)
-        (activity as? AppCompatActivity)?.supportActionBar?.setDisplayShowTitleEnabled(false)
-
-        val toolbarTitle: TextView = view.findViewById(R.id.toolbar_title)
-        toolbarTitle.text = "복용 약 관리"
-
-        weekCalendarView = view.findViewById(R.id.meal_calendarView)
-        initWeekCalendarView(view)
-
         view.findViewById<Button>(R.id.add_existing_medicine_button).setOnClickListener {
-            startActivity(Intent(context, MedicineDetailActivity::class.java))
+            val intent = Intent(context, MedicineDetailActivity::class.java)
+
+            if (medicationId != null) {
+                intent.putExtra("medicationId", medicationId)
+                startActivity(intent)
+            } else {
+                Toast.makeText(context, "No medication ID found.", Toast.LENGTH_SHORT).show()
+            }
         }
 
         view.findViewById<Button>(R.id.add_medicine_button).setOnClickListener {
@@ -85,6 +83,15 @@ class MedicineChecklistFragment : Fragment() {
         alarmTextView.text = spannableString
 
         validateToken()
+
+        weekCalendarView = view.findViewById(R.id.meal_calendarView)
+        if (weekCalendarView == null) {
+            Log.e("MealChecklistFragment", "weekCalendarView is null")
+            Toast.makeText(context, "Calendar View 초기화 실패", Toast.LENGTH_SHORT).show()
+            return
+        }
+
+        initWeekCalendarView(view)
     }
 
     private fun validateToken() {
@@ -93,7 +100,7 @@ class MedicineChecklistFragment : Fragment() {
             override fun onResponse(call: Call<Void>, response: Response<Void>) {
                 if (response.isSuccessful) {
                     selectedDate?.let {
-                        selectDate(it)
+                        selectDate(it) // 초기화 시 오늘 날짜 데이터 로드
                     }
                 } else {
                     redirectToLogin()
@@ -120,7 +127,6 @@ class MedicineChecklistFragment : Fragment() {
 
     private fun selectDate(date: LocalDate) {
         selectedDate = date
-        weekCalendarView.notifyDateChanged(date)
         fetchMedicationChecklist(date)
     }
 
@@ -132,8 +138,10 @@ class MedicineChecklistFragment : Fragment() {
             Callback<MedicationChecklistResponse> {
             override fun onResponse(call: Call<MedicationChecklistResponse>, response: Response<MedicationChecklistResponse>) {
                 if (response.isSuccessful) {
-                    response.body()?.checklist?.let {
-                        updateChecklistUI(it)
+                    response.body()?.let { fetchedResponse ->
+                        medicationId = fetchedResponse.medicationId
+                        updateChecklistUI(fetchedResponse.checklist)
+                        Log.d("MedicineChecklistFragment", "Medication ID: $medicationId")
                     }
                 } else {
                     Toast.makeText(context, "Failed to load medication checklist", Toast.LENGTH_SHORT).show()
@@ -150,7 +158,6 @@ class MedicineChecklistFragment : Fragment() {
         val medicineContentLayout = view?.findViewById<LinearLayout>(R.id.medicine_content_layout)
         medicineContentLayout?.removeAllViews()
 
-
         val now = LocalDateTime.now()
         val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss", Locale.getDefault())
 
@@ -166,13 +173,7 @@ class MedicineChecklistFragment : Fragment() {
             medicineName.text = item.medicationName
             medicineCheckbox.isChecked = item.isComplete
 
-            itemView.background = when {
-                item.isComplete -> ContextCompat.getDrawable(requireContext(), R.drawable.background_yellow)
-                now.isAfter(goalTime) -> ContextCompat.getDrawable(requireContext(), R.drawable.background_red)
-                else -> ContextCompat.getDrawable(requireContext(), R.drawable.medicine_background)
-            }
-
-            applyStrikeThrough(medicineName, medicineTime, item.isComplete)
+            updateItemViewBackground(item.isComplete, now, goalTime, itemView)
 
             itemView.setOnClickListener {
                 val bottomSheetFragment = MedicineBottomSheetFragment()
@@ -180,11 +181,23 @@ class MedicineChecklistFragment : Fragment() {
             }
 
             medicineCheckbox.setOnCheckedChangeListener { _, isChecked ->
-                applyStrikeThrough(medicineName, medicineTime, isChecked)
                 item.isComplete = isChecked
+                updateItemViewBackground(isChecked, now, goalTime, itemView)
+                applyStrikeThrough(medicineName, medicineTime, isChecked)
             }
 
             medicineContentLayout?.addView(itemView)
+        }
+    }
+
+    private fun updateItemViewBackground(isComplete: Boolean, now: LocalDateTime, goalTime: LocalDateTime, itemView: View) {
+        if (isComplete) {
+            itemView.setBackgroundResource(R.drawable.medicine_background) // 체크 시 보라색 배경
+        } else {
+            itemView.background = when {
+                now.isAfter(goalTime) -> ContextCompat.getDrawable(requireContext(), R.drawable.background_red) // 목표 시간 < 현재 시간
+                else -> ContextCompat.getDrawable(requireContext(), R.drawable.background_yellow) // 목표 시간 > 현재 시간
+            }
         }
     }
 
@@ -198,21 +211,26 @@ class MedicineChecklistFragment : Fragment() {
         }
     }
 
+
+
     private fun initWeekCalendarView(view: View) {
-        Log.d("MedicineChecklistFragment", "initWeekCalendarView 시작")
+        Log.d("MealChecklistFragment", "initWeekCalendarView 시작")
 
-        weekCalendarView.dayBinder = object : WeekDayBinder<DayViewContainer> {
-            override fun create(view: View) = DayViewContainer(view)
+        weekCalendarView.dayBinder = object :
+            WeekDayBinder<MedicineChecklistFragment.DayViewContainer> {
+            override fun create(view: View) = MedicineChecklistFragment.DayViewContainer(view)
 
-            override fun bind(container: DayViewContainer, data: WeekDay) {
+            override fun bind(container: MedicineChecklistFragment.DayViewContainer, data: WeekDay) {
                 container.textView.text = data.date.dayOfMonth.toString()
-                container.textView.setOnClickListener {
-                    onDateSelected(data.date)
-                }
+
                 if (data.date == selectedDate) {
                     container.textView.setBackgroundResource(R.drawable.app_week_cal_selected_date)
                 } else {
-                    container.textView.setBackgroundResource(0)
+                    container.textView.setBackgroundResource(0) // 기본 배경
+                }
+
+                container.textView.setOnClickListener {
+                    onDateSelected(data.date)
                 }
             }
         }
@@ -227,12 +245,6 @@ class MedicineChecklistFragment : Fragment() {
         weekCalendarView.scrollToWeek(currentDate)
 
         val titlesContainer = view.findViewById<ViewGroup>(R.id.app_calendar_day_titles_container)
-        if (titlesContainer == null) {
-            Log.e("MedicineChecklistFragment", "titlesContainer is null")
-        } else {
-            Log.d("MedicineChecklistFragment", "titlesContainer is not null")
-        }
-
         titlesContainer?.children?.map { it as TextView }?.forEachIndexed { index, textView ->
             val dayOfWeek = daysOfWeek[index]
             val title = dayOfWeek.getDisplayName(java.time.format.TextStyle.SHORT, Locale.getDefault())
@@ -243,29 +255,23 @@ class MedicineChecklistFragment : Fragment() {
             layoutParams.marginStart = 5
             layoutParams.topMargin = 5
             textView.layoutParams = layoutParams
-        } ?: run {
-            Toast.makeText(context, "Titles container not found", Toast.LENGTH_SHORT).show()
         }
 
-        Log.d("MedicineChecklistFragment", "initWeekCalendarView 끝")
+        Log.d("MealChecklistFragment", "initWeekCalendarView 끝")
     }
 
     private fun onDateSelected(date: LocalDate) {
         val currentSelection = selectedDate
-        if (currentSelection == date) {
-            selectedDate = null
-        } else {
-            selectedDate = date
-        }
+        selectedDate = date
 
         weekCalendarView.notifyDateChanged(date)
-        if (currentSelection != null) {
+        if (currentSelection != null && currentSelection != date) {
             weekCalendarView.notifyDateChanged(currentSelection)
         }
 
         Toast.makeText(context, "선택된 날짜: $date", Toast.LENGTH_SHORT).show()
 
-        fetchMedicationChecklist(date)
+        selectDate(date) // 선택된 날짜의 체크리스트 데이터 로드
     }
 
     private class DayViewContainer(view: View) : ViewContainer(view) {
