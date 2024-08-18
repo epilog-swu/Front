@@ -42,11 +42,13 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
 
-        <ImageView
+        <Button
+            android:id="@+id/prev_button"
             android:layout_marginEnd="20dp"
             android:layout_width="30dp"
             android:layout_height="40dp"
-            android:src="@drawable/prev"
+            android:background="@android:color/transparent"
+            android:drawableStart="@drawable/prev"
             android:layout_gravity="center"/>
 
         <LinearLayout
@@ -62,11 +64,13 @@
                 android:src="@drawable/medicine"/>
         </LinearLayout>
 
-        <ImageView
+        <Button
+            android:id="@+id/next_button"
             android:layout_marginStart="20dp"
             android:layout_width="30dp"
             android:layout_height="40dp"
-            android:src="@drawable/next"
+            android:background="@android:color/transparent"
+            android:drawableStart="@drawable/next"
             android:layout_gravity="center"/>
     </LinearLayout>
 
@@ -112,34 +116,14 @@
                 android:textSize="18sp"
                 android:textStyle="bold"/>
 
+            <!-- Layout to hold time badges -->
             <LinearLayout
+                android:id="@+id/medicine_times_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:gravity="center_vertical">
-
-                <TextView
-                    android:id="@+id/badgeCavamazepine"
-                    android:layout_width="wrap_content"
-                    android:layout_height="22dp"
-                    android:background="@drawable/badge"
-                    android:text="7시 30분"
-                    android:layout_marginEnd="10dp"
-                    android:textColor="#000"
-                    android:textSize="14sp"
-                    android:gravity="center" />
-
-                <TextView
-                    android:id="@+id/badgePhenytoin"
-                    android:layout_width="wrap_content"
-                    android:layout_height="22dp"
-                    android:background="@drawable/badge"
-                    android:text="12시 30분"
-                    android:textColor="#000"
-                    android:textSize="14sp"
-                    android:gravity="center" />
-
-            </LinearLayout>
+                android:layout_marginTop="8dp"
+                android:gravity="center_vertical" />
 
             <TextView
                 android:id="@+id/textView2"
@@ -148,14 +132,43 @@
                 android:text="복용 기간"
                 android:layout_marginTop="16dp"
                 android:textColor="#000"
-                android:textSize="20sp"
+                android:textSize="18sp"
                 android:textStyle="bold"/>
 
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+                <TextView
+                    android:id="@+id/medicine_period_start"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="2024년 3월 28일"
+                    android:layout_marginTop="8dp"
+                    android:textSize="16sp"
+                    android:textColor="#000"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text=" - "
+                    android:layout_marginTop="8dp"
+                    android:textSize="16sp"
+                    android:textColor="#000"/>
+                <TextView
+                    android:id="@+id/medicine_period_end"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="2024년 5월 28일"
+                    android:layout_marginTop="8dp"
+                    android:textSize="16sp"
+                    android:textColor="#000"/>
+            </LinearLayout>
+
             <TextView
-                android:id="@+id/medicine_period"
+                android:id="@+id/medicine_days"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="2024년 3월 28일 - 2024년 5월 28일\n월, 화, 수, 목, 금, 토, 일"
+                android:text="월, 화, 수, 목, 금, 토, 일"
                 android:layout_marginTop="8dp"
                 android:textSize="16sp"
                 android:textColor="#000"/>
@@ -167,7 +180,7 @@
                 android:text="효능"
                 android:layout_marginTop="16dp"
                 android:textColor="#000"
-                android:textSize="20sp"
+                android:textSize="18sp"
                 android:textStyle="bold"/>
 
             <TextView
@@ -230,6 +243,7 @@
                     android:src="@drawable/clock"/>
 
                 <TextView
+                    android:id="@+id/alarm_status"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
@@ -239,6 +253,7 @@
             </LinearLayout>
         </LinearLayout>
     </ScrollView>
+
     <!-- Buttons at the Bottom -->
     <LinearLayout
         android:id="@+id/thirdLinearLayout"

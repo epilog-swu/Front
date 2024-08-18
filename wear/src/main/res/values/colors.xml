@@ -13,4 +13,6 @@
     <color name="메인주황">#EEAE4A</color>
     <color name="메인연주황">#FAECD3</color>
     <color name="빨강">#FFC9C9</color>
+    <color name="start_color">#ECE4F9</color>
+    <color name="end_color">#BBA5DA</color>
 </resources>

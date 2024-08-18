@@ -357,7 +357,7 @@ class CalendarPage : Fragment() {
 
                 // 파일 저장 후 결과를 메인 스레드에서 UI로 알림
                 withContext(Dispatchers.Main) {
-                    Toast.makeText(context, "PDF downloaded successfully!", Toast.LENGTH_LONG)
+                    Toast.makeText(context, "PDF 변환 성공", Toast.LENGTH_LONG)
                         .show()
                 }
             } catch (e: IOException) {
