@@ -10,10 +10,11 @@ import android.os.Bundle
 import android.util.Log
 import android.widget.TextView
 import androidx.activity.ComponentActivity
+import com.epi.epilog.R
 import com.epi.epilog.presentation.calendar.ChartInitializer
 import com.epi.epilog.presentation.blood.BloodSugarActivity
 import com.epi.epilog.presentation.blood.BloodSugarDatas
-import com.epi.epilog.presentation.databinding.ActivityMainBinding
+import com.epi.epilog.databinding.ActivityMainBinding
 import com.epi.epilog.presentation.fall.FallDetectionService
 import com.epi.epilog.presentation.meal.MealActivity
 import com.epi.epilog.presentation.medicine.MedicineActivity

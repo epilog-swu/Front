@@ -8,7 +8,7 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.core.view.children
 import com.epi.epilog.presentation.MainActivity
-import com.epi.epilog.presentation.R
+import com.epi.epilog.R
 import com.kizitonwose.calendar.core.WeekDay
 import com.kizitonwose.calendar.core.atStartOfMonth
 import com.kizitonwose.calendar.core.daysOfWeek

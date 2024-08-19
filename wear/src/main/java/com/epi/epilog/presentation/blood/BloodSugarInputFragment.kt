@@ -17,7 +17,7 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import com.epi.epilog.presentation.ApiResponse
 import com.epi.epilog.presentation.MainActivity
-import com.epi.epilog.presentation.R
+import com.epi.epilog.R
 import com.epi.epilog.presentation.theme.api.RetrofitService
 import com.google.gson.Gson
 import retrofit2.Call

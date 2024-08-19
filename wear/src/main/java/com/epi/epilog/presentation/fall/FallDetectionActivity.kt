@@ -13,7 +13,7 @@ import android.widget.Toast
 import androidx.activity.ComponentActivity
 import com.epi.epilog.presentation.ApiResponse
 import com.epi.epilog.presentation.MainActivity
-import com.epi.epilog.presentation.R
+import com.epi.epilog.R
 import com.epi.epilog.presentation.theme.api.LocationData
 import com.epi.epilog.presentation.theme.api.RetrofitService
 import com.google.android.gms.location.FusedLocationProviderClient

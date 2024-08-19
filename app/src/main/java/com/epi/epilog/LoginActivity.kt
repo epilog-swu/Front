@@ -81,7 +81,7 @@ class LoginActivity : AppCompatActivity() {
                     val responseBody = response.body()
                     saveTokenToSession(responseBody)
                     Log.d(TAG, "Token: $responseBody")
-                    sendFCMToken(responseBody) // FCM 토큰 전송 추가
+//                    sendFCMToken(responseBody) // FCM 토큰 전송 추가
                 } else {
                     Log.d(TAG, "Login failed with HTTP status code: ${response.code()}")
                     Toast.makeText(this@LoginActivity, "로그인 실패: HTTP status code ${response.code()}", Toast.LENGTH_SHORT).show()
@@ -94,7 +94,7 @@ class LoginActivity : AppCompatActivity() {
             }
         })
     }
-
+//TODO : FCM 기기 토큰 서버로 전송 -> 추후에 서버와 연동하여 음성인식 기능 도입 예정
     private fun sendFCMToken(authToken: String?) {
         FirebaseMessaging.getInstance().token.addOnCompleteListener { task ->
             if (task.isSuccessful) {

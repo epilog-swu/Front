@@ -33,7 +33,7 @@ import java.time.LocalDateTime
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 import android.provider.Settings
-import com.epi.epilog.presentation.R
+import com.epi.epilog.R
 import com.epi.epilog.presentation.UpdateChecklistStatusRequest
 
 
@@ -176,7 +176,7 @@ class MedicineActivity : ComponentActivity() {
 
     private fun createNotificationChannel() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            val channelId = "Medicine Activity Channel"
+            val channelId = "MedicineActivityChannel"
             val channelName = "Medicine Notifications"
             val channelDescription = "Notifications for medicine reminders"
             val importance = NotificationManager.IMPORTANCE_DEFAULT

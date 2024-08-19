@@ -28,7 +28,7 @@ import android.os.PowerManager
 import android.util.Log
 import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationCompat
-import com.epi.epilog.presentation.R
+import com.epi.epilog.R
 import com.epi.epilog.presentation.theme.api.LocationData
 import com.epi.epilog.presentation.theme.api.RetrofitService
 import com.epi.epilog.presentation.theme.api.SensorData
@@ -49,6 +49,8 @@ import java.util.concurrent.ScheduledExecutorService
 import java.util.concurrent.TimeUnit
 
 class FallDetectionService : Service(), SensorEventListener, LocationListener {
+
+    private val medicineChannelId = "MedicineActivityChannel" // 알림 채널 ID
 
     private lateinit var sensorManager: SensorManager
     private var accelerometer: Sensor? = null
