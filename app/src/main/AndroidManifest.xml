@@ -4,13 +4,15 @@
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+
     <application
         android:networkSecurityConfig="@xml/network_secutiry_config"
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
         android:icon="@mipmap/ic_launcher"
-        android:label="@string/app_name"
+        android:label="Dialog"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.DayNight.NoActionBar"
@@ -33,13 +35,13 @@
 
         <activity android:name=".LoginActivity" android:exported="true"/>
 
-        <activity android:name=".ActivityDiaryShowDetail">
+        <activity android:name=".diary.ActivityDiaryShowDetail">
         </activity>
 
 
-        <activity android:name=".ActivityShowSuccessDialog"
+        <activity android:name=".diary.ActivityShowSuccessDialog"
             android:theme="@style/TransparentTheme" />
-        <activity android:name=".ActivityShowFailDialog"
+        <activity android:name=".diary.ActivityShowFailDialog"
             android:theme="@style/TransparentTheme" />
 <activity android:name=".medicine.MedicineAddModifyActivity"/>
         <activity android:name=".medicine.MedicineDetailActivity"/>

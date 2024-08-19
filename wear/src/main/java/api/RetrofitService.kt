@@ -1,9 +1,9 @@
 package com.epi.epilog.presentation.theme.api
 
 import com.epi.epilog.presentation.ApiResponse
-import com.epi.epilog.presentation.Blood
-import com.epi.epilog.presentation.BloodSugarDatas
-import com.epi.epilog.presentation.MedicineCheckListDatas
+import com.epi.epilog.presentation.blood.Blood
+import com.epi.epilog.presentation.blood.BloodSugarDatas
+import com.epi.epilog.presentation.medicine.MedicineCheckListDatas
 import com.epi.epilog.presentation.UpdateChecklistStatusRequest
 import com.epi.epilog.presentation.theme.Data
 import okhttp3.ResponseBody

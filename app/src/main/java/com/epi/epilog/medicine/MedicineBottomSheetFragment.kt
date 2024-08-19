@@ -45,7 +45,7 @@ class MedicineBottomSheetFragment : BottomSheetDialogFragment() {
             if (bottomSheet != null) {
                 val behavior = BottomSheetBehavior.from(bottomSheet)
                 val scale = resources.displayMetrics.density
-                val minHeight = (190 * scale + 0.5f).toInt()
+                val minHeight = (150 * scale + 0.5f).toInt()
 
                 behavior.peekHeight = minHeight
                 bottomSheet.layoutParams.height = minHeight

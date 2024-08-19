@@ -13,6 +13,7 @@ import androidx.viewpager2.adapter.FragmentStateAdapter
 import androidx.viewpager2.widget.ViewPager2
 import com.epi.epilog.api.RetrofitClient.retrofitService
 import com.epi.epilog.databinding.ActivityMainBinding
+import com.epi.epilog.main.CalendarFragment
 import com.epi.epilog.meal.MealChecklistFragment
 import com.ismaeldivita.chipnavigation.ChipNavigationBar
 import com.epi.epilog.medicine.MedicineChecklistFragment
