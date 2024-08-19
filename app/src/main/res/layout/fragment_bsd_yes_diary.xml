@@ -49,29 +49,29 @@
     <ScrollView
         android:id="@+id/scrollContainerlayout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
         android:fillViewport="true"
         android:layout_marginTop="5dp"
         android:layout_marginStart="15dp"
         android:layout_marginEnd="15dp"
-        app:layout_constraintBottom_toTopOf="@id/writeDiaryBtn"
-        app:layout_constraintTop_toBottomOf="@id/lineImageView">
+        app:layout_constraintTop_toBottomOf="@id/lineImageView"
+        app:layout_constraintBottom_toTopOf="@id/yesDiaryWriteDiaryBtn"
+        app:layout_constraintHeight_default="wrap">
 
         <LinearLayout
             android:id="@+id/scrollContainer"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
-
             <!-- 여기에 yes_diary_count_layout들이 추가될 것입니다 -->
-
         </LinearLayout>
 
     </ScrollView>
 
+
     <!-- 일지 추가하기 버튼 -->
     <Button
-        android:id="@+id/writeDiaryBtn"
+        android:id="@+id/yesDiaryWriteDiaryBtn"
         android:layout_width="300dp"
         android:layout_height="50dp"
         android:layout_marginBottom="20dp"

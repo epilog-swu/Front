@@ -119,6 +119,22 @@ class BottomSheetFragment : BottomSheetDialogFragment() {
                     }
                 }
             } else {
+
+                // 설정할 텍스트는 arguments에서 가져오거나 다른 방식으로 설정할 수 있습니다.
+                val formattedDate = selectedDate?.let { formatDate(it) }
+
+                bindingYesDiary.dateTextView.text = formattedDate
+
+                // 추가적인 설정과 클릭 리스너 등 설정
+                bindingYesDiary.yesDiaryWriteDiaryBtn.setOnClickListener {
+                    // 일지 추가 버튼 클릭시
+                    val intent = Intent(requireContext(), DiaryEditActivity::class.java)
+                    intent.putExtra("date", selectedDate)
+                    Log.d("bottomsheetFrag", "selectedDate : $selectedDate")
+                    startActivity(intent)
+
+                    dismiss() // 바텀시트 닫기
+                }
                 // 설정할 텍스트는 arguments에서 가져오거나 다른 방식으로 설정할 수 있습니다.
                 val date = arguments?.getString("date")
                 //bindingYesDiary.btmSheetDlgYesDiaryDate.text = date
@@ -175,6 +191,8 @@ class BottomSheetFragment : BottomSheetDialogFragment() {
 
             scrollContainer.addView(entryLayout)
         }
+
+
     }
 
     // dp를 px로 변환하는 확장 함수
