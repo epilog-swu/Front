@@ -5,7 +5,7 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import androidx.core.app.NotificationCompat
-import com.epi.epilog.presentation.R
+import com.epi.epilog.R
 
 class MealNotificationReceiver : BroadcastReceiver() {
     override fun onReceive(context: Context, intent: Intent) {

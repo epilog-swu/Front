@@ -18,6 +18,7 @@ import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import com.epi.epilog.R
 import com.epi.epilog.presentation.theme.Data
 import com.epi.epilog.presentation.theme.api.RetrofitService
 import com.epi.epilog.presentation.theme.api.TokenData
@@ -79,7 +80,8 @@ class LoginActivity : ComponentActivity() {
                         Log.d(TAG, "Server Response: $it")
                         saveTokenToSession(it)
                         setLoggedIn(true)
-                        sendFCMTokenAndNavigate()
+                        navigateToMainActivity()
+//                        sendFCMTokenAndNavigate()
                     }
                 } else {
                     Log.d(TAG, "Error Response: ${response.errorBody()?.string()}")
@@ -116,7 +118,8 @@ class LoginActivity : ComponentActivity() {
         retrofitService.testApi("Bearer $authToken").enqueue(object : Callback<Void> {
             override fun onResponse(call: Call<Void>, response: Response<Void>) {
                 if (response.isSuccessful) {
-                    sendFCMTokenAndNavigate()
+                     navigateToMainActivity()
+//                    sendFCMTokenAndNavigate()
                 } else {
                     saveTokenToSession(null)
                 }
@@ -129,6 +132,7 @@ class LoginActivity : ComponentActivity() {
         })
     }
 
+    //TODO : Firebase Cloud Messaging에서 가져온 기기 토큰
     private fun sendFCMTokenAndNavigate() {
         FirebaseMessaging.getInstance().token.addOnCompleteListener { task ->
             if (!task.isSuccessful) {
@@ -138,10 +142,11 @@ class LoginActivity : ComponentActivity() {
 
             val fcmToken = task.result
             Log.d(TAG, "FCM Token: $fcmToken")
-            sendTokenToServer(fcmToken)
+//            sendTokenToServer(fcmToken)
         }
     }
 
+    //TODO : FCM 기기 토큰 서버로 전송 -> 추후에 서버와 연동하여 음성인식 기능 도입 예정
     private fun sendTokenToServer(fcmToken: String) {
         val sharedPreferences = getSharedPreferences("AppPrefs", Context.MODE_PRIVATE)
         val authToken = sharedPreferences.getString("AuthToken", null) ?: return

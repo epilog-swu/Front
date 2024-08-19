@@ -2,7 +2,7 @@ package com.epi.epilog.presentation.calendar
 
 import android.view.View
 import android.widget.TextView
-import com.epi.epilog.presentation.R
+import com.epi.epilog.R
 import com.kizitonwose.calendar.view.ViewContainer
 
 class DayViewContainer(view: View) : ViewContainer(view) {

@@ -13,7 +13,7 @@ import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts.RequestPermission
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
-import com.epi.epilog.presentation.R
+import com.epi.epilog.R
 
 class SoundRecognizerActivity : AppCompatActivity() {
 
