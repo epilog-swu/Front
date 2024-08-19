@@ -1,13 +1,13 @@
 {
   "project_info": {
-    "project_number": "684814905883",
-    "project_id": "dialog-25f37",
-    "storage_bucket": "dialog-25f37.appspot.com"
+    "project_number": "1005268704466",
+    "project_id": "dialog-e00d9",
+    "storage_bucket": "dialog-e00d9.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:684814905883:android:1dc011a243bc45860e3ebe",
+        "mobilesdk_app_id": "1:1005268704466:android:7256115c2d11d4c3e0610b",
         "android_client_info": {
           "package_name": "com.epi.epilog"
         }
@@ -15,7 +15,7 @@
       "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyCpuKwhYoeJtEhTyjpRavIiP9LBvYRjYzE"
+          "current_key": "AIzaSyDMdQFwK7vFyo42a_XOxrkyzksRxWlIZHY"
         }
       ],
       "services": {

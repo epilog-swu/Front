@@ -21,7 +21,6 @@
     <uses-feature android:name="android.hardware.type.watch" />
 
     <application
-        android:name=".presentation.MyApplication"
         android:networkSecurityConfig="@xml/network_secutiry_config"
         android:allowBackup="true"
         android:icon="@drawable/logo"
@@ -35,7 +34,7 @@
         </activity>
 
         <service
-            android:name=".presentation.MyFirebaseMessagingService"
+            android:name=".presentation.fall.MyFirebaseMessagingService"
             android:exported="true">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT"/>
@@ -50,21 +49,21 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".presentation.MedicineActivity"
+        <activity android:name=".presentation.medicine.MedicineActivity"
             android:exported="true"
             android:theme="@style/Theme.AppCompat.DayNight.NoActionBar" />
 
-        <activity android:name=".presentation.BloodSugarActivity"
+        <activity android:name=".presentation.blood.BloodSugarActivity"
             android:exported="true"
             android:theme="@style/Theme.AppCompat.DayNight.NoActionBar" />
 
-        <activity android:name=".presentation.MealActivity"
+        <activity android:name=".presentation.meal.MealActivity"
             android:exported="true"
             android:theme="@style/Theme.AppCompat.DayNight.NoActionBar" />
 
-        <activity android:name=".presentation.SoundRecognizerActivity" />
+        <activity android:name=".presentation.fall.SoundRecognizerActivity" />
 
-        <activity android:name=".presentation.FallDetectionActivity"
+        <activity android:name=".presentation.fall.FallDetectionActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="com.epi.epilog.SHOW_FALL_DETECTION"/>
@@ -72,7 +71,7 @@
         </activity>
 
         <service
-            android:name=".FallDetectionService"
+            android:name=".presentation.fall.FallDetectionService"
             android:enabled="true"
             android:exported="true"
             android:foregroundServiceType="location"
@@ -80,7 +79,7 @@
         </service>
 
         <receiver
-            android:name=".presentation.BootBroadcastReceiver"
+            android:name=".presentation.fall.BootBroadcastReceiver"
             android:enabled="true"
             android:exported="true">
             <intent-filter>
@@ -96,8 +95,8 @@
             android:name="com.google.android.wearable.standalone"
             android:value="true" />
 
-        <receiver android:name=".presentation.MealNotificationReceiver" />
-        <receiver android:name=".presentation.MedicineNotificationReceiver" />
+        <receiver android:name=".presentation.meal.MealNotificationReceiver" />
+        <receiver android:name=".presentation.medicine.MedicineNotificationReceiver" />
 
     </application>
 </manifest>

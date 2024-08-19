@@ -12,8 +12,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.Fragment
 import api.DiaryFragment
-import com.epi.epilog.ActivityShowFailDialog
-import com.epi.epilog.ActivityShowSuccessDialog
 import com.epi.epilog.ApiResponse
 import com.epi.epilog.MainActivity
 import com.epi.epilog.R

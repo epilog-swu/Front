@@ -17,6 +17,7 @@ import retrofit2.http.Query
 
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import retrofit2.http.DELETE
 import retrofit2.http.Streaming
 import retrofit2.http.Path
 
@@ -123,6 +124,7 @@ interface RetrofitService {
         @Header("Authorization") token: String
     ):Call<GraphBloodSugarAverageResponse>
 
+    //PDF
     @Streaming
     @GET("/api/logs/convert")
     fun downloadPDF(
@@ -132,6 +134,20 @@ interface RetrofitService {
         @Header("Content-Type") contentType: String = "application/pdf"
     ): Call<ResponseBody>
 
+    //복약체크리스트 상세 조회
+    @Headers("Content-Type: application/json")
+    @GET("/api/medications/{mcld}")
+    fun getMedicationDetail(
+        @Path("mcld") medicationId: Int,
+        @Header("Authorization") token: String
+    ): Call<MedicationDetailResponse>
+
+    //복약체크리스트 약 삭제
+    @DELETE("/api/medications/{medicationId}")
+    fun deleteMedication(
+        @Header("Authorization") token: String,
+        @Path("medicationId") medicationId: Int
+    ): Call<Void>
 }
 
 //일지 상세 조회 data class
@@ -304,6 +320,23 @@ data class MedicationRequest(
     val precautions: String,
     val storageMethod: String
 )
+
+//복약체크리스트 약 상세 조회
+data class MedicationDetailResponse(
+    val id: Int,
+    val nextId: Int?,
+    val prevId: Int?,
+    val medicationName: String,
+    val times: List<String>,
+    val isAlarm: Boolean,
+    val startDate: String,
+    val endDate: String,
+    val weeks: List<String>,
+    val effectiveness: String,
+    val precautions: String,
+    val storageMethod: String
+)
+
 
 data class Medication(
     val name: String,
