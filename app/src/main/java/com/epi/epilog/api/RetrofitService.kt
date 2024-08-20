@@ -171,13 +171,13 @@ data class Fall(
 )
 
 data class Exercise(
-    val type: String?,
+    val comment: String?,
     val details: String?,
     val keyword: List<String>?
 )
 
 data class Mood(
-    val type: String?,
+    val comment: String?,
     val details: String?,
     val keyword: List<String>?
 )
