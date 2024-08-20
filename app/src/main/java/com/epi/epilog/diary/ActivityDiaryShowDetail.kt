@@ -230,8 +230,17 @@ class ActivityDiaryShowDetail : AppCompatActivity() {
         if (exerciseKeywords.isNotEmpty()) {
             val exerciseComment = "오늘은 " + exerciseKeywords.joinToString(", ") + " 신체활동을 했습니다."
             binding.exercise.text = exerciseComment
-            binding.exerciseDetail.text = diaryDetail.exercise?.details
-            binding.exerciseDetail.visibility = View.VISIBLE
+
+            val exerciseDetails = diaryDetail.exercise?.details
+            if (!exerciseDetails.isNullOrBlank()) {
+                // details가 있을 경우 상단과 하단에 줄 바꿈 추가
+                binding.exerciseDetail.text = "\n$exerciseDetails\n"
+                binding.exerciseDetail.visibility = View.VISIBLE
+            } else {
+                binding.exerciseDetail.visibility = View.GONE
+            }
+
+
         } else {
             binding.exercise.text = "" // 키워드가 "직접입력"만 있는 경우, 코멘트는 생성하지 않음
             binding.exerciseLayout.visibility = View.GONE
@@ -291,8 +300,16 @@ class ActivityDiaryShowDetail : AppCompatActivity() {
         if (moodKeywords.isNotEmpty()) {
             val moodComment = "오늘은 " + moodKeywords.joinToString(", ") + "을(를) 느꼈습니다."
             binding.mood.text = moodComment
-            binding.moodDetail.text = diaryDetail.mood?.details
-            binding.moodDetail.visibility = View.VISIBLE
+
+            val moodDetails = diaryDetail.mood?.details
+            if (!moodDetails.isNullOrBlank()) {
+                // details가 있을 경우 상단과 하단에 줄 바꿈 추가
+                binding.moodDetail.text = "\n$moodDetails\n"
+                binding.moodDetail.visibility = View.VISIBLE
+            } else {
+                binding.moodDetail.visibility = View.GONE
+            }
+
         } else {
             binding.mood.text = "" // 키워드가 "직접입력"만 있는 경우, 코멘트는 생성하지 않음
             binding.moodDetail.visibility = View.GONE
