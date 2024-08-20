@@ -35,7 +35,7 @@ class startActivity : AppCompatActivity() {
         // 배경색을 서서히 변경합니다.
         val background = findViewById<View>(R.id.startLayout).background
         if (background is TransitionDrawable) {
-            background.startTransition(5000) // 배경색 전환 시간
+            background.startTransition(3000) // 배경색 전환 시간
         }
 
         logoImage.postDelayed({
@@ -43,12 +43,12 @@ class startActivity : AppCompatActivity() {
             logoImage.updateLayoutParams<FrameLayout.LayoutParams> {
                 updateMargins(right = dpToPx(15))
             }
-        }, 2000)
+        }, 1300)
 
         // 1초 뒤에 버튼들을 표시합니다.
         logoFrame.postDelayed({
             findViewById<View>(R.id.buttonsLayout).visibility = View.VISIBLE
-        }, 3000)
+        }, 2000)
 
         signUpButton.setOnClickListener {
             val intent = Intent(this, signUp1Activity::class.java)
