@@ -140,7 +140,6 @@ class MedicineChecklistFragment : Fragment() {
         })
     }
 
-
     private fun updateChecklistUI(checklist: List<ChecklistItem>) {
         val medicineContentLayout = view?.findViewById<LinearLayout>(R.id.medicine_content_layout)
         medicineContentLayout?.removeAllViews()
@@ -154,6 +153,9 @@ class MedicineChecklistFragment : Fragment() {
             val medicineName = itemView.findViewById<TextView>(R.id.medicine_name)
             val medicineCheckbox = itemView.findViewById<CheckBox>(R.id.medicine_checkbox)
 
+            // 각 itemView에 태그를 설정
+            itemView.tag = "item-${item.id}"
+
             val goalTime = LocalDateTime.parse(item.goalTime, formatter)
 
             medicineTime.text = item.time
@@ -166,8 +168,6 @@ class MedicineChecklistFragment : Fragment() {
                 val bottomSheetFragment = MedicineBottomSheetFragment().apply {
                     arguments = Bundle().apply {
                         putInt("checklist_item_id", selectedItem.id)  // 아이템 ID 전달
-                        putString("medicine_name", selectedItem.medicationName)
-                        putString("medicine_time", selectedItem.time)
                     }
                 }
                 bottomSheetFragment.show(parentFragmentManager, bottomSheetFragment.tag)
@@ -255,7 +255,7 @@ class MedicineChecklistFragment : Fragment() {
     }
 
     fun applyChangesToMedicineItem(medicineItemId: Int) {
-        view?.findViewWithTag<ViewGroup>("item-$medicineItemId")?.let { itemView ->
+        view?.findViewWithTag<View>("item-$medicineItemId")?.let { itemView ->
             val medicineNameTextView = itemView.findViewById<TextView>(R.id.medicine_name)
             val medicineTimeTextView = itemView.findViewById<TextView>(R.id.medicine_time)
             applyStrikeThrough(medicineNameTextView, medicineTimeTextView, true)

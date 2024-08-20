@@ -57,6 +57,7 @@ class ActivityDiaryShowDetail : AppCompatActivity() {
     private fun fetchDiaryDetails() {
         // API 호출 후 데이터를 받아오는 로직
         val logId = intent.getIntExtra("id", 0)
+        Log.d("DiaryDetail", "logid: $logId")
         val token = getTokenFromSession()  // 토큰 가져오기
 
         RetrofitClient.retrofitService.getDiaryDetail(logId, token).enqueue(object : Callback<DiaryDetailResponse> {
@@ -203,128 +204,161 @@ class ActivityDiaryShowDetail : AppCompatActivity() {
 
         //상위 레이아웃 visibility 설정 //TODO : 나중에 이미지 있으면 상위 레이아웃 나오도록 바꿔줘야 함
         if (isWeightEmpty && isBodyFatPercentageEmpty){
-            binding.diaryDetailWeightBMIGraph.visibility = View.GONE // 몸무게 및 체지방률 상위 레이아웃 박스
+            binding.bodyMeasurementLayout.visibility = View.GONE // 몸무게 및 체지방률 상위 레이아웃 박스
+            binding.diaryDetailWeightBMIGraph.visibility = View.GONE
         }else{
+            binding.bodyMeasurementLayout.visibility = View.VISIBLE
             binding.diaryDetailWeightBMIGraph.visibility = View.VISIBLE
             drawWeightBMIGraph(selectedDate) //둘 중 하나라도 NULL이 아니면 그래프 작성
         }
 
-        // 신체 사진
-        val isBodyPhotoEmpty = diaryDetail.bodyPhoto?.isNullOrEmpty()
-        if (isBodyPhotoEmpty == true) {
-            binding.diaryDetailBodyImage.visibility = View.GONE
+//        // 신체 사진
+//        val isBodyPhotoEmpty = diaryDetail.bodyPhoto?.isNullOrEmpty()
+//        if (isBodyPhotoEmpty == true) {
+//            binding.diaryDetailBodyImage.visibility = View.GONE
+//            binding.bodyMeasurementLayout.visibility = View.GONE
+//        } else {
+//            // 신체 사진 로딩
+//            // 예: Glide.with(this).load(diaryDetail.bodyPhoto.imageUri).into(binding.bodyImage)
+//            binding.diaryDetailBodyImage.visibility = View.GONE //TODO : 일단 안보이도록 설정 ...... XML도 안보이도록 해놨어요
+//        }
+
+
+
+        // 운동 처리
+        val exerciseKeywords = diaryDetail.exercise?.keyword?.filter { it != "직접입력" } ?: emptyList()
+        if (exerciseKeywords.isNotEmpty()) {
+            val exerciseComment = "오늘은 " + exerciseKeywords.joinToString(", ") + " 신체활동을 했습니다."
+            binding.exercise.text = exerciseComment
+
+            val exerciseDetails = diaryDetail.exercise?.details
+            if (!exerciseDetails.isNullOrBlank()) {
+                // details가 있을 경우 상단과 하단에 줄 바꿈 추가
+                binding.exerciseDetail.text = "\n$exerciseDetails\n"
+                binding.exerciseDetail.visibility = View.VISIBLE
+            } else {
+                binding.exerciseDetail.visibility = View.GONE
+            }
+
+
         } else {
-            // 신체 사진 로딩
-            // 예: Glide.with(this).load(diaryDetail.bodyPhoto.imageUri).into(binding.bodyImage)
-            binding.diaryDetailBodyImage.visibility = View.GONE //TODO : 일단 안보이도록 설정 ...... XML도 안보이도록 해놨어요
-        }
-
-        // 상위 레이아웃 visibility 설정
-        if (isWeightEmpty && isBodyFatPercentageEmpty && isBodyPhotoEmpty == true) {
-            binding.bodyMeasurementLayout.visibility = View.GONE
-            binding.diaryDetailWeightBMIGraph.visibility = View.GONE //몸무게 및 체지방율 그래프도 안보이도록 설정
-        } else {
-            binding.bodyMeasurementLayout.visibility = View.VISIBLE
-        }
-
-
-        // 운동
-        if (diaryDetail.exercise == null || diaryDetail.exercise.keyword.isNullOrEmpty()) {
+            binding.exercise.text = "" // 키워드가 "직접입력"만 있는 경우, 코멘트는 생성하지 않음
             binding.exerciseLayout.visibility = View.GONE
-        } else {
-            binding.exercise.text = diaryDetail.exercise.keyword.toString()
-            binding.exerciseLayout.visibility = View.VISIBLE
-
-            // 운동 배지 추가
-            binding.exerciseBadgeLayout.removeAllViews() // 기존 배지 제거
-
-            diaryDetail.exercise.keyword.forEachIndexed { index, keyword ->
-                Log.d("ExerciseBadge", "Processing keyword: $keyword")
-
-                // 배지에 해당하는 TextView 생성
-                val badgeTextView = TextView(this).apply {
-                    text = keyword
-                    setBackgroundResource(R.drawable.badge) // 배경으로 drawable 사용
-                    setTextColor(ContextCompat.getColor(this@ActivityDiaryShowDetail, android.R.color.black))
-                    textSize = 14f
-                    setPadding(16, 8, 16, 8) // 패딩 설정
-                    id = View.generateViewId() // ID를 동적으로 생성
-                }
-
-                // LayoutParams 생성
-                val layoutParams = ConstraintLayout.LayoutParams(
-                    ConstraintLayout.LayoutParams.WRAP_CONTENT,
-                    ConstraintLayout.LayoutParams.WRAP_CONTENT
-                ).apply {
-                    // 첫 번째 배지는 parent 시작점에 붙임
-                    if (index == 0) {
-                        startToStart = ConstraintLayout.LayoutParams.PARENT_ID
-                    } else {
-                        // 나머지는 이전 배지의 끝에 붙임
-                        startToEnd = binding.exerciseBadgeLayout.getChildAt(index - 1).id
-                    }
-                    topToTop = ConstraintLayout.LayoutParams.PARENT_ID // 상단을 parent에 맞춤
-                    bottomToBottom = ConstraintLayout.LayoutParams.PARENT_ID // 하단을 parent에 맞춤
-                    setMargins(8, 0, 50, 0) // 마진 설정
-                }
-
-                // 배지에 layoutParams 적용 후 레이아웃에 추가
-                badgeTextView.layoutParams = layoutParams
-                binding.exerciseBadgeLayout.addView(badgeTextView)
-
-                // 레이아웃 강제 갱신
-                binding.exerciseBadgeLayout.invalidate()
-                binding.exerciseBadgeLayout.requestLayout()
-            }
+            binding.exerciseDetail.visibility = View.GONE
         }
 
 
-        // 기분
-        if (diaryDetail.mood == null || diaryDetail.mood.keyword.isNullOrEmpty()) {
-            binding.moodLayout.visibility = View.GONE
-        } else {
-            binding.mood.text = diaryDetail.mood.details
-            binding.moodLayout.visibility = View.VISIBLE
+//        if (diaryDetail.exercise?.keyword?.contains("직접입력") == true) {
+//            binding.exerciseDetail.text = diaryDetail.exercise.details
+//            binding.exerciseDetail.visibility = View.VISIBLE
+//        } else {
+//            binding.exerciseDetail.visibility = View.GONE
+//        }
 
-            binding.mood.text = diaryDetail.mood.details
-            diaryDetail.mood.keyword.forEachIndexed { index, keyword ->
-                Log.d("MoodBadge", "Processing keyword: $keyword")
+        // 운동 배지 추가
+        binding.exerciseBadgeLayout.removeAllViews() // 기존 배지 제거
 
-                // 배지에 해당하는 TextView 생성
-                val badgeTextView = TextView(this).apply {
-                    text = keyword
-                    setBackgroundResource(R.drawable.badge) // 배경으로 drawable 사용
-                    setTextColor(ContextCompat.getColor(this@ActivityDiaryShowDetail, android.R.color.black))
-                    textSize = 14f
-                    setPadding(16, 8, 16, 8) // 패딩 설정
-                    id = View.generateViewId() // ID를 동적으로 생성
-                }
-
-                // LayoutParams 생성
-                val layoutParams = ConstraintLayout.LayoutParams(
-                    ConstraintLayout.LayoutParams.WRAP_CONTENT,
-                    ConstraintLayout.LayoutParams.WRAP_CONTENT
-                ).apply {
-                    // 첫 번째 배지는 parent 시작점에 붙임
-                    if (index == 0) {
-                        startToStart = ConstraintLayout.LayoutParams.PARENT_ID
-                    } else {
-                        // 나머지는 이전 배지의 끝에 붙임
-                        startToEnd = binding.moodBadgeLayout.getChildAt(index - 1).id
-                    }
-                    topToTop = ConstraintLayout.LayoutParams.PARENT_ID // 상단을 parent에 맞춤
-                    bottomToBottom = ConstraintLayout.LayoutParams.PARENT_ID // 하단을 parent에 맞춤
-                    setMargins(8, 0, 50, 0) // 마진 설정
-                }
-
-                // 배지에 layoutParams 적용 후 레이아웃에 추가
-                badgeTextView.layoutParams = layoutParams
-                binding.moodBadgeLayout.addView(badgeTextView)
-
-                // 레이아웃 강제 갱신
-                binding.moodBadgeLayout.invalidate()
-                binding.moodBadgeLayout.requestLayout()
+        exerciseKeywords.forEachIndexed { index, keyword ->
+            // 배지에 해당하는 TextView 생성
+            val badgeTextView = TextView(this).apply {
+                text = keyword
+                setBackgroundResource(R.drawable.badge) // 배경으로 drawable 사용
+                setTextColor(ContextCompat.getColor(this@ActivityDiaryShowDetail, android.R.color.black))
+                textSize = 14f
+                setPadding(16, 8, 16, 8) // 패딩 설정
+                id = View.generateViewId() // ID를 동적으로 생성
             }
+
+            // LayoutParams 생성
+            val layoutParams = ConstraintLayout.LayoutParams(
+                ConstraintLayout.LayoutParams.WRAP_CONTENT,
+                ConstraintLayout.LayoutParams.WRAP_CONTENT
+            ).apply {
+                // 첫 번째 배지는 parent 시작점에 붙임
+                if (index == 0) {
+                    startToStart = ConstraintLayout.LayoutParams.PARENT_ID
+                } else {
+                    // 나머지는 이전 배지의 끝에 붙임
+                    startToEnd = binding.exerciseBadgeLayout.getChildAt(index - 1).id
+                }
+                topToTop = ConstraintLayout.LayoutParams.PARENT_ID // 상단을 parent에 맞춤
+                bottomToBottom = ConstraintLayout.LayoutParams.PARENT_ID // 하단을 parent에 맞춤
+                setMargins(8, 0, 50, 0) // 마진 설정
+            }
+
+            // 배지에 layoutParams 적용 후 레이아웃에 추가
+            badgeTextView.layoutParams = layoutParams
+            binding.exerciseBadgeLayout.addView(badgeTextView)
+
+            // 레이아웃 강제 갱신
+            binding.exerciseBadgeLayout.invalidate()
+            binding.exerciseBadgeLayout.requestLayout()
+        }
+
+        // 기분 처리
+        val moodKeywords = diaryDetail.mood?.keyword?.filter { it != "직접입력" } ?: emptyList()
+        if (moodKeywords.isNotEmpty()) {
+            val moodComment = "오늘은 " + moodKeywords.joinToString(", ") + "을(를) 느꼈습니다."
+            binding.mood.text = moodComment
+
+            val moodDetails = diaryDetail.mood?.details
+            if (!moodDetails.isNullOrBlank()) {
+                // details가 있을 경우 상단과 하단에 줄 바꿈 추가
+                binding.moodDetail.text = "\n$moodDetails\n"
+                binding.moodDetail.visibility = View.VISIBLE
+            } else {
+                binding.moodDetail.visibility = View.GONE
+            }
+
+        } else {
+            binding.mood.text = "" // 키워드가 "직접입력"만 있는 경우, 코멘트는 생성하지 않음
+            binding.moodDetail.visibility = View.GONE
+            binding.moodLayout.visibility = View.GONE // 키워드가 없으면 상위 레이아웃 숨김
+        }
+
+
+//        if (diaryDetail.mood?.keyword?.contains("직접 입력") == true) {
+//            binding.moodDetail.text = diaryDetail.mood.details
+//            binding.moodDetail.visibility = View.VISIBLE
+//        } else {
+//            binding.moodDetail.visibility = View.GONE
+//        }
+
+        moodKeywords.forEachIndexed { index, keyword ->
+            // 배지에 해당하는 TextView 생성
+            val badgeTextView = TextView(this).apply {
+                text = keyword
+                setBackgroundResource(R.drawable.badge) // 배경으로 drawable 사용
+                setTextColor(ContextCompat.getColor(this@ActivityDiaryShowDetail, android.R.color.black))
+                textSize = 14f
+                setPadding(16, 8, 16, 8) // 패딩 설정
+                id = View.generateViewId() // ID를 동적으로 생성
+            }
+
+            // LayoutParams 생성
+            val layoutParams = ConstraintLayout.LayoutParams(
+                ConstraintLayout.LayoutParams.WRAP_CONTENT,
+                ConstraintLayout.LayoutParams.WRAP_CONTENT
+            ).apply {
+                // 첫 번째 배지는 parent 시작점에 붙임
+                if (index == 0) {
+                    startToStart = ConstraintLayout.LayoutParams.PARENT_ID
+                } else {
+                    // 나머지는 이전 배지의 끝에 붙임
+                    startToEnd = binding.moodBadgeLayout.getChildAt(index - 1).id
+                }
+                topToTop = ConstraintLayout.LayoutParams.PARENT_ID // 상단을 parent에 맞춤
+                bottomToBottom = ConstraintLayout.LayoutParams.PARENT_ID // 하단을 parent에 맞춤
+                setMargins(8, 0, 50, 0) // 마진 설정
+            }
+
+            // 배지에 layoutParams 적용 후 레이아웃에 추가
+            badgeTextView.layoutParams = layoutParams
+            binding.moodBadgeLayout.addView(badgeTextView)
+
+            // 레이아웃 강제 갱신
+            binding.moodBadgeLayout.invalidate()
+            binding.moodBadgeLayout.requestLayout()
         }
     }
 
