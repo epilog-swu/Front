@@ -22,7 +22,7 @@ class DiaryFragmentBloodPressure : Fragment(), DiaryFragment {
         savedInstanceState: Bundle?
     ): View? {
         val view = inflater.inflate(R.layout.diary_fragment_blood_pressure, container, false)
-        systolicEditText = view.findViewById(R.id.input_edit_text_systolic)
+        systolicEditText = view.findViewById(R.id.input_edit_text_sytolic)
         diastolicEditText = view.findViewById(R.id.input_edit_text_diastolic)
         heartRateEditText = view.findViewById(R.id.input_edit_text_heart_rate)
         return view
