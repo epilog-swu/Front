@@ -135,54 +135,51 @@ class DiaryWriteActivity : AppCompatActivity() {
         const val REQUEST_CODE_SUCCESS_DIALOG = 1
     }
 
-
     private fun saveAllData() {
         val date = intent.getStringExtra("date") ?: ""
         val occurrenceType = intent.getStringExtra("occurrenceType") ?: ""
 
-        Log.d("saveAllData", "Date: $date, OccurrenceType: $occurrenceType") // 로그 추가
+        Log.d("saveAllData", "Date: $date, OccurrenceType: $occurrenceType")
 
-        val bloodSugar = getFragmentData<DiaryFragmentBloodSugar>()
-        val bloodPressure = getFragmentData<DiaryFragmentBloodPressure>()
-        val weight = getFragmentData<DiaryFragmentWeight>()
-        val exercise = getFragmentData<DiaryFragmentExercise>()
-        val mood = getFragmentData<DiaryFragmentMood>()
+        // 각 프래그먼트에서 데이터를 가져오되, 초기화되지 않은 경우 null로 설정
+        val bloodSugar = getFragmentData<DiaryFragmentBloodSugar>()?.optString("bloodSugar") ?: null
+        val systolicBloodPressure = getFragmentData<DiaryFragmentBloodPressure>()?.optString("systolicBloodPressure") ?: null
+        val diastolicBloodPressure = getFragmentData<DiaryFragmentBloodPressure>()?.optString("diastolicBloodPressure") ?: null
+        val heartRate = getFragmentData<DiaryFragmentBloodPressure>()?.optString("heartRate") ?: null
+        val weight = getFragmentData<DiaryFragmentWeight>()?.optString("weight") ?: null
+        val bodyFatPercentage = getFragmentData<DiaryFragmentWeight>()?.optString("bodyFatPercentage") ?: null
+        val bodyPhoto = getFragmentData<DiaryFragmentWeight>()?.optString("bodyPhoto") ?: null
+        val exercise = getFragmentData<DiaryFragmentExercise>()?.optJSONArray("exercise")?.let { parseExerciseEntries(it) } ?: null
+        val mood = getFragmentData<DiaryFragmentMood>()?.optJSONArray("mood")?.let { parseMoodEntries(it) } ?: null
 
-        // DiaryRequest 생성 시 null 처리
         val diaryRequest = DiaryRequest(
             date = date,
             occurenceType = occurrenceType,
-            bloodSugar = bloodSugar?.getString("bloodSugar")?.takeIf { it.isNotEmpty() },
-            systolicBloodPressure = bloodPressure?.getString("systolicBloodPressure")?.takeIf { it.isNotEmpty() },
-            diastolicBloodPressure = bloodPressure?.getString("diastolicBloodPressure")?.takeIf { it.isNotEmpty() },
-            heartRate = bloodPressure?.getString("heartRate")?.takeIf { it.isNotEmpty() },
-            weight = weight?.getString("weight")?.takeIf { it.isNotEmpty() },
-            bodyFatPercentage = weight?.getString("bodyFatPercentage")?.takeIf { it.isNotEmpty() },
-            bodyPhoto = weight?.getString("bodyPhoto")?.takeIf { it != "null" },
-            exercise = exercise?.getJSONArray("exercise")?.let { parseExerciseEntries(it) }?.takeIf { it.isNotEmpty() },
-            mood = mood?.getJSONArray("mood")?.let { parseMoodEntries(it) }?.takeIf { it.isNotEmpty() }
+            bloodSugar = bloodSugar,
+            systolicBloodPressure = systolicBloodPressure,
+            diastolicBloodPressure = diastolicBloodPressure,
+            heartRate = heartRate,
+            weight = weight,
+            bodyFatPercentage = bodyFatPercentage,
+            bodyPhoto = bodyPhoto,
+            exercise = exercise,
+            mood = mood
         )
 
-
-        // Gson 인스턴스를 serializeNulls 옵션으로 생성
         val gson = GsonBuilder().serializeNulls().create()
         val requestDataJson = gson.toJson(diaryRequest)
 
-        // 요청 데이터를 JSON 문자열로 변환하여 로그로 출력
         Log.d("RequestData", "Sending request data: $requestDataJson")
 
-        // Retrofit을 사용하여 서버에 데이터 전송
         val token = getTokenFromSession()
         retrofitService.addDiary("Bearer $token", diaryRequest).enqueue(object : Callback<ApiResponse> {
             override fun onResponse(call: Call<ApiResponse>, response: Response<ApiResponse>) {
                 if (response.isSuccessful) {
                     val apiResponse = response.body()
                     if (apiResponse?.success == true) {
-                        // 성공 처리
                         logResponseBody(response)
                         overridePendingTransition(0, 0)
                     } else {
-                        // 실패 처리
                         handleFailure(apiResponse?.message ?: "Unknown error")
                     }
                 } else {
@@ -195,6 +192,7 @@ class DiaryWriteActivity : AppCompatActivity() {
             }
         })
     }
+
 
     // Exercise 데이터 수집 시 조건에 따라 항목을 필터링
     private fun parseExerciseEntries(array: JSONArray): List<ExerciseEntry> {
@@ -232,7 +230,11 @@ class DiaryWriteActivity : AppCompatActivity() {
 
 
     private inline fun <reified T : DiaryFragment> getFragmentData(): JSONObject? {
-        return fragments.find { it is T }?.let { (it as T).getData() }
+        return try {
+            fragments.find { it is T }?.let { (it as T).getData() }
+        } catch (e: UninitializedPropertyAccessException) {
+            null
+        }
     }
 
 
