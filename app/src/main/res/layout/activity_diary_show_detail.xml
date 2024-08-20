@@ -41,7 +41,7 @@
         android:id="@+id/scrollView"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        app:layout_constraintBottom_toTopOf="@id/buttonLayout"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/toolbar">
@@ -373,16 +373,16 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/diary_detail_weight" />
 
-                <ImageView
-                    android:id="@+id/diary_detail_body_image"
-                    android:layout_width="100dp"
-                    android:layout_height="100dp"
-                    android:layout_marginStart="16dp"
-                    android:src="@drawable/body_img"
-                    android:visibility="gone"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/diary_detail_BMI" />
+<!--                <ImageView-->
+<!--                    android:id="@+id/diary_detail_body_image"-->
+<!--                    android:layout_width="100dp"-->
+<!--                    android:layout_height="100dp"-->
+<!--                    android:layout_marginStart="16dp"-->
+<!--                    android:src="@drawable/body_img"-->
+<!--                    android:visibility="gone"-->
+<!--                    app:layout_constraintEnd_toEndOf="parent"-->
+<!--                    app:layout_constraintStart_toStartOf="parent"-->
+<!--                    app:layout_constraintTop_toBottomOf="@id/diary_detail_BMI" />-->
             </androidx.constraintlayout.widget.ConstraintLayout>
 
             <!-- 몸무게 및 체지방율 라인차트 -->
@@ -445,6 +445,17 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/exerciseHeader" />
 
+                <TextView
+                    android:id="@+id/exerciseDetail"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="test"
+                    android:visibility="visible"
+                    android:textColor="@android:color/black"
+                    android:textSize="14sp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/exercise"/>
+
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:id="@+id/exerciseBadgeLayout"
                     android:layout_width="match_parent"
@@ -453,7 +464,7 @@
                     android:orientation="horizontal"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/exercise">
+                    app:layout_constraintTop_toBottomOf="@id/exerciseDetail">
 
                     <!--배지 요소 동적 추가-->
 
@@ -472,7 +483,8 @@
                 android:visibility="visible"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/exerciseLayout">
+                app:layout_constraintTop_toBottomOf="@id/exerciseLayout"
+                app:layout_constraintBottom_toBottomOf="parent">
 
                 <TextView
                     android:id="@+id/moodHeader"
@@ -496,6 +508,17 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/moodHeader" />
 
+                <TextView
+                    android:id="@+id/moodDetail"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="test"
+                    android:visibility="visible"
+                    android:textColor="@android:color/black"
+                    android:textSize="14sp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/mood"/>
+
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:id="@+id/moodBadgeLayout"
                     android:layout_width="match_parent"
@@ -504,7 +527,7 @@
                     android:orientation="horizontal"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/mood">
+                    app:layout_constraintTop_toBottomOf="@id/moodDetail">
                     <!--mood 배지 요소 동적으로 추가 -->
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -560,37 +583,38 @@
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>
 
-    <!-- Button Section -->
-    <LinearLayout
-        android:id="@+id/buttonLayout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:padding="16dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent">
+    <!-- 버튼 부 주석처리 -->
+<!--    &lt;!&ndash; Button Section &ndash;&gt;-->
+<!--    <LinearLayout-->
+<!--        android:id="@+id/buttonLayout"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:orientation="horizontal"-->
+<!--        android:padding="16dp"-->
+<!--        app:layout_constraintBottom_toBottomOf="parent"-->
+<!--        app:layout_constraintEnd_toEndOf="parent"-->
+<!--        app:layout_constraintStart_toStartOf="parent">-->
 
-        <Button
-            android:id="@+id/edit_button"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:background="@drawable/purple_button_shape"
-            android:text="수정"
-            android:textColor="@android:color/white"
-            android:textSize="16sp" />
+<!--        <Button-->
+<!--            android:id="@+id/edit_button"-->
+<!--            android:layout_width="0dp"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_weight="1"-->
+<!--            android:background="@drawable/purple_button_shape"-->
+<!--            android:text="수정"-->
+<!--            android:textColor="@android:color/white"-->
+<!--            android:textSize="16sp" />-->
 
-        <Button
-            android:id="@+id/delete_button"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_weight="1"
-            android:background="@drawable/purple_solid_button_shape"
-            android:text="삭제"
-            android:textColor="@android:color/white"
-            android:textSize="16sp" />
-    </LinearLayout>
+<!--        <Button-->
+<!--            android:id="@+id/delete_button"-->
+<!--            android:layout_width="0dp"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_marginStart="16dp"-->
+<!--            android:layout_weight="1"-->
+<!--            android:background="@drawable/purple_solid_button_shape"-->
+<!--            android:text="삭제"-->
+<!--            android:textColor="@android:color/white"-->
+<!--            android:textSize="16sp" />-->
+<!--    </LinearLayout>-->
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -256,7 +256,6 @@ class MedicineChecklistFragment : Fragment() {
             layoutParams.topMargin = 5
             textView.layoutParams = layoutParams
         }
-
         Log.d("MealChecklistFragment", "initWeekCalendarView 끝")
     }
 

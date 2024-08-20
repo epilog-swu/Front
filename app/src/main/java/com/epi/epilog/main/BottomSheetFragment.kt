@@ -120,6 +120,22 @@ class BottomSheetFragment : BottomSheetDialogFragment() {
                     }
                 }
             } else {
+
+                // 설정할 텍스트는 arguments에서 가져오거나 다른 방식으로 설정할 수 있습니다.
+                val formattedDate = selectedDate?.let { formatDate(it) }
+
+                bindingYesDiary.dateTextView.text = formattedDate
+
+                // 추가적인 설정과 클릭 리스너 등 설정
+                bindingYesDiary.yesDiaryWriteDiaryBtn.setOnClickListener {
+                    // 일지 추가 버튼 클릭시
+                    val intent = Intent(requireContext(), DiaryEditActivity::class.java)
+                    intent.putExtra("date", selectedDate)
+                    Log.d("bottomsheetFrag", "selectedDate : $selectedDate")
+                    startActivity(intent)
+
+                    dismiss() // 바텀시트 닫기
+                }
                 // 설정할 텍스트는 arguments에서 가져오거나 다른 방식으로 설정할 수 있습니다.
                 val date = arguments?.getString("date")
                 //bindingYesDiary.btmSheetDlgYesDiaryDate.text = date
@@ -158,120 +174,36 @@ class BottomSheetFragment : BottomSheetDialogFragment() {
 
 
     private fun populateIcons(logs: List<titleKeyWordEntry>, rootView: View) {
-        val iconContainer = rootView.findViewById<ConstraintLayout>(R.id.main_bsd_yesdiary_layout)
+        val scrollContainer = rootView.findViewById<LinearLayout>(R.id.scrollContainer)
 
         // 기존에 추가된 뷰가 있다면 제거합니다.
-        iconContainer.removeAllViews()
-
-        // 타이틀 텍스트뷰 추가
-        val titleTextView = TextView(context)
-        titleTextView.id = View.generateViewId()
-        titleTextView.text = "일지 선택"
-        titleTextView.textSize = 16f
-        titleTextView.setTextColor(ContextCompat.getColor(requireContext(), R.color.black))
-        titleTextView.gravity = Gravity.CENTER
-
-        val titleLayoutParams = ConstraintLayout.LayoutParams(
-            ConstraintLayout.LayoutParams.WRAP_CONTENT,
-            ConstraintLayout.LayoutParams.WRAP_CONTENT
-        )
-        titleLayoutParams.topToTop = ConstraintLayout.LayoutParams.PARENT_ID
-        titleLayoutParams.startToStart = ConstraintLayout.LayoutParams.PARENT_ID
-        titleLayoutParams.endToEnd = ConstraintLayout.LayoutParams.PARENT_ID
-        titleLayoutParams.topMargin = dpToPx(15)
-
-        titleTextView.layoutParams = titleLayoutParams
-        iconContainer.addView(titleTextView)
-
-        // 날짜 텍스트뷰 추가
-        val dateTextView = TextView(context)
-        dateTextView.id = View.generateViewId()
-        dateTextView.text = formatDate(selectedDate ?: "2024-07-10")  // 선택된 날짜를 사용, 기본값으로 "2024-07-10" 사용
-        dateTextView.textSize = 14f
-        dateTextView.setTextColor(ContextCompat.getColor(requireContext(), R.color.black))
-        dateTextView.gravity = Gravity.CENTER
-
-        val dateLayoutParams = ConstraintLayout.LayoutParams(
-            ConstraintLayout.LayoutParams.WRAP_CONTENT,
-            ConstraintLayout.LayoutParams.WRAP_CONTENT
-        )
-        dateLayoutParams.topToBottom = titleTextView.id
-        dateLayoutParams.startToStart = ConstraintLayout.LayoutParams.PARENT_ID
-        dateLayoutParams.endToEnd = ConstraintLayout.LayoutParams.PARENT_ID
-
-        dateTextView.layoutParams = dateLayoutParams
-        iconContainer.addView(dateTextView)
-
-        // 구분선 이미지뷰 추가
-        val lineImageView = ImageView(context)
-        lineImageView.id = View.generateViewId()
-        lineImageView.setImageResource(R.drawable.dialog_line)
-
-        val lineLayoutParams = ConstraintLayout.LayoutParams(
-            ConstraintLayout.LayoutParams.WRAP_CONTENT,
-            ConstraintLayout.LayoutParams.WRAP_CONTENT
-        )
-        lineLayoutParams.topToBottom = dateTextView.id
-        lineLayoutParams.startToStart = ConstraintLayout.LayoutParams.PARENT_ID
-        lineLayoutParams.endToEnd = ConstraintLayout.LayoutParams.PARENT_ID
-        lineLayoutParams.topMargin = dpToPx(10)
-
-        lineImageView.layoutParams = lineLayoutParams
-        iconContainer.addView(lineImageView)
-
-        var lastViewId = lineImageView.id // 처음에 추가될 뷰는 구분선 아래에 위치하게 됩니다.
+        scrollContainer.removeAllViews()
 
         logs.forEach { log ->
             val entryLayout = createDiaryEntryLayout(log)
 
-            // 새로운 LinearLayout을 추가하기 위한 LayoutParams 생성
-            val layoutParams = ConstraintLayout.LayoutParams(
-                ConstraintLayout.LayoutParams.MATCH_PARENT,
-                ConstraintLayout.LayoutParams.WRAP_CONTENT
+            // 항목 사이에 마진을 추가
+            val layoutParams = LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT
             )
-            layoutParams.topToBottom = lastViewId
-            layoutParams.startToStart = ConstraintLayout.LayoutParams.PARENT_ID
-            layoutParams.endToEnd = ConstraintLayout.LayoutParams.PARENT_ID
-            layoutParams.setMargins(dpToPx(15), dpToPx(15), dpToPx(15), dpToPx(15)) // 15dp의 마진 추가
+            layoutParams.setMargins(0, 8.toPx(), 0, 0)  // 위쪽에만 8dp 마진 추가
             entryLayout.layoutParams = layoutParams
 
-            // 새로운 뷰의 ID를 생성하고 설정
-            entryLayout.id = View.generateViewId()
-            iconContainer.addView(entryLayout)
-
-            // 현재 추가된 뷰의 ID를 저장하여 다음 뷰의 위치를 설정
-            lastViewId = entryLayout.id
+            scrollContainer.addView(entryLayout)
         }
 
-        // 일지 추가하기 버튼 추가
-        val writeDiaryBtn = Button(context)
-        writeDiaryBtn.id = View.generateViewId()
-        writeDiaryBtn.text = "일지 추가하기"
-        writeDiaryBtn.setBackgroundResource(R.drawable.purple_button_shape)
-        writeDiaryBtn.setTextColor(ContextCompat.getColor(requireContext(), R.color.white))
-        writeDiaryBtn.textSize = 16f
 
-        val buttonLayoutParams = ConstraintLayout.LayoutParams(
-            dpToPx(300),
-            dpToPx(50)
-        )
-        buttonLayoutParams.topToBottom = lastViewId
-        buttonLayoutParams.bottomToBottom = ConstraintLayout.LayoutParams.PARENT_ID
-        buttonLayoutParams.startToStart = ConstraintLayout.LayoutParams.PARENT_ID
-        buttonLayoutParams.endToEnd = ConstraintLayout.LayoutParams.PARENT_ID
-        buttonLayoutParams.topMargin = dpToPx(15) // 마지막 아이콘과 버튼 사이에 여백 추가
-        buttonLayoutParams.bottomMargin = dpToPx(20)
-
-        writeDiaryBtn.layoutParams = buttonLayoutParams
-        iconContainer.addView(writeDiaryBtn)
-
-        writeDiaryBtn.setOnClickListener {
-            val intent = Intent(requireContext(), DiaryEditActivity::class.java)
-            intent.putExtra("date", selectedDate)
-            startActivity(intent)
-            dismiss() // 바텀시트 닫기
-        }
     }
+
+    // dp를 px로 변환하는 확장 함수
+    private fun Int.toPx(): Int {
+        val density = resources.displayMetrics.density
+        return (this * density + 0.5f).toInt()
+    }
+
+
+
 
     private fun createDiaryEntryLayout(log: titleKeyWordEntry): LinearLayout {
         val inflater = LayoutInflater.from(context)
@@ -309,6 +241,7 @@ class BottomSheetFragment : BottomSheetDialogFragment() {
             dismiss()  // 바텀시트를 닫음
         }
 
+        Log.d("createDiaryEntryLayout", "Created layout for: ${log.title}")
         return diaryEntryView
     }
 
@@ -318,11 +251,6 @@ class BottomSheetFragment : BottomSheetDialogFragment() {
         return "${parts[0]}년 ${parts[1]}월 ${parts[2]}일"
     }
 
-
-    private fun dpToPx(dp: Int): Int {
-        val density = resources.displayMetrics.density
-        return (dp * density + 0.5f).toInt()
-    }
 
     private fun getIconResourceForKeyword(keyword: String): Int? {
         // 키워드에 따라 아이콘 리소스를 반환하는 로직을 작성합니다.

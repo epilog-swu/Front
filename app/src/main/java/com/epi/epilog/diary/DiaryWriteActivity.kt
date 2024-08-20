@@ -196,12 +196,18 @@ class DiaryWriteActivity : AppCompatActivity() {
         })
     }
 
+    // Exercise 데이터 수집 시 조건에 따라 항목을 필터링
     private fun parseExerciseEntries(array: JSONArray): List<ExerciseEntry> {
         val list = mutableListOf<ExerciseEntry>()
         for (i in 0 until array.length()) {
             val item = array.getJSONObject(i)
-            val details = item.optString("details").takeIf { it != "null" }
-            list.add(ExerciseEntry(item.getString("type"), details))
+            val type = item.getString("type").replace("직접 입력", "직접입력")
+            val details = item.optString("details").takeIf { it != "null" && it.isNotEmpty() }
+
+            // "직접 입력" 타입일 경우, details가 있을 때만 추가
+            if (type != "직접입력" || details != null) {
+                list.add(ExerciseEntry(type, details))
+            }
         }
         return list
     }
@@ -210,11 +216,19 @@ class DiaryWriteActivity : AppCompatActivity() {
         val list = mutableListOf<MoodEntry>()
         for (i in 0 until array.length()) {
             val item = array.getJSONObject(i)
-            val details = item.optString("details").takeIf { it != "null" }
-            list.add(MoodEntry(item.getString("type"), details))
+            val type = item.getString("type").replace("직접 입력", "직접입력") // 여기서 변경
+            val details = item.optString("details").takeIf { it != "null" && it.isNotEmpty() }
+
+            // "직접 입력" 타입일 경우, details가 있을 때만 추가
+            if (type != "직접입력" || details != null) {
+                list.add(MoodEntry(type, details))
+            }
         }
         return list
+
     }
+
+
 
 
     private inline fun <reified T : DiaryFragment> getFragmentData(): JSONObject? {

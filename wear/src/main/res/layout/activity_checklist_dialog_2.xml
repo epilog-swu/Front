@@ -48,7 +48,7 @@
             android:layout_width="match_parent"
             android:layout_height="28dp"
             android:layout_below="@+id/dialog_button_yes"
-            android:text="예정된 시간에 식사했습니다"
+            android:text="예정된 시간에 복약했습니다"
             android:textSize="10sp"
             android:textColor="@color/검정색"
             android:background="@drawable/checklist_dialog_btn"
