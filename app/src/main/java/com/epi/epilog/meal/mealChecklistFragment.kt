@@ -38,12 +38,13 @@ class MealChecklistFragment : Fragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        val alarmTextView = view.findViewById<TextView>(R.id.alarm_text_view)
-        val text = "워치에 알람보내기"
-        val spannableString = SpannableString(text)
-        spannableString.setSpan(UnderlineSpan(), 0, text.length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
-        alarmTextView.text = spannableString
+        //TODO: 워치에 알람보내는 기능 추가 후 레이아웃 적용
+//        super.onViewCreated(view, savedInstanceState)
+//        val alarmTextView = view.findViewById<TextView>(R.id.alarm_text_view)
+//        val text = "워치에 알람보내기"
+//        val spannableString = SpannableString(text)
+//        spannableString.setSpan(UnderlineSpan(), 0, text.length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+//        alarmTextView.text = spannableString
 
         weekCalendarView = view.findViewById(R.id.meal_calendarView)
         if (weekCalendarView == null) {
