@@ -37,7 +37,7 @@ import retrofit2.Callback
 import retrofit2.Response
 import java.time.LocalDate
 
-class ActivityDiaryShowDetail : AppCompatActivity() {
+class DiaryShowDetailActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityDiaryShowDetailBinding
     private var selectedDate: String? = null // selectedDate를 클래스 변수로 선언
@@ -70,13 +70,13 @@ class ActivityDiaryShowDetail : AppCompatActivity() {
                     }
                 } else {
                     Log.e("DiaryDetail", "Failed to load data: ${response.message()}")
-                    Toast.makeText(this@ActivityDiaryShowDetail, "Failed to load data", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this@DiaryShowDetailActivity, "Failed to load data", Toast.LENGTH_SHORT).show()
                 }
             }
 
             override fun onFailure(call: Call<DiaryDetailResponse>, t: Throwable) {
                 Log.e("DiaryDetail", "Error occurred: ${t.message}")
-                Toast.makeText(this@ActivityDiaryShowDetail, "Error: ${t.message}", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this@DiaryShowDetailActivity, "Error: ${t.message}", Toast.LENGTH_SHORT).show()
             }
         })
     }
@@ -263,7 +263,7 @@ class ActivityDiaryShowDetail : AppCompatActivity() {
             val badgeTextView = TextView(this).apply {
                 text = keyword
                 setBackgroundResource(R.drawable.badge) // 배경으로 drawable 사용
-                setTextColor(ContextCompat.getColor(this@ActivityDiaryShowDetail, android.R.color.black))
+                setTextColor(ContextCompat.getColor(this@DiaryShowDetailActivity, android.R.color.black))
                 textSize = 14f
                 setPadding(16, 8, 16, 8) // 패딩 설정
                 id = View.generateViewId() // ID를 동적으로 생성
@@ -329,7 +329,7 @@ class ActivityDiaryShowDetail : AppCompatActivity() {
             val badgeTextView = TextView(this).apply {
                 text = keyword
                 setBackgroundResource(R.drawable.badge) // 배경으로 drawable 사용
-                setTextColor(ContextCompat.getColor(this@ActivityDiaryShowDetail, android.R.color.black))
+                setTextColor(ContextCompat.getColor(this@DiaryShowDetailActivity, android.R.color.black))
                 textSize = 14f
                 setPadding(16, 8, 16, 8) // 패딩 설정
                 id = View.generateViewId() // ID를 동적으로 생성
@@ -464,16 +464,16 @@ class ActivityDiaryShowDetail : AppCompatActivity() {
                         updateBloodSugarUI(lineChart, bloodSugarDatas)
                         // TextView 업데이트, 필요시 여기에 추가 가능
                     } else {
-                        Toast.makeText(this@ActivityDiaryShowDetail, "Response body is null", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(this@DiaryShowDetailActivity, "Response body is null", Toast.LENGTH_SHORT).show()
                     }
                 } else {
                     Log.e("ActivityDiaryShowDetail", "Failed with status code: ${response.code()}, message: ${response.message()}")
-                    Toast.makeText(this@ActivityDiaryShowDetail, "Failed to load blood sugar data: ${response.message()}", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this@DiaryShowDetailActivity, "Failed to load blood sugar data: ${response.message()}", Toast.LENGTH_SHORT).show()
                 }
             }
 
             override fun onFailure(call: Call<GraphBloodSugarResponse>, t: Throwable) {
-                Toast.makeText(this@ActivityDiaryShowDetail, "Error: ${t.message}", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this@DiaryShowDetailActivity, "Error: ${t.message}", Toast.LENGTH_SHORT).show()
             }
         })
     }
@@ -572,16 +572,16 @@ class ActivityDiaryShowDetail : AppCompatActivity() {
 
                         updateWeightBMIUI(weightData, bmiData)
                     } else {
-                        Toast.makeText(this@ActivityDiaryShowDetail, "Response body is null", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(this@DiaryShowDetailActivity, "Response body is null", Toast.LENGTH_SHORT).show()
                     }
                 } else {
                     Log.e("ActivityDiaryShowDetail", "Failed with status code: ${response.code()}, message: ${response.message()}")
-                    Toast.makeText(this@ActivityDiaryShowDetail, "Failed to load weight and BMI data: ${response.message()}", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this@DiaryShowDetailActivity, "Failed to load weight and BMI data: ${response.message()}", Toast.LENGTH_SHORT).show()
                 }
             }
 
             override fun onFailure(call: Call<GraphWeightBMIResponse>, t: Throwable) {
-                Toast.makeText(this@ActivityDiaryShowDetail, "Error: ${t.message}", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this@DiaryShowDetailActivity, "Error: ${t.message}", Toast.LENGTH_SHORT).show()
             }
         })
     }

@@ -35,7 +35,7 @@
 
         <activity android:name=".LoginActivity" android:exported="true"/>
 
-        <activity android:name=".diary.ActivityDiaryShowDetail">
+        <activity android:name=".diary.DiaryShowDetailActivity">
         </activity>
 
 

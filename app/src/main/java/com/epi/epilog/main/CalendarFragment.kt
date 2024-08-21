@@ -12,7 +12,6 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.Lifecycle
 import androidx.viewpager2.adapter.FragmentStateAdapter
-import com.epi.epilog.main.GraphPage
 import com.epi.epilog.databinding.MainCalendarBinding
 
 class CalendarFragment : Fragment() {
