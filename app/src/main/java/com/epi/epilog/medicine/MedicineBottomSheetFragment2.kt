@@ -9,6 +9,8 @@ import com.epi.epilog.R
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.epi.epilog.databinding.FragmentMedicineSelectBottom2Binding
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 
 class MedicineBottomSheetFragment2 : BottomSheetDialogFragment() {
 
@@ -33,9 +35,20 @@ class MedicineBottomSheetFragment2 : BottomSheetDialogFragment() {
         binding.noDiaryWriteDiaryBtn.setOnClickListener {
             val selectedHour = binding.timePicker.hour
             val selectedMinute = binding.timePicker.minute
-            // 시간 설정 처리
-            Toast.makeText(context, "선택된 시간: $selectedHour:$selectedMinute", Toast.LENGTH_SHORT).show()
-            dismiss()
+
+            // 선택된 시간을 문자열로 포맷합니다.
+            val selectedTime = LocalDateTime.now()
+                .withHour(selectedHour)
+                .withMinute(selectedMinute)
+                .format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"))
+
+            // 선택된 시간을 FragmentResult로 반환합니다.
+            parentFragmentManager.setFragmentResult(
+                "timePickerRequestKey",
+                Bundle().apply { putString("selectedTime", selectedTime) }
+            )
+
+            dismiss() // 바텀시트 닫기
         }
 
         view.post {
@@ -62,8 +75,6 @@ class MedicineBottomSheetFragment2 : BottomSheetDialogFragment() {
             }
         }
     }
-
-
 
     override fun onDestroyView() {
         super.onDestroyView()
