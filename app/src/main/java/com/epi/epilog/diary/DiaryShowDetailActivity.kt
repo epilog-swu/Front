@@ -228,7 +228,7 @@ class DiaryShowDetailActivity : AppCompatActivity() {
         // 운동 처리
         val exerciseKeywords = diaryDetail.exercise?.keyword?.filter { it != "직접입력" } ?: emptyList()
         if (exerciseKeywords.isNotEmpty()) {
-            val exerciseComment = "오늘은 " + exerciseKeywords.joinToString(", ") + " 신체활동을 했습니다."
+            val exerciseComment = diaryDetail.exercise?.comment
             binding.exercise.text = exerciseComment
 
             val exerciseDetails = diaryDetail.exercise?.details
@@ -298,7 +298,7 @@ class DiaryShowDetailActivity : AppCompatActivity() {
         // 기분 처리
         val moodKeywords = diaryDetail.mood?.keyword?.filter { it != "직접입력" } ?: emptyList()
         if (moodKeywords.isNotEmpty()) {
-            val moodComment = "오늘은 " + moodKeywords.joinToString(", ") + "을(를) 느꼈습니다."
+            val moodComment = diaryDetail.mood?.comment
             binding.mood.text = moodComment
 
             val moodDetails = diaryDetail.mood?.details
