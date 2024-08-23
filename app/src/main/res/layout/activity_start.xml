@@ -78,7 +78,7 @@ android:id="@+id/buttonsLayout">
     android:layout_height="56dp"
     android:background="@drawable/white_button_shape"
     android:gravity="center"
-    android:text="시작하기"
+    android:text="로그인"
     android:textColor="@color/main_purple"
     android:textSize="18dp" />
 </LinearLayout>

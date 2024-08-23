@@ -11,6 +11,7 @@ import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import com.epi.epilog.MainActivity
 import com.epi.epilog.R
 import com.epi.epilog.api.Medication
 import com.epi.epilog.api.RetrofitClient
@@ -73,11 +74,9 @@ class signUp5Activity : AppCompatActivity() {
 
                         Log.d("signUp5Activity", "전달 값 : loginId=$loginId, password=$password, name=$name, stature=$stature, weight=$weight, gender=$gender, protectorName=$protectorName, protectorPhone=$protectorPhone, medications=$medications")
 
-                        val intent = Intent(this@signUp5Activity, com.epi.epilog.startActivity::class.java)
-                        startActivity(intent)
-                        finish()
+                        navigateToMain()
                     } else {
-                        Toast.makeText(this@signUp5Activity,  "회원가입 실패", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(this@signUp5Activity, "회원가입 실패", Toast.LENGTH_SHORT).show()
                     }
                 } else {
                     Toast.makeText(this@signUp5Activity, "회원가입 실패", Toast.LENGTH_SHORT).show()
@@ -93,5 +92,11 @@ class signUp5Activity : AppCompatActivity() {
     private fun saveTokenToSession(token: String) {
         val sharedPreferences = getSharedPreferences("AppPrefs", Context.MODE_PRIVATE)
         sharedPreferences.edit().putString("AuthToken", token).apply()
+    }
+
+    private fun navigateToMain() {
+        val intent = Intent(this, MainActivity::class.java)
+        startActivity(intent)
+        finish()
     }
 }
