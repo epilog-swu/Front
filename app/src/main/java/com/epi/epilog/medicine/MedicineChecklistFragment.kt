@@ -10,9 +10,9 @@ import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import com.epi.epilog.signup.LoginActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.epi.epilog.LoginActivity
 import com.epi.epilog.R
 import com.epi.epilog.api.ChecklistItem
 import com.epi.epilog.api.MedicationChecklistResponse

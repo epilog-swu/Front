@@ -1,4 +1,4 @@
-package com.epi.epilog
+package com.epi.epilog.main
 
 import android.content.Context
 import android.content.Intent
@@ -11,9 +11,11 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import androidx.viewpager2.widget.ViewPager2
+import com.epi.epilog.signup.LoginActivity
+import com.epi.epilog.my.MyPageFragment
+import com.epi.epilog.R
 import com.epi.epilog.api.RetrofitClient.retrofitService
 import com.epi.epilog.databinding.ActivityMainBinding
-import com.epi.epilog.main.CalendarFragment
 import com.epi.epilog.meal.MealChecklistFragment
 import com.ismaeldivita.chipnavigation.ChipNavigationBar
 import com.epi.epilog.medicine.MedicineChecklistFragment
@@ -40,10 +42,10 @@ class MainActivity : AppCompatActivity() {
 
             mainLayoutBottomNavigation.setOnItemSelectedListener { id ->
                 when (id) {
-                    R.id.btm_menu_cal-> viewPagerMain.currentItem = 0
-                    R.id.btm_menu_medicine-> viewPagerMain.currentItem = 1
-                    R.id.btm_menu_food-> viewPagerMain.currentItem = 2
-                    R.id.btm_menu_my-> viewPagerMain.currentItem = 3
+                    R.id.btm_menu_cal -> viewPagerMain.currentItem = 0
+                    R.id.btm_menu_medicine -> viewPagerMain.currentItem = 1
+                    R.id.btm_menu_food -> viewPagerMain.currentItem = 2
+                    R.id.btm_menu_my -> viewPagerMain.currentItem = 3
                 }
             }
 

@@ -11,7 +11,7 @@ import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import com.epi.epilog.MainActivity
+import com.epi.epilog.main.MainActivity
 import com.epi.epilog.R
 import com.epi.epilog.api.Medication
 import com.epi.epilog.api.RetrofitClient

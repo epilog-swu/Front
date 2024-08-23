@@ -24,16 +24,16 @@
         <activity android:name=".signup.signUp4Activity"/>
         <activity android:name=".signup.signUp5Activity"/>
         <activity android:name=".diary.DiaryWriteActivity"/>
-        <activity android:name=".startActivity" android:exported="true">
+        <activity android:name=".signup.startActivity" android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
         <activity android:name=".diary.DiaryEditActivity"/>
-        <activity android:name=".MainActivity" android:exported="true"/>
+        <activity android:name=".main.MainActivity" android:exported="true"/>
 
-        <activity android:name=".LoginActivity" android:exported="true"/>
+        <activity android:name=".signup.LoginActivity" android:exported="true"/>
 
         <activity android:name=".diary.DiaryShowDetailActivity">
         </activity>

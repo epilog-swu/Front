@@ -12,8 +12,8 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.Fragment
 import api.DiaryFragment
-import com.epi.epilog.ApiResponse
-import com.epi.epilog.MainActivity
+import com.epi.epilog.api.ApiResponse
+import com.epi.epilog.main.MainActivity
 import com.epi.epilog.R
 import com.epi.epilog.api.DiaryRequest
 import com.epi.epilog.api.ExerciseEntry

@@ -1,4 +1,4 @@
-package com.epi.epilog
+package com.epi.epilog.signup
 
 import android.content.Context
 import android.content.Intent
@@ -12,10 +12,12 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import com.epi.epilog.api.ApiResponse
+import com.epi.epilog.R
 import com.epi.epilog.api.LoginRequest
 import com.epi.epilog.api.RetrofitService
 import com.epi.epilog.api.TokenData
-import com.epi.epilog.signup.signUp1Activity
+import com.epi.epilog.main.MainActivity
 import com.google.firebase.messaging.FirebaseMessaging
 import com.google.gson.GsonBuilder
 import retrofit2.Call

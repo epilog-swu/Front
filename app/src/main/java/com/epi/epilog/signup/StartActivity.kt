@@ -1,4 +1,4 @@
-package com.epi.epilog
+package com.epi.epilog.signup
 
 import android.animation.AnimatorSet
 import android.animation.ObjectAnimator
@@ -11,7 +11,9 @@ import android.widget.Button
 import android.widget.FrameLayout
 import android.widget.ImageView
 import androidx.appcompat.app.AppCompatActivity
-import com.epi.epilog.signup.signUp1Activity
+import com.epi.epilog.R
+import com.epi.epilog.main.MainActivity
+
 
 class startActivity : AppCompatActivity() {
 

@@ -1,4 +1,4 @@
-package com.epi.epilog.presentation.calendar
+package com.epi.epilog.presentation.main
 
 import android.content.Context
 import android.graphics.Color
