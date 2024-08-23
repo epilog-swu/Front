@@ -18,6 +18,12 @@ git clone https://github.com/epilog-swu/Front.git
 
 
 
+## 플로우 차트
+
+<img src="https://github.com/user-attachments/assets/ec1dbeeb-482d-403c-ba8e-e5f5e1bce220" width="1000" height="500"/>
+
+
+<img src="https://github.com/user-attachments/assets/3bcd5154-7de2-4f1b-9eb4-74e85397209e" width="900" height="450"/>
 
 ## 디렉토리 구조
 
@@ -57,3 +63,18 @@ git clone https://github.com/epilog-swu/Front.git
 └── java
 └── res
 ```
+
+
+## 팀원
+<table>
+  <tr>
+    <td>양수빈</td>
+    <td>박현아</td>
+    <td>신서영</td>
+  </tr>
+  <tr>
+    <td>Server/AI Developer</td>
+    <td>Android Developer</td>
+    <td>Android Developer</td>
+  </tr>
+</table>
