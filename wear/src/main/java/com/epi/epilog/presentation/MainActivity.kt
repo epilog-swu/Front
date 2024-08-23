@@ -37,19 +37,12 @@ class MainActivity : ComponentActivity() {
     private lateinit var binding: ActivityMainBinding
     private lateinit var chart: LineChart
 
-    private val bloodSugarChartData = ArrayList<Entry>() // 데이터 배열
-    private lateinit var lineData: LineData
-
-    private var todayDataCounts: Int = 0
     private lateinit var retrofitService: RetrofitService
 
     private lateinit var weekCalendarView: WeekCalendarView
     private lateinit var calendarInitializer: CalendarInitializer // 변경된 부분: 변수 선언
     private lateinit var chartInitializer: ChartInitializer // 변경된 부분: 변수 선언
 
-    private lateinit var sensorManager: SensorManager
-    private var accelerometer: Sensor? = null
-    private val sensorData = mutableListOf<SensorData>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -57,6 +50,10 @@ class MainActivity : ComponentActivity() {
 
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+
+        // Retrofit 초기화
+        initializeRetrofit()
 
         chart = binding.graphBloodSugarChart
         weekCalendarView = binding.calendarView
@@ -69,8 +66,11 @@ class MainActivity : ComponentActivity() {
         calendarInitializer = CalendarInitializer(this, weekCalendarView, this::onDateSelected)
         calendarInitializer.initWeekCalendarView()
 
-        // Retrofit 초기화
-        initializeRetrofit()
+        // 오늘 날짜 선택 및 차트 초기화
+        val today = LocalDate.now()
+        onDateSelected(today)
+        calendarInitializer.selectDate(today)
+
 
         // 버튼 클릭 리스너 설정
         setButtonListeners()
@@ -133,18 +133,6 @@ class MainActivity : ComponentActivity() {
         } else {
             startService(serviceIntent)
         }
-    }
-
-    private fun disableButtons() {
-        binding.btnBloodSugarRecord.isEnabled = false
-        binding.btnCheckMedicine.isEnabled = false
-        binding.btnCheckMeals.isEnabled = false
-    }
-
-    private fun enableButtons() {
-        binding.btnBloodSugarRecord.isEnabled = true
-        binding.btnCheckMedicine.isEnabled = true
-        binding.btnCheckMeals.isEnabled = true
     }
 
     private fun onDateSelected(date: LocalDate) {
