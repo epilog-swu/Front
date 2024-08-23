@@ -10,25 +10,50 @@
 ```bash
 git clone https://github.com/epilog-swu/Front.git
 ```
-
+안드로이드 스튜디오에서 get From VCS -> 리포지토리 주소 입력
 
 ## 시스템 아키텍처
-![lambda](https://github.com/user-attachments/assets/3a13b67d-7992-4fb5-a415-8e72a977b223)
 
-## 모델 구조 및 평가
-<img src="https://github.com/user-attachments/assets/77049221-6b01-493e-a230-af659312aa99" height="300px" alert="모델 정보"> <img src="https://github.com/user-attachments/assets/2cb534b8-56c3-4420-bc2a-5f35640ed1f6" height="340px" /> </img>
+<img src="https://github.com/user-attachments/assets/d3b6b476-8af9-4618-a8ee-5f9dec852432" hegiht = "300px"/> </img>
+
+
 
 
 ## 디렉토리 구조
+
+### 앱모듈
 ```
-📁 AI
-├── Dockerfile
-└── app
-    ├── main.py
-    ├── requirements.txt
-    └── static
-        ├── LSTM_model
-        ├── images
-        ├── learning
-        └── training_data
+📁 App
+├── manifests
+│    └── AndroidManifest.xml
+└── kotlin+java
+│    └── com.epi.epilog
+│        ├── api
+│        ├── diary
+│        ├── main
+│        ├── meal
+│        ├── medicine
+│        ├── my
+│        ├── signup
+│        └── ui.theme
+└── java
+└── res
+```
+### Wear 모듈
+```
+📁 Wear
+├── manifests
+│    └── AndroidManifest.xml
+└── kotlin+java
+│    └── api
+│        └── RetrofitService.kt
+│    └── com.epi.epilog.presentation
+│        ├── blood
+│        ├── fall
+│        ├── main
+│        ├── meal
+│        ├── medicine
+│        └── theme
+└── java
+└── res
 ```
