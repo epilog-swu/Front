@@ -168,7 +168,7 @@ class CalendarPage : Fragment() {
                             when {
                                 diaryCount in 1..2 -> container.textView.setBackgroundResource(R.drawable.calendar_day_count1_bg)
                                 diaryCount in 3..6 -> container.textView.setBackgroundResource(R.drawable.calendar_day_count3_bg)
-                                diaryCount == 7 -> container.textView.setBackgroundResource(R.drawable.calendar_selectday_bg)
+                                diaryCount >= 7 -> container.textView.setBackgroundResource(R.drawable.calendar_selectday_bg)
                                 else -> container.textView.setBackgroundResource(R.drawable.calendar_day_bg)
                             }
                             container.textView.setTextColor(Color.BLACK)
