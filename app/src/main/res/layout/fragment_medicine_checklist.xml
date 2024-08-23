@@ -73,6 +73,7 @@
         android:layout_marginTop="10dp">
 
         <TextView
+            android:id="@+id/instruction_text_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="오늘 먹어야 하는\n약을 확인해보세요"
@@ -81,32 +82,32 @@
             android:textSize="18sp"
             android:textStyle="bold"/>
 
-        <LinearLayout
-            android:id="@+id/medicine_sub_title"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="13dp"
-            android:gravity="center"
-            android:orientation="horizontal">
+        <!--        <LinearLayout-->
+        <!--            android:id="@+id/medicine_sub_title"-->
+        <!--            android:layout_width="wrap_content"-->
+        <!--            android:layout_height="wrap_content"-->
+        <!--            android:layout_marginStart="13dp"-->
+        <!--            android:gravity="center"-->
+        <!--            android:orientation="horizontal">-->
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="복용이 확인되지 않은 약이 있어요"
-                android:textColor="@color/덜진한회색"
-                android:textStyle="bold"
-                android:textSize="10dp" />
+        <!--            <TextView-->
+        <!--                android:layout_width="wrap_content"-->
+        <!--                android:layout_height="wrap_content"-->
+        <!--                android:text="복용이 확인되지 않은 약이 있어요"-->
+        <!--                android:textColor="@color/덜진한회색"-->
+        <!--                android:textStyle="bold"-->
+        <!--                android:textSize="10dp" />-->
 
-            <TextView
-                android:id="@+id/alarm_text_view"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="워치에 알람보내기"
-                android:layout_marginStart="5dp"
-                android:textColor="@color/덜진한회색"
-                android:textStyle="bold"
-                android:textSize="10dp" />
-        </LinearLayout>
+        <!--            <TextView-->
+        <!--                android:id="@+id/alarm_text_view"-->
+        <!--                android:layout_width="wrap_content"-->
+        <!--                android:layout_height="wrap_content"-->
+        <!--                android:text="워치에 알람보내기"-->
+        <!--                android:layout_marginStart="5dp"-->
+        <!--                android:textColor="@color/덜진한회색"-->
+        <!--                android:textStyle="bold"-->
+        <!--                android:textSize="10dp" />-->
+        <!--        </LinearLayout>-->
     </LinearLayout>
 
     <!-- ScrollView for medicine checklist -->
@@ -119,13 +120,15 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
 
-        <LinearLayout
+        <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/medicine_content_layout"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
-            <!-- Medicine data items will be added here dynamically -->
-        </LinearLayout>
+            android:layout_height="0dp"
+            app:layout_constraintTop_toBottomOf="@id/header_view"
+            app:layout_constraintBottom_toTopOf="@id/buttonLayout"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"/>
+
     </ScrollView>
 
     <!-- Bottom buttons -->

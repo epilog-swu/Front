@@ -1,5 +1,7 @@
 package com.epi.epilog.signup
 
+import android.animation.AnimatorSet
+import android.animation.ObjectAnimator
 import android.content.Context
 import android.content.Intent
 import android.graphics.drawable.TransitionDrawable
@@ -9,10 +11,9 @@ import android.widget.Button
 import android.widget.FrameLayout
 import android.widget.ImageView
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.updateLayoutParams
-import androidx.core.view.updateMargins
 import com.epi.epilog.R
 import com.epi.epilog.main.MainActivity
+
 
 class startActivity : AppCompatActivity() {
 
@@ -30,26 +31,29 @@ class startActivity : AppCompatActivity() {
         val signUpButton: Button = findViewById(R.id.signUpButton)
         val nextButton: Button = findViewById(R.id.nextButton)
 
-        // FrameLayout을 먼저 보여줍니다.
         logoFrame.visibility = View.VISIBLE
 
-        // 배경색을 서서히 변경합니다.
         val background = findViewById<View>(R.id.startLayout).background
         if (background is TransitionDrawable) {
             background.startTransition(3000) // 배경색 전환 시간
         }
 
-        logoImage.postDelayed({
+        logoFrame.postDelayed({
             ovalImage.visibility = View.VISIBLE
-            logoImage.updateLayoutParams<FrameLayout.LayoutParams> {
-                updateMargins(right = dpToPx(15))
-            }
-        }, 1300)
 
-        // 1초 뒤에 버튼들을 표시합니다.
+            // 애니메이션 설정
+            val ovalMoveLeft = ObjectAnimator.ofFloat(ovalImage, "translationX", dpToPx(-10).toFloat())
+            val logoMoveLeft = ObjectAnimator.ofFloat(logoImage, "translationX", dpToPx(-15).toFloat())
+
+            val animatorSet = AnimatorSet()
+            animatorSet.playTogether(ovalMoveLeft, logoMoveLeft)
+            animatorSet.duration = 700 // 애니메이션 지속 시간
+            animatorSet.start()
+        }, 1100)
+
         logoFrame.postDelayed({
             findViewById<View>(R.id.buttonsLayout).visibility = View.VISIBLE
-        }, 2000)
+        }, 1900)
 
         signUpButton.setOnClickListener {
             val intent = Intent(this, signUp1Activity::class.java)

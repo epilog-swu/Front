@@ -3,7 +3,6 @@ package com.epi.epilog.api
 import android.os.Parcel
 import android.os.Parcelable
 import okhttp3.ResponseBody
-
 import com.google.gson.annotations.SerializedName
 import retrofit2.Call
 import retrofit2.http.Body
@@ -12,10 +11,10 @@ import retrofit2.http.Header
 import retrofit2.http.Headers
 import retrofit2.http.POST
 import retrofit2.http.Query
-
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.DELETE
+import retrofit2.http.PATCH
 import retrofit2.http.Streaming
 import retrofit2.http.Path
 
@@ -146,6 +145,18 @@ interface RetrofitService {
         @Header("Authorization") token: String,
         @Path("medicationId") medicationId: Int
     ): Call<Void>
+
+    //복약체크리스트 약 수정
+    @PATCH("api/medicines/{chklistId}")
+    fun updateMedicineStatus(
+        @Path("chklistId") chklistId: Int,
+        @Header("Authorization") token: String,
+        @Body request: MedicationStatusUpdateRequest
+    ): Call<ApiResponse>
+}
+
+enum class State {
+    복용, 미복용, 상태없음
 }
 
 //일지 상세 조회 data class
@@ -280,9 +291,8 @@ data class ChecklistItem(
     val time: String,
     val medicationName: String,
     var isComplete: Boolean,
-    val state: String
+    var state: State
 )
-
 data class LoginRequest(
     val loginId: String,
     val password: String

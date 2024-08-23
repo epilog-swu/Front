@@ -89,33 +89,33 @@
                 android:textSize="18dp"
                 android:textStyle="bold" />
 
-            <!--식사가 확인되지 않았어요. 워치 알림보내기-->
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="14dp"
-                android:layout_marginStart="13dp"
-                android:gravity="center"
-                android:orientation="horizontal">
+<!--            &lt;!&ndash;식사가 확인되지 않았어요. 워치 알림보내기&ndash;&gt;-->
+<!--            <LinearLayout-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="14dp"-->
+<!--                android:layout_marginStart="13dp"-->
+<!--                android:gravity="center"-->
+<!--                android:orientation="horizontal">-->
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="식사가 확인되지 않았어요"
-                    android:textColor="@color/덜진한회색"
-                    android:textStyle="bold"
-                    android:textSize="10dp" />
+<!--                <TextView-->
+<!--                    android:layout_width="wrap_content"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:text="식사가 확인되지 않았어요"-->
+<!--                    android:textColor="@color/덜진한회색"-->
+<!--                    android:textStyle="bold"-->
+<!--                    android:textSize="10dp" />-->
 
-                <TextView
-                    android:id="@+id/alarm_text_view"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="워치에 알람보내기"
-                    android:layout_marginStart="5dp"
-                    android:textColor="@color/덜진한회색"
-                    android:textStyle="bold"
-                    android:textSize="10dp" />
+<!--                <TextView-->
+<!--                    android:id="@+id/alarm_text_view"-->
+<!--                    android:layout_width="wrap_content"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:text="워치에 알람보내기"-->
+<!--                    android:layout_marginStart="5dp"-->
+<!--                    android:textColor="@color/덜진한회색"-->
+<!--                    android:textStyle="bold"-->
+<!--                    android:textSize="10dp" />-->
 
-            </LinearLayout>
+<!--            </LinearLayout>-->
 
             <!--오늘의 섭취/권장 칼로리-->
             <androidx.constraintlayout.widget.ConstraintLayout

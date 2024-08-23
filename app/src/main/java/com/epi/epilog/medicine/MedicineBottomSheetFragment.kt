@@ -1,16 +1,23 @@
 package com.epi.epilog.medicine
 
-import android.graphics.Paint
+import android.content.Context
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
+import com.epi.epilog.ApiResponse
 import com.epi.epilog.R
-import com.google.android.material.bottomsheet.BottomSheetBehavior
-import com.google.android.material.bottomsheet.BottomSheetDialogFragment
+import com.epi.epilog.api.MedicationStatusUpdateRequest
+import com.epi.epilog.api.RetrofitClient
+import com.epi.epilog.api.State
 import com.epi.epilog.databinding.FragmentMedicineSelectBottomBinding
+import com.google.android.material.bottomsheet.BottomSheetDialogFragment
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 
 class MedicineBottomSheetFragment : BottomSheetDialogFragment() {
 
@@ -24,7 +31,7 @@ class MedicineBottomSheetFragment : BottomSheetDialogFragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         _binding = FragmentMedicineSelectBottomBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -33,67 +40,86 @@ class MedicineBottomSheetFragment : BottomSheetDialogFragment() {
         super.onViewCreated(view, savedInstanceState)
 
         val checklistItemId = arguments?.getInt("checklist_item_id")
-        Log.d("MedicineBottomSheetFragment", "Checklist Item ID: $checklistItemId")  // 아이템 ID를 로그로 출력
+        val parentFragment = parentFragment as? MedicineChecklistFragment
 
-        val applyChanges = {
-            val parentFragment = parentFragment as? MedicineChecklistFragment
-            checklistItemId?.let { id ->
-                parentFragment?.applyChangesToMedicineItem(id)
-                applyStrikeThroughAndChangeBackground(parentFragment, id)
+        // FragmentResultListener 등록: 시간 선택
+        parentFragmentManager.setFragmentResultListener("timePickerRequestKey", this) { _, bundle ->
+            val selectedTime = bundle.getString("selectedTime")
+            if (selectedTime != null && checklistItemId != null) {
+                applyChanges(State.복용, selectedTime)
             }
-            dismiss()
         }
 
+        // "등록된 시간에 복용했습니다" 버튼 클릭
         binding.bottomButton1.setOnClickListener {
-            applyChanges()
+            val goalTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"))
+            applyChanges(State.복용, goalTime)
         }
 
+        // "다른 시간에 복용했습니다" 버튼 클릭
         binding.bottomButton2.setOnClickListener {
-            applyChanges()
-            val secondBottomSheet = MedicineBottomSheetFragment2()
-            secondBottomSheet.show(parentFragmentManager, secondBottomSheet.tag)
+            val timePickerFragment = MedicineBottomSheetFragment2()
+            timePickerFragment.show(parentFragmentManager, "timePicker")
         }
 
+        // "복용을 건너뛰었습니다" 버튼 클릭
         binding.bottomButton3.setOnClickListener {
-            dismiss() // 아무 변화 없음
-        }
-
-        view.post {
-            val bottomSheet = dialog?.findViewById<View>(com.google.android.material.R.id.design_bottom_sheet)
-            if (bottomSheet != null) {
-                val behavior = BottomSheetBehavior.from(bottomSheet)
-                val scale = resources.displayMetrics.density
-                val minHeight = (150 * scale + 0.5f).toInt()
-
-                behavior.peekHeight = minHeight
-                bottomSheet.layoutParams.height = minHeight
-
-                behavior.addBottomSheetCallback(object : BottomSheetBehavior.BottomSheetCallback() {
-                    override fun onStateChanged(bottomSheet: View, newState: Int) {}
-                    override fun onSlide(bottomSheet: View, slideOffset: Float) {
-                        val newHeight = (minHeight + (bottomSheet.height - minHeight) * slideOffset).toInt()
-                        bottomSheet.layoutParams.height = newHeight
-                        bottomSheet.requestLayout()
-                    }
-                })
-            }
+            val currentTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"))
+            applyChanges(State.미복용, currentTime)
         }
     }
 
-    private fun applyStrikeThroughAndChangeBackground(parentFragment: MedicineChecklistFragment?, checklistItemId: Int) {
-        parentFragment?.view?.findViewWithTag<ViewGroup>("item-$checklistItemId")?.let { itemView ->
-            val medicineNameTextView = itemView.findViewById<TextView>(R.id.medicine_name)
-            val medicineTimeTextView = itemView.findViewById<TextView>(R.id.medicine_time)
+    // 토큰 가져오기
+    private fun getTokenFromSession(): String {
+        val sharedPreferences = context?.getSharedPreferences("AppPrefs", Context.MODE_PRIVATE)
+        return sharedPreferences?.getString("AuthToken", "") ?: ""
+    }
 
-            // 텍스트에 밑줄 적용
-            medicineNameTextView.paintFlags = medicineNameTextView.paintFlags or Paint.STRIKE_THRU_TEXT_FLAG
-            medicineTimeTextView.paintFlags = medicineTimeTextView.paintFlags or Paint.STRIKE_THRU_TEXT_FLAG
+    // 상태 변경 서버 요청
+    private fun updateMedicineStatus(checklistItemId: Int, newState: State, time: String) {
+        val token = getTokenFromSession()
 
-            // 배경 색상 변경
-            itemView.setBackgroundResource(R.drawable.medicine_background)
-        } ?: run {
-            Log.d("MedicineBottomSheetFragment", "View with tag 'item-$checklistItemId' not found.")
+        if (token.isNullOrBlank()) {
+            Log.e("MedicineChecklistFragment", "Token is missing or invalid")
+            return
         }
+
+        val requestBody = MedicationStatusUpdateRequest(
+            time = time,
+            status = newState
+        )
+
+        RetrofitClient.retrofitService.updateMedicineStatus(checklistItemId, "Bearer $token", requestBody).enqueue(object :
+            Callback<ApiResponse> {
+            override fun onResponse(call: Call<ApiResponse>, response: Response<ApiResponse>) {
+                if (response.isSuccessful) {
+                    Log.d("MedicineChecklistFragment", "Status updated successfully for ID: $checklistItemId")
+                } else {
+                    Log.e("MedicineChecklistFragment", "Failed to update status for ID: $checklistItemId. Response code: ${response.code()}, message: ${response.message()}")
+                }
+            }
+
+            override fun onFailure(call: Call<ApiResponse>, t: Throwable) {
+                Log.e("MedicineChecklistFragment", "Error updating status for ID: $checklistItemId", t)
+            }
+        })
+    }
+
+    // 상태 변경 및 UI 업데이트
+    private fun applyChanges(newState: State, time: String) {
+        val checklistItemId = arguments?.getInt("checklist_item_id")
+
+        checklistItemId?.let { id ->
+            // UI 업데이트
+            val parentFragment = parentFragment as? MedicineChecklistFragment
+            parentFragment?.applyStateChangeToMedicineItem(id, newState)
+
+            // 서버에 상태 변경 요청 전송
+            updateMedicineStatus(id, newState, time)
+            Log.d("MedicineBottomSheetFragment", "ID: $id changed to State: $newState at $time")
+        }
+
+        dismiss()
     }
 
     override fun onDestroyView() {
@@ -101,4 +127,3 @@ class MedicineBottomSheetFragment : BottomSheetDialogFragment() {
         _binding = null
     }
 }
-

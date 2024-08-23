@@ -343,6 +343,12 @@ class CalendarPage : Fragment() {
                 Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS),
                 "downloaded_report.pdf"
             )
+
+            // 파일이 이미 존재하는 경우 삭제합니다.
+            if (file.exists()) {
+                file.delete()
+            }
+
             var inputStream: InputStream? = null
             var outputStream: OutputStream? = null
             try {
@@ -387,6 +393,7 @@ class CalendarPage : Fragment() {
             }
         }
     }
+
 
 
     private val diaryCountsMap = mutableMapOf<LocalDate, Int>()

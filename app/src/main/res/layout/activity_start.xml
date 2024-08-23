@@ -21,22 +21,24 @@ android:gravity="center">
     android:text="@string/app_name_capital"
     android:textSize="50dp"
     android:paddingTop="10dp"
+    android:textStyle="bold"
     android:layout_marginBottom="50dp"
-    android:layout_marginTop="-100dp"
+    android:layout_marginTop="-10dp"
+    android:fontFamily="@font/montserrat_light"
     android:textColor="#000"/>
 
 <FrameLayout
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:layout_gravity="center"
-    android:visibility="gone"
+    android:layout_marginTop="50dp"
     android:id="@+id/logoFrame">
 
     <ImageView
         android:id="@+id/ovalImage"
         android:layout_width="100dp"
         android:layout_height="100dp"
-        android:layout_marginLeft="30dp"
+        android:layout_marginLeft="60dp"
         android:src="@drawable/start_oval"
         android:visibility="gone"/>
 
@@ -76,7 +78,7 @@ android:id="@+id/buttonsLayout">
     android:layout_height="56dp"
     android:background="@drawable/white_button_shape"
     android:gravity="center"
-    android:text="시작하기"
+    android:text="로그인"
     android:textColor="@color/main_purple"
     android:textSize="18dp" />
 </LinearLayout>
