@@ -14,7 +14,7 @@ git clone https://github.com/epilog-swu/Front.git
 
 ## 시스템 아키텍처
 
-<img src="https://github.com/user-attachments/assets/d3b6b476-8af9-4618-a8ee-5f9dec852432" hegiht = "300px"/> </img>
+<img src="https://github.com/user-attachments/assets/d3b6b476-8af9-4618-a8ee-5f9dec852432" width ="850" height="1000"/>
 
 
 
