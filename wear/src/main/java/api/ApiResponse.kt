@@ -1,4 +1,4 @@
-package com.epi.epilog.presentation
+package api
 import com.google.gson.annotations.SerializedName
 
 data class ApiResponse(

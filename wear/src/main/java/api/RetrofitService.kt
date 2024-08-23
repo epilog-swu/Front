@@ -1,6 +1,6 @@
 package com.epi.epilog.presentation.theme.api
 
-import com.epi.epilog.presentation.ApiResponse
+import api.ApiResponse
 import com.epi.epilog.presentation.blood.Blood
 import com.epi.epilog.presentation.blood.BloodSugarDatas
 import com.epi.epilog.presentation.medicine.MedicineCheckListDatas

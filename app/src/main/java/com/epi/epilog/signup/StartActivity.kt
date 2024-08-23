@@ -1,4 +1,4 @@
-package com.epi.epilog
+package com.epi.epilog.signup
 
 import android.content.Context
 import android.content.Intent
@@ -11,7 +11,8 @@ import android.widget.ImageView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.updateLayoutParams
 import androidx.core.view.updateMargins
-import com.epi.epilog.signup.signUp1Activity
+import com.epi.epilog.R
+import com.epi.epilog.main.MainActivity
 
 class startActivity : AppCompatActivity() {
 

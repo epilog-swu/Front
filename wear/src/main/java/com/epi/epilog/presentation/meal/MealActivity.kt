@@ -14,12 +14,13 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.CheckBox
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.epi.epilog.presentation.ApiResponse
+import api.ApiResponse
 import com.epi.epilog.R
 import com.epi.epilog.presentation.theme.api.MealCheckItem
 import com.epi.epilog.presentation.theme.api.MealCheckListResponse
@@ -233,6 +234,7 @@ class MealActivity : ComponentActivity() {
                         item.state = State.상태없음
                         updateMealStatus(item.id, item.goalTime, "상태없음") {
                             item.state = State.상태없음
+                            Toast.makeText(context, "취소되었습니다", Toast.LENGTH_SHORT).show() // 취소 메시지 띄우기
                             notifyItemChanged(position)
                         }
                     }

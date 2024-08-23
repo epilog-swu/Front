@@ -73,7 +73,7 @@ class signUp5Activity : AppCompatActivity() {
 
                         Log.d("signUp5Activity", "전달 값 : loginId=$loginId, password=$password, name=$name, stature=$stature, weight=$weight, gender=$gender, protectorName=$protectorName, protectorPhone=$protectorPhone, medications=$medications")
 
-                        val intent = Intent(this@signUp5Activity, com.epi.epilog.startActivity::class.java)
+                        val intent = Intent(this@signUp5Activity, startActivity::class.java)
                         startActivity(intent)
                         finish()
                     } else {

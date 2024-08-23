@@ -15,7 +15,7 @@ import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
-import com.epi.epilog.LoginActivity
+import com.epi.epilog.signup.LoginActivity
 import com.epi.epilog.R
 import com.epi.epilog.api.DiaryCountResponse
 import com.epi.epilog.api.RetrofitClient

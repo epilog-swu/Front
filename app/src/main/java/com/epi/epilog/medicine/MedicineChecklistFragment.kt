@@ -8,7 +8,6 @@ import android.text.SpannableString
 import android.text.Spanned
 import android.text.style.UnderlineSpan
 import android.util.Log
-import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -19,7 +18,7 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
-import com.epi.epilog.LoginActivity
+import com.epi.epilog.signup.LoginActivity
 import com.epi.epilog.R
 import com.epi.epilog.api.ChecklistItem
 import com.epi.epilog.api.MedicationChecklistResponse

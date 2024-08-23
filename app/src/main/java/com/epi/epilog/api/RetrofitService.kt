@@ -2,9 +2,7 @@ package com.epi.epilog.api
 
 import android.os.Parcel
 import android.os.Parcelable
-import com.epi.epilog.ApiResponse
 import okhttp3.ResponseBody
-import org.json.JSONObject
 
 import com.google.gson.annotations.SerializedName
 import retrofit2.Call
