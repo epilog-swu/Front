@@ -47,6 +47,7 @@ import java.time.LocalDate
 import java.time.YearMonth
 import java.time.format.DateTimeFormatter
 import java.util.Locale
+import kotlin.math.roundToInt
 
 
 class GraphPage : Fragment() {
@@ -177,12 +178,19 @@ class GraphPage : Fragment() {
         }
     }
 
-    //선택된 날짜에 따라 (혈당)textView 변경
+
     private fun updateAverageBloodSugarUI(averageBloodSugar: Float, preAverageBloodSugar: Float, postAverageBloodSugar: Float) {
-        binding.graphAvgBloodsugarTv.text = averageBloodSugar.toString()
-        binding.graphAvgBloodsugarMealPreTv.text = preAverageBloodSugar.toString()
-        binding.graphAvgBloodsugarMealPostTv.text = postAverageBloodSugar.toString()
+        // Float 값을 Int로 반올림
+        val roundedAverageBloodSugar = averageBloodSugar.roundToInt()
+        val roundedPreAverageBloodSugar = preAverageBloodSugar.roundToInt()
+        val roundedPostAverageBloodSugar = postAverageBloodSugar.roundToInt()
+
+        // 반올림된 Int 값을 TextView에 설정
+        binding.graphAvgBloodsugarTv.text = roundedAverageBloodSugar.toString()
+        binding.graphAvgBloodsugarMealPreTv.text = roundedPreAverageBloodSugar.toString()
+        binding.graphAvgBloodsugarMealPostTv.text = roundedPostAverageBloodSugar.toString()
     }
+
 
 
     // 선택된 날짜에 따라 textview 변경
@@ -249,8 +257,8 @@ class GraphPage : Fragment() {
         xAxis.axisLineColor = Color.parseColor("#817DA1") // x축 색상 설정
         xAxis.textColor = Color.parseColor("#817DA1") // x축 라벨 색상 설정
         xAxis.axisMinimum = 0f
-        xAxis.axisMaximum = 7f
-        xAxis.valueFormatter = IndexAxisValueFormatter(arrayOf("0", "1", "2", "3", "4", "5", "6", "7")) // x축 라벨 설정
+        xAxis.axisMaximum = 9f
+        xAxis.valueFormatter = IndexAxisValueFormatter(arrayOf("0", "1", "2", "3", "4", "5", "6", "7", "8", "9")) // x축 라벨 설정
 
         // Y축 설정
         val yAxis = lineChart.axisLeft

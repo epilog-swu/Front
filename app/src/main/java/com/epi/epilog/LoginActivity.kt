@@ -94,7 +94,7 @@ class LoginActivity : AppCompatActivity() {
             }
         })
     }
-//TODO : FCM 기기 토큰 서버로 전송 -> 추후에 서버와 연동하여 음성인식 기능 도입 예정
+    //TODO : FCM 기기 토큰 서버로 전송 -> 추후에 서버와 연동하여 음성인식 기능 도입 예정
     private fun sendFCMToken(authToken: String?) {
         FirebaseMessaging.getInstance().token.addOnCompleteListener { task ->
             if (task.isSuccessful) {
