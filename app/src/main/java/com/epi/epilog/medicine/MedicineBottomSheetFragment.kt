@@ -42,7 +42,7 @@ class MedicineBottomSheetFragment : BottomSheetDialogFragment() {
         val checklistItemId = arguments?.getInt("checklist_item_id")
         val parentFragment = parentFragment as? MedicineChecklistFragment
 
-        // FragmentResultListener 등록
+        // FragmentResultListener 등록: 시간 선택
         parentFragmentManager.setFragmentResultListener("timePickerRequestKey", this) { _, bundle ->
             val selectedTime = bundle.getString("selectedTime")
             if (selectedTime != null && checklistItemId != null) {
@@ -50,37 +50,32 @@ class MedicineBottomSheetFragment : BottomSheetDialogFragment() {
             }
         }
 
-        val applyChanges = { newState: State, time: String ->
-            checklistItemId?.let { id ->
-                // UI 업데이트
-                parentFragment?.applyStateChangeToMedicineItem(id, newState)
-
-                // 서버에 상태 변경 요청 전송
-                updateMedicineStatus(id, newState, time)
-                Log.d("MedicineBottomSheetFragment", "ID: $id changed to State: $newState at $time")
-            }
-            dismiss()
-        }
-
+        // "등록된 시간에 복용했습니다" 버튼 클릭
         binding.bottomButton1.setOnClickListener {
-            val currentTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"))
-            applyChanges(State.복용, currentTime)
+            val goalTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"))
+            applyChanges(State.복용, goalTime)
         }
 
+        // "다른 시간에 복용했습니다" 버튼 클릭
         binding.bottomButton2.setOnClickListener {
             val timePickerFragment = MedicineBottomSheetFragment2()
             timePickerFragment.show(parentFragmentManager, "timePicker")
         }
 
+        // "복용을 건너뛰었습니다" 버튼 클릭
         binding.bottomButton3.setOnClickListener {
             val currentTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"))
             applyChanges(State.미복용, currentTime)
         }
     }
-    fun getTokenFromSession(): String {
+
+    // 토큰 가져오기
+    private fun getTokenFromSession(): String {
         val sharedPreferences = context?.getSharedPreferences("AppPrefs", Context.MODE_PRIVATE)
         return sharedPreferences?.getString("AuthToken", "") ?: ""
     }
+
+    // 상태 변경 서버 요청
     private fun updateMedicineStatus(checklistItemId: Int, newState: State, time: String) {
         val token = getTokenFromSession()
 
@@ -109,6 +104,8 @@ class MedicineBottomSheetFragment : BottomSheetDialogFragment() {
             }
         })
     }
+
+    // 상태 변경 및 UI 업데이트
     private fun applyChanges(newState: State, time: String) {
         val checklistItemId = arguments?.getInt("checklist_item_id")
 
@@ -121,6 +118,7 @@ class MedicineBottomSheetFragment : BottomSheetDialogFragment() {
             updateMedicineStatus(id, newState, time)
             Log.d("MedicineBottomSheetFragment", "ID: $id changed to State: $newState at $time")
         }
+
         dismiss()
     }
 
