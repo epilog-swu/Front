@@ -1,18 +1,12 @@
 import android.app.Dialog
-import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.widget.Button
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.DialogFragment
-import com.epi.epilog.MainActivity
+import com.epi.epilog.main.MainActivity
 import com.epi.epilog.R
-import com.epi.epilog.api.RetrofitClient
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
 
 class DeleteDialogFragment : DialogFragment() {
 

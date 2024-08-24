@@ -20,7 +20,7 @@ import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.epi.epilog.presentation.ApiResponse
+import api.ApiResponse
 import com.epi.epilog.R
 import com.epi.epilog.presentation.theme.api.MealCheckItem
 import com.epi.epilog.presentation.theme.api.MealCheckListResponse

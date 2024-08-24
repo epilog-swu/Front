@@ -11,8 +11,8 @@ import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.ComponentActivity
-import com.epi.epilog.presentation.ApiResponse
-import com.epi.epilog.presentation.MainActivity
+import api.ApiResponse
+import com.epi.epilog.presentation.main.MainActivity
 import com.epi.epilog.R
 import com.epi.epilog.presentation.theme.api.LocationData
 import com.epi.epilog.presentation.theme.api.RetrofitService
