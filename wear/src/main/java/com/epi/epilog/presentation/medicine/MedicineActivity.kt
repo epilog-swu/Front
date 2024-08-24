@@ -33,6 +33,7 @@ import java.time.LocalDateTime
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 import android.provider.Settings
+import android.widget.Toast
 import com.epi.epilog.R
 import com.epi.epilog.presentation.UpdateChecklistStatusRequest
 
@@ -359,6 +360,7 @@ class MedicineActivity : ComponentActivity() {
                             (context as MedicineActivity).updateChecklistStatus(checklistItem.id,
                                 State.상태없음, LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")))
                             (context as MedicineActivity).saveChecklistData() // 상태 변경 후 데이터 저장
+                            Toast.makeText(context, "취소되었습니다", Toast.LENGTH_SHORT).show()
                         }
                     }
                 }
