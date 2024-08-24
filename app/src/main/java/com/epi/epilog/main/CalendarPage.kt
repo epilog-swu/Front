@@ -149,7 +149,7 @@ class CalendarPage : Fragment() {
                 if (day.position == DayPosition.MonthDate) {
                     when {
                         day.date == rangeStartDate || day.date == rangeEndDate -> {
-                            container.textView.setBackgroundResource(R.drawable.calendar_selectday_bg)
+                            container.textView.setBackgroundResource(com.epi.epilog.R.drawable.calendar_rangeday_end)
                             container.textView.setTextColor(Color.BLACK)
                         }
 
