@@ -28,6 +28,22 @@ class DiaryFragmentMood : Fragment(), DiaryFragment {
         checkBoxes = listOf(
             view.findViewById(R.id.mood_calm),
             view.findViewById(R.id.mood_happy),
+            view.findViewById(R.id.mood_active),
+            view.findViewById(R.id.mood_annoyed),
+            view.findViewById(R.id.mood_capricious),
+            view.findViewById(R.id.mood_confused),
+            view.findViewById(R.id.mood_energylow),
+            view.findViewById(R.id.mood_gloomy),
+            view.findViewById(R.id.mood_guilty),
+            view.findViewById(R.id.mood_indifference),
+            view.findViewById(R.id.mood_lively),
+            view.findViewById(R.id.mood_obsession),
+            view.findViewById(R.id.mood_sad),
+            view.findViewById(R.id.mood_scray),
+            view.findViewById(R.id.mood_stressed),
+            view.findViewById(R.id.mood_surprised),
+            view.findViewById(R.id.mood_vacant),
+            view.findViewById(R.id.mood_worried),
             view.findViewById(R.id.moodCheckbox_directInput)
         )
 
