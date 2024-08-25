@@ -24,7 +24,7 @@
         <activity android:name=".signup.signUp4Activity"/>
         <activity android:name=".signup.signUp5Activity"/>
         <activity android:name=".diary.DiaryWriteActivity"/>
-        <activity android:name=".signup.startActivity" android:exported="true">
+        <activity android:name=".signup.StartActivity" android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />

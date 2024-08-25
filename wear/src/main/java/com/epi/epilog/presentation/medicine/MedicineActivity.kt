@@ -246,10 +246,6 @@ class MedicineActivity : ComponentActivity() {
 
 
 
-
-
-
-
     fun MedicineshowDialog(chklstId: Int, goalTime: String, onStatusChanged: (State, String) -> Unit) {
         Log.d("MedicineActivity", "showDialog called with chklistId: $chklstId")
         val builder = AlertDialog.Builder(this)

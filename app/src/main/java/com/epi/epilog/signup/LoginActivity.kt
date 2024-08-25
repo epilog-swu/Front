@@ -4,21 +4,27 @@ import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
+import android.text.InputType
+import android.text.SpannableString
+import android.text.Spanned
+import android.text.method.LinkMovementMethod
+import android.text.style.ClickableSpan
+import android.text.style.UnderlineSpan
 import android.util.Log
+import android.view.MotionEvent
+import android.view.View
 import android.widget.Button
 import android.widget.EditText
+import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
-import com.epi.epilog.api.ApiResponse
 import com.epi.epilog.R
 import com.epi.epilog.api.LoginRequest
 import com.epi.epilog.api.RetrofitService
-import com.epi.epilog.api.TokenData
 import com.epi.epilog.main.MainActivity
-import com.google.firebase.messaging.FirebaseMessaging
 import com.google.gson.GsonBuilder
 import retrofit2.Call
 import retrofit2.Callback
@@ -29,27 +35,65 @@ import retrofit2.converter.gson.GsonConverterFactory
 class LoginActivity : AppCompatActivity() {
 
     private lateinit var retrofitService: RetrofitService
+    private lateinit var passwordEditText: EditText
+    private lateinit var togglePasswordVisibility: ImageView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login_patient)
 
-        initializeRetrofit()
-
-        // 권한 요청
+        // 앱 시작 시 권한 요청
         checkAndRequestPermissions()
+
+        initializeRetrofit()
 
         val preButton: Button = findViewById(R.id.pre_button)
         val loginButton: Button = findViewById(R.id.login_button)
         val loginIdEditText: EditText = findViewById(R.id.id_edit)
-        val passwordEditText: EditText = findViewById(R.id.password_edit)
+        passwordEditText = findViewById(R.id.password_edit)
         val signUpText: TextView = findViewById(R.id.signup_text)
 
+        // 회원가입 텍스트에 밑줄 추가 및 클릭 이벤트 추가
+        val signUpFullText = "계정이 없으신가요? 회원가입하기"
+        val spannableString = SpannableString(signUpFullText)
+        val startIndex = signUpFullText.indexOf("회원가입하기")
+        val endIndex = startIndex + "회원가입하기".length
+
+        spannableString.setSpan(UnderlineSpan(), startIndex, endIndex, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+
+        val clickableSpan = object : ClickableSpan() {
+            override fun onClick(widget: View) {
+                val intent = Intent(this@LoginActivity, signUp1Activity::class.java)
+                startActivity(intent)
+            }
+        }
+        spannableString.setSpan(clickableSpan, startIndex, endIndex, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+
+        signUpText.text = spannableString
+        signUpText.movementMethod = LinkMovementMethod.getInstance()
+
+        // 기본적으로 비밀번호 숨김 설정
+        passwordEditText.inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_PASSWORD
+
+        // 비밀번호 보이기/숨기기 기능 추가
+        passwordEditText.setOnTouchListener { _, event ->
+            if (event.action == MotionEvent.ACTION_UP) {
+                val drawableRight = 2
+                if (event.rawX >= (passwordEditText.right - passwordEditText.compoundDrawables[drawableRight].bounds.width())) {
+                    togglePasswordVisibility(passwordEditText)
+                    return@setOnTouchListener true
+                }
+            }
+            false
+        }
+
+        // 이전 버튼
         preButton.setOnClickListener {
-            val intent = Intent(this, startActivity::class.java)
+            val intent = Intent(this, StartActivity::class.java)
             startActivity(intent)
         }
 
+        // 로그인 버튼
         loginButton.setOnClickListener {
             val loginId = loginIdEditText.text.toString()
             val password = passwordEditText.text.toString()
@@ -65,6 +109,15 @@ class LoginActivity : AppCompatActivity() {
             val intent = Intent(this, signUp1Activity::class.java)
             startActivity(intent)
         }
+    }
+
+    private fun togglePasswordVisibility(editText: EditText) {
+        if (editText.inputType == (InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_PASSWORD)) {
+            editText.inputType = InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD
+        } else {
+            editText.inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_PASSWORD
+        }
+        editText.setSelection(editText.text.length)
     }
 
     private fun initializeRetrofit() {
@@ -83,7 +136,7 @@ class LoginActivity : AppCompatActivity() {
                     val responseBody = response.body()
                     saveTokenToSession(responseBody)
                     Log.d(TAG, "Token: $responseBody")
-//                    sendFCMToken(responseBody) // FCM 토큰 전송 추가
+                    navigateToMainActivity()
                 } else {
                     Log.d(TAG, "Login failed with HTTP status code: ${response.code()}")
                     Toast.makeText(this@LoginActivity, "로그인 실패: HTTP status code ${response.code()}", Toast.LENGTH_SHORT).show()
@@ -96,75 +149,91 @@ class LoginActivity : AppCompatActivity() {
             }
         })
     }
-    //TODO : FCM 기기 토큰 서버로 전송 -> 추후에 서버와 연동하여 음성인식 기능 도입 예정
-    private fun sendFCMToken(authToken: String?) {
-        FirebaseMessaging.getInstance().token.addOnCompleteListener { task ->
-            if (task.isSuccessful) {
-                val fcmToken = task.result
-                val tokenData = TokenData(token = fcmToken)
 
-                retrofitService.postToken("Bearer $authToken", tokenData).enqueue(object : Callback<ApiResponse> {
-                    override fun onResponse(call: Call<ApiResponse>, response: Response<ApiResponse>) {
-                        if (response.isSuccessful && response.body()?.success == true) {
-                            Log.d(TAG, "FCM 토큰 전송 성공: $fcmToken")
-                        } else {
-                            Log.d(TAG, "FCM 토큰 전송 실패")
-                        }
-                        navigateToMainActivity() // FCM 토큰 전송 후 메인 액티비티로 이동
-                    }
-
-                    override fun onFailure(call: Call<ApiResponse>, t: Throwable) {
-                        Log.d(TAG, "FCM 토큰 전송 실패: ${t.message}")
-                        navigateToMainActivity() // 실패해도 메인 액티비티로 이동
-                    }
-                })
-            } else {
-                Log.w(TAG, "FCM 토큰 가져오기 실패", task.exception)
-                navigateToMainActivity() // FCM 토큰 가져오기 실패 시에도 메인 액티비티로 이동
-            }
-        }
-    }
-    // 권한 요청
     private fun checkAndRequestPermissions() {
-        val permissions = arrayOf(
-            android.Manifest.permission.BODY_SENSORS,
-            android.Manifest.permission.POST_NOTIFICATIONS,
-            android.Manifest.permission.ACCESS_FINE_LOCATION,
-            android.Manifest.permission.ACCESS_COARSE_LOCATION
-        )
+        val permissionsNeeded = mutableListOf<String>()
 
-        val permissionsNeeded = permissions.filter {
-            ContextCompat.checkSelfPermission(this, it) != PackageManager.PERMISSION_GRANTED
+        // 센서 권한 확인
+        val sensorPermission = android.Manifest.permission.BODY_SENSORS
+        if (ContextCompat.checkSelfPermission(this, sensorPermission) != PackageManager.PERMISSION_GRANTED) {
+            permissionsNeeded.add(sensorPermission)
+        }
+
+        // 알림 권한 확인
+        val notificationPermission = android.Manifest.permission.POST_NOTIFICATIONS
+        if (ContextCompat.checkSelfPermission(this, notificationPermission) != PackageManager.PERMISSION_GRANTED) {
+            permissionsNeeded.add(notificationPermission)
+        }
+
+        // 위치 권한 확인 (둘 중 하나만 허용되면 됨)
+        val fineLocationPermission = android.Manifest.permission.ACCESS_FINE_LOCATION
+        val coarseLocationPermission = android.Manifest.permission.ACCESS_COARSE_LOCATION
+        if (ContextCompat.checkSelfPermission(this, fineLocationPermission) != PackageManager.PERMISSION_GRANTED &&
+            ContextCompat.checkSelfPermission(this, coarseLocationPermission) != PackageManager.PERMISSION_GRANTED) {
+            permissionsNeeded.add(fineLocationPermission)
+            permissionsNeeded.add(coarseLocationPermission)
         }
 
         if (permissionsNeeded.isNotEmpty()) {
+            // 필요한 모든 권한을 한 번에 요청
+            Toast.makeText(this@LoginActivity, "앱 실행을 위해 모든 권한을 허용해주세요", Toast.LENGTH_SHORT).show()
             ActivityCompat.requestPermissions(this, permissionsNeeded.toTypedArray(), PERMISSION_REQUEST_CODE)
+        } else {
         }
     }
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         if (requestCode == PERMISSION_REQUEST_CODE) {
-            val perms = HashMap<String, Int>()
-            perms[android.Manifest.permission.BODY_SENSORS] = PackageManager.PERMISSION_GRANTED
-            perms[android.Manifest.permission.POST_NOTIFICATIONS] = PackageManager.PERMISSION_GRANTED
-            perms[android.Manifest.permission.ACCESS_FINE_LOCATION] = PackageManager.PERMISSION_GRANTED
-            perms[android.Manifest.permission.ACCESS_COARSE_LOCATION] = PackageManager.PERMISSION_GRANTED
+            val permissionsToRequestAgain = mutableListOf<String>()
 
-            if (grantResults.isNotEmpty()) {
-                for (i in permissions.indices) {
-                    perms[permissions[i]] = grantResults[i]
-                }
+            // 센서 권한이 거부되었는지 확인
+            val sensorPermission = android.Manifest.permission.BODY_SENSORS
+            if (ContextCompat.checkSelfPermission(this, sensorPermission) != PackageManager.PERMISSION_GRANTED) {
+                permissionsToRequestAgain.add(sensorPermission)
+            }
 
-                if (perms[android.Manifest.permission.BODY_SENSORS] == PackageManager.PERMISSION_GRANTED
-                    && perms[android.Manifest.permission.POST_NOTIFICATIONS] == PackageManager.PERMISSION_GRANTED) {
-                    Log.d(TAG, "All permissions granted")
-                } else {
-                    Toast.makeText(this, "권한 설정을 해주세요", Toast.LENGTH_LONG).show()
-                }
+            // 알림 권한이 거부되었는지 확인
+            val notificationPermission = android.Manifest.permission.POST_NOTIFICATIONS
+            if (ContextCompat.checkSelfPermission(this, notificationPermission) != PackageManager.PERMISSION_GRANTED) {
+                permissionsToRequestAgain.add(notificationPermission)
+            }
+
+            // 위치 권한이 둘 다 거부되었는지 확인 (둘 중 하나라도 허용된 경우 무시)
+            val fineLocationPermission = android.Manifest.permission.ACCESS_FINE_LOCATION
+            val coarseLocationPermission = android.Manifest.permission.ACCESS_COARSE_LOCATION
+            if (ContextCompat.checkSelfPermission(this, fineLocationPermission) != PackageManager.PERMISSION_GRANTED &&
+                ContextCompat.checkSelfPermission(this, coarseLocationPermission) != PackageManager.PERMISSION_GRANTED) {
+                permissionsToRequestAgain.add(fineLocationPermission)
+                permissionsToRequestAgain.add(coarseLocationPermission)
+            }
+
+            if (permissionsToRequestAgain.isNotEmpty()) {
+                // 아직 허용되지 않은 권한이 있다면 다시 요청
+                ActivityCompat.requestPermissions(this, permissionsToRequestAgain.toTypedArray(), PERMISSION_REQUEST_CODE)
+            } else {
+                // 모든 권한이 허용된 상태라면 초기화 진행
+            }
+
+            // 권한 요청 후에도 필요한 권한이 허용되지 않았다면 설정 페이지로 이동
+            if (permissionsToRequestAgain.any {
+                    ContextCompat.checkSelfPermission(this, it) != PackageManager.PERMISSION_GRANTED
+                }) {
+                redirectToSettings()
             }
         }
     }
+
+    private fun redirectToSettings() {
+        Toast.makeText(this, "설정에서 모든 권한을 허용해주세요.", Toast.LENGTH_LONG).show()
+        val intent = Intent(android.provider.Settings.ACTION_APPLICATION_DETAILS_SETTINGS).apply {
+            data = android.net.Uri.fromParts("package", packageName, null)
+        }
+        startActivity(intent)
+    }
+
+
+
     private fun saveTokenToSession(token: String?) {
         val sharedPreferences = getSharedPreferences("AppPrefs", Context.MODE_PRIVATE)
         sharedPreferences.edit().putString("AuthToken", token).apply()

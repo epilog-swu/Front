@@ -6,8 +6,8 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.epi.epilog.ApiResponse
 import com.epi.epilog.R
+import com.epi.epilog.api.ApiResponse
 import com.epi.epilog.api.MedicationStatusUpdateRequest
 import com.epi.epilog.api.RetrofitClient
 import com.epi.epilog.api.State
@@ -16,6 +16,7 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
@@ -27,6 +28,8 @@ class MedicineBottomSheetFragment : BottomSheetDialogFragment() {
 
     private var _binding: FragmentMedicineSelectBottomBinding? = null
     private val binding get() = _binding!!
+
+    private var selectedTimeFromPicker: String? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -40,42 +43,40 @@ class MedicineBottomSheetFragment : BottomSheetDialogFragment() {
         super.onViewCreated(view, savedInstanceState)
 
         val checklistItemId = arguments?.getInt("checklist_item_id")
+        val selectedDate = arguments?.getString("selected_date")?.let { LocalDate.parse(it) }
         val parentFragment = parentFragment as? MedicineChecklistFragment
 
-        // FragmentResultListener 등록: 시간 선택
+        // TimePicker에서 선택된 시간 수신 대기
         parentFragmentManager.setFragmentResultListener("timePickerRequestKey", this) { _, bundle ->
-            val selectedTime = bundle.getString("selectedTime")
-            if (selectedTime != null && checklistItemId != null) {
-                applyChanges(State.복용, selectedTime)
+            selectedTimeFromPicker = bundle.getString("selectedTime")
+            // 선택된 시간이 있을 경우 서버에 적용
+            selectedTimeFromPicker?.let {
+                applyChanges(State.복용, it, selectedDate)
             }
         }
 
-        // "등록된 시간에 복용했습니다" 버튼 클릭
         binding.bottomButton1.setOnClickListener {
             val goalTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"))
-            applyChanges(State.복용, goalTime)
+            applyChanges(State.복용, goalTime, selectedDate)
         }
 
-        // "다른 시간에 복용했습니다" 버튼 클릭
         binding.bottomButton2.setOnClickListener {
+            // TimePicker를 통해 시간을 선택하도록 BottomSheet2 열기
             val timePickerFragment = MedicineBottomSheetFragment2()
             timePickerFragment.show(parentFragmentManager, "timePicker")
         }
 
-        // "복용을 건너뛰었습니다" 버튼 클릭
         binding.bottomButton3.setOnClickListener {
             val currentTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"))
-            applyChanges(State.미복용, currentTime)
+            applyChanges(State.미복용, currentTime, selectedDate)
         }
     }
 
-    // 토큰 가져오기
     private fun getTokenFromSession(): String {
         val sharedPreferences = context?.getSharedPreferences("AppPrefs", Context.MODE_PRIVATE)
         return sharedPreferences?.getString("AuthToken", "") ?: ""
     }
 
-    // 상태 변경 서버 요청
     private fun updateMedicineStatus(checklistItemId: Int, newState: State, time: String) {
         val token = getTokenFromSession()
 
@@ -105,18 +106,21 @@ class MedicineBottomSheetFragment : BottomSheetDialogFragment() {
         })
     }
 
-    // 상태 변경 및 UI 업데이트
-    private fun applyChanges(newState: State, time: String) {
+    private fun applyChanges(newState: State, time: String, selectedDate: LocalDate?) {
         val checklistItemId = arguments?.getInt("checklist_item_id")
 
         checklistItemId?.let { id ->
-            // UI 업데이트
             val parentFragment = parentFragment as? MedicineChecklistFragment
             parentFragment?.applyStateChangeToMedicineItem(id, newState)
 
-            // 서버에 상태 변경 요청 전송
             updateMedicineStatus(id, newState, time)
             Log.d("MedicineBottomSheetFragment", "ID: $id changed to State: $newState at $time")
+
+            // 상태가 변경되면 선택된 날짜의 데이터를 자동으로 새로고침
+            selectedDate?.let {
+                parentFragment?.selectDate(it)
+                Log.d("MedicineBottomSheetFragment", "날짜: $it")
+            }
         }
 
         dismiss()

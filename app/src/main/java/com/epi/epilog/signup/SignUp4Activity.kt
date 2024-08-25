@@ -2,6 +2,7 @@ package com.epi.epilog.signup
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.*
@@ -10,6 +11,12 @@ import androidx.appcompat.widget.Toolbar
 import androidx.constraintlayout.widget.ConstraintLayout
 import com.epi.epilog.R
 import com.epi.epilog.api.Medication
+import com.epi.epilog.api.RetrofitClient
+import com.epi.epilog.api.SignUpRequest
+import com.epi.epilog.api.SignUpResponse
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
 class signUp4Activity : AppCompatActivity() {
 
@@ -50,19 +57,55 @@ class signUp4Activity : AppCompatActivity() {
 
         nextButton.setOnClickListener {
             collectMedications()
-            val intent = Intent(this, signUp5Activity::class.java).apply {
-                putExtra("loginId", this@signUp4Activity.intent.getStringExtra("loginId"))
-                putExtra("password", this@signUp4Activity.intent.getStringExtra("password"))
-                putExtra("name", this@signUp4Activity.intent.getStringExtra("name"))
-                putExtra("stature", this@signUp4Activity.intent.getFloatExtra("stature", 0f))
-                putExtra("weight", this@signUp4Activity.intent.getFloatExtra("weight", 0f))
-                putExtra("gender", this@signUp4Activity.intent.getStringExtra("gender"))
-                putExtra("protectorName", this@signUp4Activity.intent.getStringExtra("protectorName"))
-                putExtra("protectorPhone", this@signUp4Activity.intent.getStringExtra("protectorPhone"))
-                putParcelableArrayListExtra("medications", ArrayList(medications))
-            }
-            startActivity(intent)
+            logMedications() // 로그 출력
+            signUp()
         }
+    }
+
+    private fun signUp() {
+        val loginId = intent.getStringExtra("loginId") ?: return
+        val password = intent.getStringExtra("password") ?: return
+        val name = intent.getStringExtra("name") ?: return
+        val stature = intent.getFloatExtra("stature", 0f)
+        val weight = intent.getFloatExtra("weight", 0f)
+        val gender = intent.getStringExtra("gender") ?: return
+        val protectorName = intent.getStringExtra("protectorName") ?: return
+        val protectorPhone = intent.getStringExtra("protectorPhone") ?: return
+
+        val signUpRequest = SignUpRequest(
+            loginId = loginId,
+            password = password,
+            name = name,
+            stature = stature,
+            weight = weight,
+            gender = gender,
+            protectorName = protectorName,
+            protectorPhone = protectorPhone,
+            medication = medications
+        )
+
+        RetrofitClient.retrofitService.signUp(signUpRequest).enqueue(object : Callback<SignUpResponse> {
+            override fun onResponse(call: Call<SignUpResponse>, response: Response<SignUpResponse>) {
+                if (response.isSuccessful) {
+                    val responseBody = response.body()
+                    if (responseBody?.success == true) {
+                        val intent = Intent(this@signUp4Activity, signUp5Activity::class.java).apply {
+                            putExtra("code", responseBody.code)
+                            putExtra("token", responseBody.token)  // 토큰을 다음 Activity에 전달
+                        }
+                        startActivity(intent)
+                    } else {
+                        Toast.makeText(this@signUp4Activity, "회원가입 실패", Toast.LENGTH_SHORT).show()
+                    }
+                } else {
+                    Toast.makeText(this@signUp4Activity, "회원가입 실패", Toast.LENGTH_SHORT).show()
+                }
+            }
+
+            override fun onFailure(call: Call<SignUpResponse>, t: Throwable) {
+                Toast.makeText(this@signUp4Activity, "회원가입 실패: ${t.message}", Toast.LENGTH_SHORT).show()
+            }
+        })
     }
 
     private fun addMedicationItem(medicationName: String) {
@@ -110,7 +153,6 @@ class signUp4Activity : AppCompatActivity() {
         val timePicker = signUpDetailView.findViewById<TimePicker>(R.id.timePicker)
         val timeListLayout = signUpDetailView.findViewById<LinearLayout>(R.id.time_list_layout)
 
-        // Repopulate the times for this medication if they exist
         medicationTimes[medicationName]?.forEach { time ->
             addTimeEntry(timeListLayout, time)
         }
@@ -151,6 +193,12 @@ class signUp4Activity : AppCompatActivity() {
             val times = medicationTimes[medicationName] ?: mutableListOf()
 
             medications.add(Medication(medicationName, times))
+        }
+    }
+
+    private fun logMedications() {
+        for (medication in medications) {
+            Log.d("Medication", "Name: ${medication.name}, Times: ${medication.times.joinToString()}")
         }
     }
 }
