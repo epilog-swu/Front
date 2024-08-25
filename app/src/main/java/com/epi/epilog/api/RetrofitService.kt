@@ -2,10 +2,7 @@ package com.epi.epilog.api
 
 import android.os.Parcel
 import android.os.Parcelable
-import com.epi.epilog.ApiResponse
-import com.epi.epilog.medicine.MedicineBottomSheetFragment
 import okhttp3.ResponseBody
-
 import com.google.gson.annotations.SerializedName
 import retrofit2.Call
 import retrofit2.http.Body
@@ -14,7 +11,6 @@ import retrofit2.http.Header
 import retrofit2.http.Headers
 import retrofit2.http.POST
 import retrofit2.http.Query
-
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.DELETE

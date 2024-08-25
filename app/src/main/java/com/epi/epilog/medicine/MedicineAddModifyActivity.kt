@@ -14,8 +14,8 @@ import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
-import com.epi.epilog.ApiResponse
-import com.epi.epilog.MainActivity
+import com.epi.epilog.api.ApiResponse
+import com.epi.epilog.main.MainActivity
 import com.epi.epilog.R
 import com.epi.epilog.api.Medication
 import com.epi.epilog.api.MedicationRequest

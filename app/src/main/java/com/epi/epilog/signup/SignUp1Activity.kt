@@ -12,7 +12,7 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
-import com.epi.epilog.ApiResponse
+import com.epi.epilog.api.ApiResponse
 import com.epi.epilog.R
 import com.epi.epilog.api.RetrofitClient
 import retrofit2.Call

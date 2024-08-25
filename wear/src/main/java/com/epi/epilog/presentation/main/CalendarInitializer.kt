@@ -1,4 +1,4 @@
-package com.epi.epilog.presentation.calendar
+package com.epi.epilog.presentation.main
 
 import android.content.Context
 import android.util.TypedValue
@@ -7,7 +7,6 @@ import android.view.ViewGroup
 import android.widget.TextView
 import android.widget.Toast
 import androidx.core.view.children
-import com.epi.epilog.presentation.MainActivity
 import com.epi.epilog.R
 import com.kizitonwose.calendar.core.WeekDay
 import com.kizitonwose.calendar.core.atStartOfMonth

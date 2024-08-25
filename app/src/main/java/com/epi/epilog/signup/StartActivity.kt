@@ -1,4 +1,4 @@
-package com.epi.epilog
+package com.epi.epilog.signup
 
 import android.animation.AnimatorSet
 import android.animation.ObjectAnimator
@@ -10,14 +10,24 @@ import android.view.View
 import android.widget.Button
 import android.widget.FrameLayout
 import android.widget.ImageView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import com.epi.epilog.signup.signUp1Activity
+import com.epi.epilog.R
+import com.epi.epilog.api.RetrofitService
+import com.epi.epilog.main.MainActivity
+import com.google.gson.GsonBuilder
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
 
-class startActivity : AppCompatActivity() {
+class StartActivity : AppCompatActivity() {
 
     private lateinit var logoFrame: FrameLayout
     private lateinit var logoImage: ImageView
     private lateinit var ovalImage: ImageView
+    private lateinit var retrofitService: RetrofitService
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -28,6 +38,11 @@ class startActivity : AppCompatActivity() {
         ovalImage = findViewById(R.id.ovalImage)
         val signUpButton: Button = findViewById(R.id.signUpButton)
         val nextButton: Button = findViewById(R.id.nextButton)
+
+        initializeRetrofit()
+
+        // 앱 시작 시 토큰 유효성 검사
+        validateTokenAndProceed()
 
         logoFrame.visibility = View.VISIBLE
 
@@ -62,7 +77,7 @@ class startActivity : AppCompatActivity() {
             val sharedPreferences = getSharedPreferences("AppPrefs", Context.MODE_PRIVATE)
             val authToken = sharedPreferences.getString("AuthToken", null)
             if (!authToken.isNullOrEmpty()) {
-                navigateToMain() // 바로 메인 액티비티로 이동
+                navigateToMain()
             } else {
                 redirectToLogin()
             }
@@ -71,6 +86,38 @@ class startActivity : AppCompatActivity() {
 
     private fun dpToPx(dp: Int): Int {
         return (dp * resources.displayMetrics.density).toInt()
+    }
+
+    private fun initializeRetrofit() {
+        val gson = GsonBuilder().setLenient().create()
+        val retrofit = Retrofit.Builder()
+            .baseUrl("http://epilog-develop-env.eba-imw3vi3g.ap-northeast-2.elasticbeanstalk.com/")
+            .addConverterFactory(GsonConverterFactory.create(gson))
+            .build()
+        retrofitService = retrofit.create(RetrofitService::class.java)
+    }
+
+    private fun validateTokenAndProceed() {
+        val sharedPreferences = getSharedPreferences("AppPrefs", Context.MODE_PRIVATE)
+        val authToken = sharedPreferences.getString("AuthToken", null)
+
+        if (authToken.isNullOrEmpty()) {
+            // 토큰이 없는 경우 그냥 StartActivity에 머무름
+            return
+        }
+
+        retrofitService.testApi("Bearer $authToken").enqueue(object : Callback<Void> {
+            override fun onResponse(call: Call<Void>, response: Response<Void>) {
+                if (response.isSuccessful) {
+                    // 토큰이 유효하면 메인 액티비티로 이동
+                    navigateToMain()
+                }
+            }
+
+            override fun onFailure(call: Call<Void>, t: Throwable) {
+                Toast.makeText(this@StartActivity, "토큰 유효성 검사 실패: ${t.message}", Toast.LENGTH_SHORT).show()
+            }
+        })
     }
 
     private fun navigateToMain() {

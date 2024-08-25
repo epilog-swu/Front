@@ -11,7 +11,7 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
-import com.epi.epilog.MainActivity
+import com.epi.epilog.main.MainActivity
 import com.epi.epilog.R
 import com.epi.epilog.api.MedicationDetailResponse
 import com.epi.epilog.api.RetrofitClient
@@ -59,12 +59,15 @@ class MedicineDetailActivity : AppCompatActivity() {
 
         // Intent로부터 medicationId를 가져와서 currentMedicationId에 설정
         currentMedicationId = intent.getIntExtra("medicationId", -1)
+        Log.d("MedicineDetailActivity", "Received medicationId: $currentMedicationId")
 
-        // 처음에는 currentMedicationId가 유효한 경우에만 fetch
+        // 유효한 medicationId인지 확인
         if (currentMedicationId != null && currentMedicationId != -1) {
             fetchMedicationDetail(currentMedicationId!!)
         } else {
             Toast.makeText(this, "Invalid Medication ID", Toast.LENGTH_SHORT).show()
+            Log.e("MedicineDetailActivity", "Invalid Medication ID: $currentMedicationId")
+            finish()  // 유효하지 않은 경우 액티비티 종료
         }
 
         prevButton.setOnClickListener {
@@ -207,7 +210,10 @@ class MedicineDetailActivity : AppCompatActivity() {
         return sharedPreferences.getString("AuthToken", "") ?: ""
     }
 
-    private fun formatDateString(date: String): String {
+    private fun formatDateString(date: String?): String {
+        // date가 null이거나 빈 문자열인 경우 빈 문자열 반환
+        if (date.isNullOrEmpty()) return ""
+
         val parts = date.split(" ")
         return if (parts.size == 3) {
             "${parts[0]}년 ${parts[1]}월 ${parts[2]}일"
@@ -215,6 +221,7 @@ class MedicineDetailActivity : AppCompatActivity() {
             date
         }
     }
+
 
     private fun navigateToMainActivity() {
         val intent = Intent(this, MainActivity::class.java)
