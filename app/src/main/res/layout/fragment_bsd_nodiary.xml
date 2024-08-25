@@ -27,10 +27,9 @@
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="15dp"
         android:gravity="center"
-        android:text="일지 요약"
+        android:text="일지 선택"
         android:textColor="@color/black"
         android:textSize="16sp"
-        android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />

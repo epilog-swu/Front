@@ -234,7 +234,8 @@ class MealActivity : ComponentActivity() {
                         item.state = State.상태없음
                         updateMealStatus(item.id, item.goalTime, "상태없음") {
                             item.state = State.상태없음
-                            Toast.makeText(context, "취소되었습니다", Toast.LENGTH_SHORT).show() // 취소 메시지 띄우기
+
+                            Toast.makeText(context, "취소되었습니다", Toast.LENGTH_SHORT).show()
                             notifyItemChanged(position)
                         }
                     }

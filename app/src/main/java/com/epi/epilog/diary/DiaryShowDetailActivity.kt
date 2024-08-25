@@ -11,6 +11,7 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.constraintlayout.widget.ConstraintSet
 import androidx.core.content.ContextCompat
 import com.bumptech.glide.Glide
 import com.epi.epilog.R
@@ -258,42 +259,59 @@ class DiaryShowDetailActivity : AppCompatActivity() {
         // 운동 배지 추가
         binding.exerciseBadgeLayout.removeAllViews() // 기존 배지 제거
 
+        // 한 줄에 몇 개의 배지를 표시할지 결정합니다.
+        val maxBadgesPerRow = 3
+        var previousViewId = View.NO_ID
+        var previousRowStartViewId = View.NO_ID
+        val verticalSpacing = 16 // 상하 간격을 위한 값 (dp)
+
         exerciseKeywords.forEachIndexed { index, keyword ->
-            // 배지에 해당하는 TextView 생성
             val badgeTextView = TextView(this).apply {
                 text = keyword
-                setBackgroundResource(R.drawable.badge) // 배경으로 drawable 사용
+                setBackgroundResource(R.drawable.badge)
                 setTextColor(ContextCompat.getColor(this@DiaryShowDetailActivity, android.R.color.black))
                 textSize = 14f
-                setPadding(16, 8, 16, 8) // 패딩 설정
-                id = View.generateViewId() // ID를 동적으로 생성
+                setPadding(16, 8, 16, 8)
+                id = View.generateViewId()
             }
 
             // LayoutParams 생성
             val layoutParams = ConstraintLayout.LayoutParams(
                 ConstraintLayout.LayoutParams.WRAP_CONTENT,
                 ConstraintLayout.LayoutParams.WRAP_CONTENT
-            ).apply {
-                // 첫 번째 배지는 parent 시작점에 붙임
-                if (index == 0) {
-                    startToStart = ConstraintLayout.LayoutParams.PARENT_ID
-                } else {
-                    // 나머지는 이전 배지의 끝에 붙임
-                    startToEnd = binding.exerciseBadgeLayout.getChildAt(index - 1).id
-                }
-                topToTop = ConstraintLayout.LayoutParams.PARENT_ID // 상단을 parent에 맞춤
-                bottomToBottom = ConstraintLayout.LayoutParams.PARENT_ID // 하단을 parent에 맞춤
-                setMargins(8, 0, 50, 0) // 마진 설정
-            }
-
-            // 배지에 layoutParams 적용 후 레이아웃에 추가
+            )
             badgeTextView.layoutParams = layoutParams
             binding.exerciseBadgeLayout.addView(badgeTextView)
 
-            // 레이아웃 강제 갱신
-            binding.exerciseBadgeLayout.invalidate()
-            binding.exerciseBadgeLayout.requestLayout()
+            val constraintSet = ConstraintSet()
+            constraintSet.clone(binding.exerciseBadgeLayout)
+
+            if (index % maxBadgesPerRow == 0) {
+                // 새 줄의 시작
+                constraintSet.connect(badgeTextView.id, ConstraintSet.START, ConstraintSet.PARENT_ID, ConstraintSet.START)
+                if (index == 0) {
+                    // 첫 번째 배지
+                    constraintSet.connect(badgeTextView.id, ConstraintSet.TOP, ConstraintSet.PARENT_ID, ConstraintSet.TOP)
+                } else {
+                    // 줄바꿈 시 첫 번째 배지
+                    constraintSet.connect(badgeTextView.id, ConstraintSet.TOP, previousRowStartViewId, ConstraintSet.BOTTOM, verticalSpacing)
+                    previousRowStartViewId = badgeTextView.id
+                }
+            } else {
+                // 같은 줄에 배치
+                constraintSet.connect(badgeTextView.id, ConstraintSet.START, previousViewId, ConstraintSet.END, 8)
+                constraintSet.connect(badgeTextView.id, ConstraintSet.TOP, previousViewId, ConstraintSet.TOP)
+            }
+
+            constraintSet.applyTo(binding.exerciseBadgeLayout)
+            previousViewId = badgeTextView.id
+
+            if (index % maxBadgesPerRow == 0) {
+                previousRowStartViewId = badgeTextView.id
+            }
         }
+
+
 
         // 기분 처리
         val moodKeywords = diaryDetail.mood?.keyword?.filter { it != "직접입력" } ?: emptyList()
@@ -317,49 +335,53 @@ class DiaryShowDetailActivity : AppCompatActivity() {
         }
 
 
-//        if (diaryDetail.mood?.keyword?.contains("직접 입력") == true) {
-//            binding.moodDetail.text = diaryDetail.mood.details
-//            binding.moodDetail.visibility = View.VISIBLE
-//        } else {
-//            binding.moodDetail.visibility = View.GONE
-//        }
-
         moodKeywords.forEachIndexed { index, keyword ->
-            // 배지에 해당하는 TextView 생성
             val badgeTextView = TextView(this).apply {
                 text = keyword
-                setBackgroundResource(R.drawable.badge) // 배경으로 drawable 사용
+                setBackgroundResource(R.drawable.badge)
                 setTextColor(ContextCompat.getColor(this@DiaryShowDetailActivity, android.R.color.black))
                 textSize = 14f
-                setPadding(16, 8, 16, 8) // 패딩 설정
-                id = View.generateViewId() // ID를 동적으로 생성
+                setPadding(16, 8, 16, 8)
+                id = View.generateViewId()
             }
 
             // LayoutParams 생성
             val layoutParams = ConstraintLayout.LayoutParams(
                 ConstraintLayout.LayoutParams.WRAP_CONTENT,
                 ConstraintLayout.LayoutParams.WRAP_CONTENT
-            ).apply {
-                // 첫 번째 배지는 parent 시작점에 붙임
-                if (index == 0) {
-                    startToStart = ConstraintLayout.LayoutParams.PARENT_ID
-                } else {
-                    // 나머지는 이전 배지의 끝에 붙임
-                    startToEnd = binding.moodBadgeLayout.getChildAt(index - 1).id
-                }
-                topToTop = ConstraintLayout.LayoutParams.PARENT_ID // 상단을 parent에 맞춤
-                bottomToBottom = ConstraintLayout.LayoutParams.PARENT_ID // 하단을 parent에 맞춤
-                setMargins(8, 0, 50, 0) // 마진 설정
-            }
-
-            // 배지에 layoutParams 적용 후 레이아웃에 추가
+            )
             badgeTextView.layoutParams = layoutParams
             binding.moodBadgeLayout.addView(badgeTextView)
 
-            // 레이아웃 강제 갱신
-            binding.moodBadgeLayout.invalidate()
-            binding.moodBadgeLayout.requestLayout()
+            val constraintSet = ConstraintSet()
+            constraintSet.clone(binding.moodBadgeLayout)
+
+            if (index % maxBadgesPerRow == 0) {
+                // 새 줄의 시작
+                constraintSet.connect(badgeTextView.id, ConstraintSet.START, ConstraintSet.PARENT_ID, ConstraintSet.START)
+                if (index == 0) {
+                    // 첫 번째 배지
+                    constraintSet.connect(badgeTextView.id, ConstraintSet.TOP, ConstraintSet.PARENT_ID, ConstraintSet.TOP)
+                } else {
+                    // 줄바꿈 시 첫 번째 배지
+                    constraintSet.connect(badgeTextView.id, ConstraintSet.TOP, previousRowStartViewId, ConstraintSet.BOTTOM, verticalSpacing)
+                    previousRowStartViewId = badgeTextView.id
+                }
+            } else {
+                // 같은 줄에 배치
+                constraintSet.connect(badgeTextView.id, ConstraintSet.START, previousViewId, ConstraintSet.END, 8)
+                constraintSet.connect(badgeTextView.id, ConstraintSet.TOP, previousViewId, ConstraintSet.TOP)
+            }
+
+            constraintSet.applyTo(binding.moodBadgeLayout)
+            previousViewId = badgeTextView.id
+
+            if (index % maxBadgesPerRow == 0) {
+                previousRowStartViewId = badgeTextView.id
+            }
         }
+
+
     }
 
     private fun formatTitleDate(title: String): String {
