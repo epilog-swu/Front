@@ -29,9 +29,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="2dp"
-            android:text="언제 측정하셨나요?"
+            android:text="시간대와 수치를 입력해주세요"
             android:textColor="@color/검정색"
-            android:textSize="12sp"
+            android:textSize="10sp"
             app:layout_constraintTop_toBottomOf="@+id/blood_sugar_title"/>
         <FrameLayout
             android:id="@+id/blood_sugar_input_form"
