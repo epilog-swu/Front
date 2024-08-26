@@ -15,13 +15,13 @@ import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
-import com.epi.epilog.LoginActivity
 import com.epi.epilog.R
 import com.epi.epilog.api.DiaryCountResponse
 import com.epi.epilog.api.RetrofitClient
 import com.epi.epilog.databinding.CalendarMonthYearBinding
 import com.epi.epilog.databinding.EpiDialogCustomBinding
 import com.epi.epilog.databinding.FragmentCalendarBinding
+import com.epi.epilog.signup.LoginActivity
 import com.kizitonwose.calendar.core.CalendarDay
 import com.kizitonwose.calendar.core.CalendarMonth
 import com.kizitonwose.calendar.core.DayPosition
@@ -90,9 +90,9 @@ class CalendarPage : Fragment() {
         RetrofitClient.retrofitService.testApi("Bearer $token").enqueue(object : Callback<Void> {
             override fun onResponse(call: Call<Void>, response: Response<Void>) {
                 if (response.isSuccessful) {
-                    setupCalendarView() // Proceed with calendar setup if the token is valid
+                    setupCalendarView()
                 } else {
-                    redirectToLogin() // Redirect to login if the token is invalid
+                    redirectToLogin()
                 }
             }
 
@@ -339,15 +339,14 @@ class CalendarPage : Fragment() {
 
     private suspend fun saveFileToStorage(body: ResponseBody) {
         try {
+            // Generate a unique filename using a timestamp
+            val timestamp = System.currentTimeMillis().toString()
+            val fileName = "downloaded_report_$timestamp.pdf"
+
             val file = File(
                 Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS),
-                "downloaded_report.pdf"
+                fileName
             )
-
-            // 파일이 이미 존재하는 경우 삭제합니다.
-            if (file.exists()) {
-                file.delete()
-            }
 
             var inputStream: InputStream? = null
             var outputStream: OutputStream? = null
@@ -363,19 +362,13 @@ class CalendarPage : Fragment() {
                     output.flush()
                 }
 
-                // 파일 저장 후 결과를 메인 스레드에서 UI로 알림
                 withContext(Dispatchers.Main) {
-                    Toast.makeText(context, "PDF 변환 성공", Toast.LENGTH_LONG)
-                        .show()
+                    Toast.makeText(context, "$fileName 당뇨 일지 PDF 변환 성공", Toast.LENGTH_LONG).show()
                 }
             } catch (e: IOException) {
                 e.printStackTrace()
                 withContext(Dispatchers.Main) {
-                    Toast.makeText(
-                        context,
-                        "Failed to save the file: ${e.message}",
-                        Toast.LENGTH_SHORT
-                    ).show()
+                    Toast.makeText(context, "Failed to save the file: ${e.message}", Toast.LENGTH_SHORT).show()
                 }
             } finally {
                 inputStream?.close()
@@ -384,12 +377,7 @@ class CalendarPage : Fragment() {
         } catch (e: IOException) {
             e.printStackTrace()
             withContext(Dispatchers.Main) {
-                Toast.makeText(
-                    context,
-                    "Failed to save the file: ${e.message}",
-                    Toast.LENGTH_SHORT
-                )
-                    .show()
+                Toast.makeText(context, "Failed to save the file: ${e.message}", Toast.LENGTH_SHORT).show()
             }
         }
     }

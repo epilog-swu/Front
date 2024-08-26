@@ -1,4 +1,4 @@
-package com.epi.epilog.presentation.calendar
+package com.epi.epilog.presentation.main
 
 import android.view.View
 import android.widget.TextView
