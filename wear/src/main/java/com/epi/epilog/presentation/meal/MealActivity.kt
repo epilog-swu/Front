@@ -248,7 +248,7 @@ class MealActivity : ComponentActivity() {
         private fun showDialog(item: MealCheckItem, position: Int) {
             val builder = AlertDialog.Builder(context)
             val inflater = context.layoutInflater
-            val dialogView = inflater.inflate(R.layout.activity_checklist_dialog, null)
+            val dialogView = inflater.inflate(R.layout.activity_checklist_dialog_meal, null)
             builder.setView(dialogView)
 
             val dialog = builder.create()
