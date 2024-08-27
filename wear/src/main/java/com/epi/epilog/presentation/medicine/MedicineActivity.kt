@@ -250,7 +250,7 @@ class MedicineActivity : ComponentActivity() {
         Log.d("MedicineActivity", "showDialog called with chklistId: $chklstId")
         val builder = AlertDialog.Builder(this)
         val inflater = layoutInflater
-        val dialogView = inflater.inflate(R.layout.activity_checklist_dialog_2, null)
+        val dialogView = inflater.inflate(R.layout.activity_checklist_dialog_medicine, null)
         builder.setView(dialogView)
         builder.setCancelable(true)
         with(builder) {

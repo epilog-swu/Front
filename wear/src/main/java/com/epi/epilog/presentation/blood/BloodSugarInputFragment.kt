@@ -92,12 +92,11 @@ class BloodSugarInputFragment : Fragment() {
                 bloodSugar = bloodSugar
             )
 
-            // Log the data being sent
             val gson = Gson()
             val bloodDataJson = gson.toJson(bloodData)
             Log.d("BloodSugarInputFragment", "Blood Data JSON: $bloodDataJson")
 
-            // Get the token from SharedPreferences
+
             val sharedPreferences = requireActivity().getSharedPreferences("AppPrefs", Context.MODE_PRIVATE)
             val token = sharedPreferences.getString("AuthToken", "")
             if (token.isNullOrEmpty()) {

@@ -50,8 +50,6 @@ import java.util.concurrent.TimeUnit
 
 class FallDetectionService : Service(), SensorEventListener, LocationListener {
 
-    private val medicineChannelId = "MedicineActivityChannel" // 알림 채널 ID
-
     private lateinit var sensorManager: SensorManager
     private var accelerometer: Sensor? = null
     private var gyroscope: Sensor? = null
@@ -64,7 +62,6 @@ class FallDetectionService : Service(), SensorEventListener, LocationListener {
     private lateinit var wakeLock: PowerManager.WakeLock
     private lateinit var scheduledExecutorService: ScheduledExecutorService
 
-    private var isEmergencyTriggered = false
     private var currentLocation: Location? = null
     private lateinit var mediaPlayer: MediaPlayer
 

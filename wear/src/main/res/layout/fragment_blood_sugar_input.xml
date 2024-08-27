@@ -1,35 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/blood_sugar_time_form"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/blood_sugar_time_form"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".presentation.BloodSugarInputFragment">
+    android:layout_height="match_parent">
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
         android:layout_gravity="center"
-        >
+        android:orientation="vertical">
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
+            android:layout_marginTop="10dp"
             android:gravity="bottom"
-            android:layout_marginTop="10dp">
+            android:orientation="horizontal">
+
             <EditText
                 android:id="@+id/bloodSugarLevelInput"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="3"
-                android:hint="혈당수치 입력"
-                android:textSize="16dp"
-                android:inputType="numberDecimal"
-                android:gravity="center_horizontal"
                 android:layout_gravity="center"
-                android:padding="16dp"
+                android:layout_weight="3"
                 android:background="@color/제일연한보라"
-                />
+                android:gravity="center_horizontal"
+                android:hint="혈당수치 입력"
+                android:inputType="numberDecimal"
+                android:padding="16dp"
+                android:textSize="16dp" />
+
             <TextView
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -38,13 +39,14 @@
                 android:textColor="@color/검정색"
                 android:textSize="12sp" />
         </LinearLayout>
+
         <Button
             android:id="@+id/blood_sugar_submit_btn"
-            android:layout_marginTop="10dp"
             android:layout_width="match_parent"
             android:layout_height="28dp"
-            android:text="완료"
+            android:layout_marginTop="10dp"
             android:background="@drawable/checklist_dialog_btn"
+            android:text="완료"
             android:textColor="@color/검정색"
             android:textSize="12sp" />
     </LinearLayout>

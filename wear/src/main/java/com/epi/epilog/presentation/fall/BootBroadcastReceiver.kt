@@ -1,6 +1,5 @@
 package com.epi.epilog.presentation.fall
 
-
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent

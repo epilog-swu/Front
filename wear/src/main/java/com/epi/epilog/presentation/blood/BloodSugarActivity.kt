@@ -30,7 +30,6 @@ class BloodSugarActivity : AppCompatActivity() {
         }
         val recordTitle = "$formattedDate 혈당기록"
 
-        // TextView 업데이트
         val textView: TextView = findViewById(R.id.blood_sugar_title)
         textView.text = recordTitle
 
