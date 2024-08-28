@@ -225,7 +225,7 @@ class LoginActivity : AppCompatActivity() {
     }
 
     private fun redirectToSettings() {
-        Toast.makeText(this, "설정에서 모든 권한을 허용해주세요.", Toast.LENGTH_LONG).show()
+        Toast.makeText(this, "설정에서 모든 권한을 허용해주세요", Toast.LENGTH_LONG).show()
         val intent = Intent(android.provider.Settings.ACTION_APPLICATION_DETAILS_SETTINGS).apply {
             data = android.net.Uri.fromParts("package", packageName, null)
         }
