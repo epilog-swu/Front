@@ -159,6 +159,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="25dp"
                 android:layout_marginTop="12dp"
+                android:layout_marginBottom="10dp"
                 android:text="@string/please_fill_all"
                 android:textColor="#FF6363"
                 android:textSize="12sp"

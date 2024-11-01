@@ -54,13 +54,11 @@ class MedicineAddModifyActivity : AppCompatActivity() {
 
         initializeRetrofit()
 
-        // Initialize UI elements from medicine_add.xml
         medicationEditText = findViewById(R.id.medicationEditText)
         addButton = findViewById(R.id.addButton)
         medicationList = findViewById(R.id.medicationList)
         saveButton = findViewById(R.id.save_button)
 
-        // Add button click listener
         addButton.setOnClickListener {
             val medicationName = medicationEditText.text.toString().trim()
             if (medicationName.isNotEmpty()) {
