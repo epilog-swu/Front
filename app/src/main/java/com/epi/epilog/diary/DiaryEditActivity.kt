@@ -55,7 +55,7 @@ class DiaryEditActivity : AppCompatActivity() {
 
         }
 
-        //TODO : 시간 입력 시 occuranceType  null로 보내야하는지, 그리고 그냥 버튼 클릭시 time null로 보내야 하는지
+        //TODO : 시간 입력 시 occuranceType 을 yyyy-mm-dd 형태로 보냄
         nextButton.setOnClickListener {
             val intent = Intent(this, DiaryWriteActivity::class.java)
             if (isTimePickerVisible) {
@@ -64,14 +64,14 @@ class DiaryEditActivity : AppCompatActivity() {
                     set(Calendar.MINUTE, timePicker.minute)
                 }
                 val dateTime = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault()).format(calendar.time)
-                selectedTime = "$selectedDate $dateTime"
-                intent.putExtra("time", selectedTime)
+                selectedTime = "$dateTime"
+                intent.putExtra("occurrenceType", selectedTime)
             } else {
                 intent.putExtra("occurrenceType", occurrenceType)
             }
             intent.putExtra("date", selectedDate)
             // Intent 내용 출력
-            Log.d("DiaryEditActivity", "Intent data: date=${intent.getStringExtra("date")}, occurrenceType=${intent.getStringExtra("occurrenceType")}, time=${intent.getStringExtra("time")}")
+            Log.d("DiaryEditActivity", "Intent data: date=${intent.getStringExtra("date")}, occurrenceType=${intent.getStringExtra("occurrenceType")}")
             startActivity(intent)
         }
     }
