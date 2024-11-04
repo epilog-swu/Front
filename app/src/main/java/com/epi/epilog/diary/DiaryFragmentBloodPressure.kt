@@ -1,11 +1,14 @@
 package com.epi.epilog.diary
 
 import android.os.Bundle
+import android.text.InputFilter
+import android.text.InputType
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import api.DiaryFragment
 import com.epi.epilog.R
@@ -25,6 +28,36 @@ class DiaryFragmentBloodPressure : Fragment(), DiaryFragment {
         systolicEditText = view.findViewById(R.id.input_edit_text_sytolic)
         diastolicEditText = view.findViewById(R.id.input_edit_text_diastolic)
         heartRateEditText = view.findViewById(R.id.input_edit_text_heart_rate)
+
+        // 모든 EditText에 정수만 입력받도록 설정
+        val inputFilter = InputFilter { source, start, end, dest, dstart, dend ->
+            if (source.isEmpty()) {
+                return@InputFilter null // Allow deletion
+            }
+            for (i in start until end) {
+                if (!Character.isDigit(source[i])) {
+                    Toast.makeText(context, "정수만 입력 가능합니다.", Toast.LENGTH_SHORT).show()
+                    return@InputFilter "" // Reject non-digits and show toast
+                }
+            }
+            null // Accept the input
+        }
+
+        systolicEditText?.apply {
+            inputType = InputType.TYPE_CLASS_NUMBER
+            filters = arrayOf(inputFilter)
+        }
+
+        diastolicEditText?.apply {
+            inputType = InputType.TYPE_CLASS_NUMBER
+            filters = arrayOf(inputFilter)
+        }
+
+        heartRateEditText?.apply {
+            inputType = InputType.TYPE_CLASS_NUMBER
+            filters = arrayOf(inputFilter)
+        }
+
         return view
     }
 

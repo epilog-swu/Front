@@ -1,11 +1,14 @@
 package com.epi.epilog.diary
 
 import android.os.Bundle
+import android.text.InputFilter
+import android.text.InputType
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import api.DiaryFragment
 import com.epi.epilog.R
@@ -36,6 +39,24 @@ class DiaryFragmentBloodSugar: Fragment(), DiaryFragment {
 
         val view = inflater.inflate(R.layout.diary_fragment_blood_sugar, container, false)
         bloodSugarEditText = view.findViewById(R.id.bloodSugarEditText)
+
+        // 초기화 후에만 필터를 설정
+        if (::bloodSugarEditText.isInitialized) {
+            bloodSugarEditText.inputType = InputType.TYPE_CLASS_NUMBER
+            bloodSugarEditText.filters = arrayOf(InputFilter { source, start, end, dest, dstart, dend ->
+                if (source.isEmpty()) {
+                    return@InputFilter null // Allow deletion
+                }
+                for (i in start until end) {
+                    if (!Character.isDigit(source[i])) {
+                        Toast.makeText(context, "정수만 입력 가능합니다.", Toast.LENGTH_SHORT).show()
+                        return@InputFilter "" // Reject non-digits and show toast
+                    }
+                }
+                null // Accept the input
+            })
+        }
+
         return view
     }
 
@@ -67,7 +88,4 @@ class DiaryFragmentBloodSugar: Fragment(), DiaryFragment {
             return fragment
         }
     }
-
-
-
 }

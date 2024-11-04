@@ -42,8 +42,8 @@ class MedicineChecklistFragment : Fragment() {
     private var medicationId: Int? = null
     private var checklistItems: MutableList<ChecklistItem> = mutableListOf()
     private lateinit var instructionTextView: TextView
-    private lateinit var recyclerView: RecyclerView
-    private lateinit var medicineAdapter: MedicineAdapter // Define adapter here for easy access
+    lateinit var recyclerView: RecyclerView
+    lateinit var medicineAdapter: MedicineAdapter // Define adapter here for easy access
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
@@ -72,10 +72,11 @@ class MedicineChecklistFragment : Fragment() {
             val bottomSheetFragment = MedicineBottomSheetFragment().apply {
                 arguments = Bundle().apply {
                     putInt("checklist_item_id", item.id)
+                    putString("goal_time", item.goalTime)
                     putString("selected_date", selectedDate.toString()) // 선택된 날짜 전달
                 }
             }
-            bottomSheetFragment.show(parentFragmentManager, bottomSheetFragment.tag)
+            bottomSheetFragment.show(childFragmentManager, bottomSheetFragment.tag)
         }
         recyclerView.adapter = medicineAdapter
 
@@ -123,18 +124,23 @@ class MedicineChecklistFragment : Fragment() {
         return sharedPreferences?.getString("AuthToken", "") ?: ""
     }
 
-    public fun selectDate(date: LocalDate) {
+    fun selectDate(date: LocalDate) {
+        Log.d("selectDate", "Selecting date: $date")
         selectedDate = date
         fetchMedicationChecklist(date)
     }
 
     fun onDateSelected(date: LocalDate) {
         val currentSelection = selectedDate
+        Log.d("onDateSelected", "Current selection: $currentSelection, New selection: $date")
         selectedDate = date
 
         weekCalendarView.notifyDateChanged(date)
         currentSelection?.let {
-            if (it != date) weekCalendarView.notifyDateChanged(it)
+            if (it != date) {
+                weekCalendarView.notifyDateChanged(it)
+                Log.d("onDateSelected", "Notified calendar view to change date: $it")
+            }
         }
 
         Toast.makeText(context, "선택된 날짜: $date", Toast.LENGTH_SHORT).show()
@@ -144,6 +150,7 @@ class MedicineChecklistFragment : Fragment() {
     private fun fetchMedicationChecklist(date: LocalDate) {
         val dateString = date.toString()
         val token = "Bearer " + getTokenFromSession()
+        Log.d("fetchMedicationChecklist", "Fetching checklist for date: $dateString")
 
         RetrofitClient.retrofitService.getMedicationChecklist(dateString, token).enqueue(object :
             Callback<MedicationChecklistResponse> {
@@ -153,20 +160,23 @@ class MedicineChecklistFragment : Fragment() {
             ) {
                 if (response.isSuccessful) {
                     response.body()?.let { fetchedResponse ->
+                        Log.d("fetchMedicationChecklist", "Received response for date: $dateString with ${fetchedResponse.checklist.size} items")
                         medicationId = fetchedResponse.medicationId
 
                         checklistItems.clear()
                         checklistItems.addAll(fetchedResponse.checklist.filter {
-                            it.goalTime.startsWith(
-                                dateString
-                            )
+                            it.goalTime.startsWith(dateString)
                         })
+                        Log.d("fetchMedicationChecklist", "Filtered and added ${checklistItems.size} items to the list")
                         medicineAdapter.notifyDataSetChanged()
+                        Log.d("fetchMedicationChecklist", "Adapter notified of data set change")
 
                         instructionTextView.visibility =
                             if (checklistItems.isEmpty()) View.GONE else View.VISIBLE
+                        Log.d("fetchMedicationChecklist", "Instruction text view visibility set to ${if (checklistItems.isEmpty()) "GONE" else "VISIBLE"}")
                     }
                 } else {
+                    Log.e("fetchMedicationChecklist", "Failed to load checklist. Response code: ${response.code()}, message: ${response.message()}")
                     Toast.makeText(
                         context,
                         "Failed to load medication checklist",
@@ -176,6 +186,7 @@ class MedicineChecklistFragment : Fragment() {
             }
 
             override fun onFailure(call: Call<MedicationChecklistResponse>, t: Throwable) {
+                Log.e("fetchMedicationChecklist", "Error fetching checklist: ${t.message}")
                 Toast.makeText(
                     context,
                     "Error fetching checklist: ${t.message}",
@@ -185,15 +196,24 @@ class MedicineChecklistFragment : Fragment() {
         })
     }
 
+
+    // applyStateChangeToMedicineItem()에서 로그 추가
     fun applyStateChangeToMedicineItem(medicineItemId: Int, newState: State) {
+        Log.d("applyStateChange", "Received newState: $newState for item ID: $medicineItemId")
+
         val itemIndex = checklistItems.indexOfFirst { it.id == medicineItemId }
         if (itemIndex != -1) {
-            checklistItems[itemIndex].state = newState
-            medicineAdapter.updateItem(itemIndex, checklistItems[itemIndex])
+            checklistItems[itemIndex] = checklistItems[itemIndex].copy(state = newState)
+            Log.d("applyStateChange", "Updated item: ${checklistItems[itemIndex]}")
+            medicineAdapter.updateChecklist(ArrayList(checklistItems))
+            Log.d("applyStateChange", "Adapter updated")
         } else {
+            Log.d("applyStateChange", "Item not found")
             fetchMedicationChecklist(selectedDate!!)
         }
     }
+
+
 
     private fun initWeekCalendarView() {
         weekCalendarView.dayBinder = object : WeekDayBinder<DayViewContainer> {
@@ -270,21 +290,24 @@ class MedicineChecklistFragment : Fragment() {
                     status = newState
                 )
 
+                Log.d("b", "Updating status for ID: $checklistItemId to state: $newState at time: $time")
+
                 RetrofitClient.retrofitService.updateMedicineStatus(checklistItemId, "Bearer $token", requestBody).enqueue(object :
                     Callback<ApiResponse> {
                     override fun onResponse(call: Call<ApiResponse>, response: Response<ApiResponse>) {
                         if (response.isSuccessful) {
-                            Log.d("MedicineChecklistFragment", "Status updated successfully for ID: $checklistItemId")
+                            Log.d("updateMedicineStatus", "Status updated successfully for ID: $checklistItemId to state: $newState")
                         } else {
-                            Log.e("MedicineChecklistFragment", "Failed to update status for ID: $checklistItemId. Response code: ${response.code()}, message: ${response.message()}")
+                            Log.e("updateMedicineStatus", "Failed to update status for ID: $checklistItemId to state: $newState. Response code: ${response.code()}, message: ${response.message()}")
                         }
                     }
 
                     override fun onFailure(call: Call<ApiResponse>, t: Throwable) {
-                        Log.e("MedicineChecklistFragment", "Error updating status for ID: $checklistItemId", t)
+                        Log.e("updateMedicineStatus", "Error updating status for ID: $checklistItemId to state: $newState", t)
                     }
                 })
             }
+
 
             private fun updateViewBasedOnState(item: ChecklistItem) {
                 when (item.state) {
@@ -349,8 +372,10 @@ class MedicineChecklistFragment : Fragment() {
         override fun getItemCount(): Int = checklist.size
 
         fun updateChecklist(newChecklist: MutableList<ChecklistItem>) {
-            checklist = newChecklist
-            notifyDataSetChanged()
+            checklist.clear()
+            checklist.addAll(newChecklist)
+            notifyDataSetChanged() // 전체 리스트 갱신
         }
+
     }
 }

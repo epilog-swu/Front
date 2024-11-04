@@ -219,6 +219,19 @@ class CalendarPage : Fragment() {
         setupPdfGeneration() // Setup PDF generation buttons and logic
     }
 
+    //PDF 변환을 위한 선택 기간 중 일지 유무 검사를 위해 쓰이는 함수
+    private fun generateDateRange(start: LocalDate, end: LocalDate): List<LocalDate> {
+        val dates = mutableListOf<LocalDate>()
+        var currentDate = start
+
+        while (!currentDate.isAfter(end)) {
+            dates.add(currentDate)
+            currentDate = currentDate.plusDays(1)
+        }
+
+        return dates
+    }
+
     private fun setupPdfGeneration() {
         // 기간선택하기를 누르면, 활성화해주고, 범위선택
         binding.pdfRangeBtn.setOnClickListener {
@@ -244,7 +257,19 @@ class CalendarPage : Fragment() {
         // PDF 변환하기를 누르면, 기간 선택하고 대화상자 생성
         binding.pdfDownloadBtn.setOnClickListener {
             if (rangeStartDate != null && rangeEndDate != null) {
-                val dateFormatter = DateTimeFormatter.ofPattern("yyyy년 M월 d일", Locale.getDefault())
+
+                // 선택된 범위의 일지 개수를 확인
+                val datesInRange = generateDateRange(rangeStartDate!!, rangeEndDate!!)
+                val totalDiaryCount = datesInRange.sumOf { diaryCountsMap[it] ?: 0 }
+
+                if (totalDiaryCount == 0) {
+                    Toast.makeText(
+                        context,
+                        "선택한 범위에 일지가 없습니다. 하나이상의 일지를 포함하도록 다시 설정해주세요.",
+                        Toast.LENGTH_LONG
+                    ).show()
+                    return@setOnClickListener
+                }
 
                 val inflater = LayoutInflater.from(requireContext())
                 val dialogBinding = EpiDialogCustomBinding.inflate(inflater)
