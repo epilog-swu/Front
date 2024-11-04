@@ -31,6 +31,17 @@ class MedicineBottomSheetFragment : BottomSheetDialogFragment() {
 
     private var selectedTimeFromPicker: String? = null
 
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        val parentFragment = parentFragment
+        if (parentFragment !is MedicineChecklistFragment) {
+            Log.e("MedicineBottomSheetFragment", "Warning: This fragment was not attached to MedicineChecklistFragment")
+        } else {
+            Log.d("MedicineBottomSheetFragment", "Attached to MedicineChecklistFragment")
+        }
+    }
+
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -77,7 +88,7 @@ class MedicineBottomSheetFragment : BottomSheetDialogFragment() {
         }
 
 
-        //TODO: 보내는 시간 GOALTIME 인지 확인
+        //TODO: 보내는 시간 GOALTIME 인지 확인. 제대로 보내고 있는지 확인해야함
         binding.bottomButton2.setOnClickListener {
             // TimePicker를 통해 시간을 선택하도록 BottomSheet2 열기
             val timePickerFragment = MedicineBottomSheetFragment2()
@@ -133,10 +144,20 @@ class MedicineBottomSheetFragment : BottomSheetDialogFragment() {
         val checklistItemId = arguments?.getInt("checklist_item_id")
         Log.d("applyChanges", "Applying changes to item ID: $checklistItemId with state: $newState at $time")
 
+        // 로그 추가 예시
         checklistItemId?.let { id ->
             val parentFragment = parentFragment as? MedicineChecklistFragment
+
+            // parentFragment가 null인지 확인하는 로그 추가
+            if (parentFragment == null) {
+                Log.d("applyChanges", "parentFragment is null")
+            } else {
+                Log.d("applyChanges", "parentFragment is not null and is of type: ${parentFragment::class.java.simpleName}")
+            }
+
             parentFragment?.applyStateChangeToMedicineItem(id, newState)
 
+            // goalTime 설정
             val goalTimeFromArgs = arguments?.getString("goal_time")
             val formattedGoalTime = goalTimeFromArgs?.let {
                 LocalDateTime.parse(it, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"))
@@ -158,6 +179,7 @@ class MedicineBottomSheetFragment : BottomSheetDialogFragment() {
                 Log.d("applyChanges", "Refetched data for date: $it")
             }
         }
+
 
         dismiss()
     }

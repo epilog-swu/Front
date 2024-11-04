@@ -76,7 +76,7 @@ class MedicineChecklistFragment : Fragment() {
                     putString("selected_date", selectedDate.toString()) // 선택된 날짜 전달
                 }
             }
-            bottomSheetFragment.show(parentFragmentManager, bottomSheetFragment.tag)
+            bottomSheetFragment.show(childFragmentManager, bottomSheetFragment.tag)
         }
         recyclerView.adapter = medicineAdapter
 
