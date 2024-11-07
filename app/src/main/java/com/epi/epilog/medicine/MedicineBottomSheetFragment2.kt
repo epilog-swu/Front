@@ -36,11 +36,11 @@ class MedicineBottomSheetFragment2 : BottomSheetDialogFragment() {
             val selectedHour = binding.timePicker.hour
             val selectedMinute = binding.timePicker.minute
 
-            // 선택된 시간을 문자열로 포맷
             val selectedTime = LocalDateTime.now()
                 .withHour(selectedHour)
                 .withMinute(selectedMinute)
-                .format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"))
+                .format(DateTimeFormatter.ofPattern("HH:mm:ss"))
+
 
             // 선택된 시간을 FragmentResult로 반환
             parentFragmentManager.setFragmentResult(
