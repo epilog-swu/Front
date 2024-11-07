@@ -90,14 +90,51 @@ class MedicineBottomSheetFragment : BottomSheetDialogFragment() {
 
         //TODO: 보내는 시간 GOALTIME 인지 확인. 제대로 보내고 있는지 확인해야함
         binding.bottomButton2.setOnClickListener {
+
             // TimePicker를 통해 시간을 선택하도록 BottomSheet2 열기
             val timePickerFragment = MedicineBottomSheetFragment2()
             timePickerFragment.show(parentFragmentManager, "timePicker")
+
+            // 서버에서 받은 goalTime을 특정 포맷으로 변환하여 사용
+            val goalTimeFromArgs = arguments?.getString("goal_time")
+
+            val formattedGoalDate = goalTimeFromArgs?.let {
+                LocalDateTime.parse(it, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"))
+                    .format(DateTimeFormatter.ofPattern("yyyy-MM-dd"))
+            }
+
+            if (checklistItemId != null) {
+                // TimePicker에서 선택된 시간 수신 대기
+                parentFragmentManager.setFragmentResultListener("timePickerRequestKey", this) { _, bundle ->
+                    selectedTimeFromPicker = bundle.getString("selectedTime")
+                    // 선택된 시간이 있을 경우 서버, UI 업데이트
+                    selectedTimeFromPicker?.let { time ->
+                        // formattedGoalDate와 selectedTime을 결합하여 새로운 문자열 생성
+                        val combinedDateTime = "$formattedGoalDate $time"
+                        updateMedicineStatus(checklistItemId, State.복용, combinedDateTime)
+                        applyChanges(State.복용, combinedDateTime, selectedDate)
+                    }
+                }
+            } else {
+                Log.e("MedicineBottomSheetFragment", "ErrorCase2: checklistItemid is not properly formatted or missing")
+            }
         }
 
+
+        //TODO : 3번 해야함.
         binding.bottomButton3.setOnClickListener {
             val currentTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"))
-            applyChanges(State.미복용, currentTime, selectedDate)
+
+            if (currentTime != null) {
+                if (checklistItemId != null) {
+                    //서버 업데이트
+                    updateMedicineStatus(checklistItemId,State.미복용,currentTime)
+                }
+                //UI 업데이트
+                applyChanges(State.미복용, currentTime, selectedDate)
+            } else {
+                Log.e("MedicineBottomSheetFragment", "Error: goalTime is not properly formatted or missing")
+            }
         }
     }
 
@@ -157,17 +194,17 @@ class MedicineBottomSheetFragment : BottomSheetDialogFragment() {
 
             parentFragment?.applyStateChangeToMedicineItem(id, newState)
 
-            // goalTime 설정
-            val goalTimeFromArgs = arguments?.getString("goal_time")
-            val formattedGoalTime = goalTimeFromArgs?.let {
-                LocalDateTime.parse(it, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"))
-                    .format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"))
-            }
-
-            if (formattedGoalTime != null) {
-                updateMedicineStatus(id, newState, formattedGoalTime)
-            }
-            Log.d("applyChanges", "Called updateMedicineStatus for ID: $id")
+//            // goalTime 설정
+//            val goalTimeFromArgs = arguments?.getString("goal_time")
+//            val formattedGoalTime = goalTimeFromArgs?.let {
+//                LocalDateTime.parse(it, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"))
+//                    .format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"))
+//            }
+//
+//            if (formattedGoalTime != null) {
+//                updateMedicineStatus(id, newState, formattedGoalTime)
+//            }
+//            Log.d("applyChanges", "Called updateMedicineStatus for ID: $id")
 
             // 상태 변경 후 UI 강제 새로고침 로그 추가
             Log.d("applyChanges", "Invalidating RecyclerView and requesting layout refresh")
