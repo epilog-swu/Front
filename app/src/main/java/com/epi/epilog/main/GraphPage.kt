@@ -243,8 +243,6 @@ class GraphPage : Fragment() {
     }
 
 
-
-
     //혈당 데이터 초기화 함수
     private fun initLineChart(view: View) {
         val lineChart: LineChart = view.findViewById(R.id.app_graph_blood_sugar_chart)

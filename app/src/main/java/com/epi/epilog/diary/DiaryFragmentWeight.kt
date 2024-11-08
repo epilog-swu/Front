@@ -6,12 +6,15 @@ import android.graphics.Bitmap
 import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
+import android.text.InputFilter
+import android.text.InputType
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.ImageView
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import api.DiaryFragment
 import com.epi.epilog.R
@@ -54,6 +57,31 @@ class DiaryFragmentWeight : Fragment(), DiaryFragment {
         bodyFatEditText = view.findViewById(R.id.bodyFatEditText)
         uploadImageView = view.findViewById(R.id.uploadImageView)
 
+        // 모든 EditText에 정수만 입력받도록 설정
+        val inputFilter = InputFilter { source, start, end, dest, dstart, dend ->
+            if (source.isEmpty()) {
+                return@InputFilter null // Allow deletion
+            }
+            for (i in start until end) {
+                if (!Character.isDigit(source[i])) {
+                    Toast.makeText(context, "정수만 입력 가능합니다.", Toast.LENGTH_SHORT).show()
+                    return@InputFilter "" // Reject non-digits and show toast
+                }
+            }
+            null // Accept the input
+        }
+
+        weightEditText?.apply {
+            inputType = InputType.TYPE_CLASS_NUMBER
+            filters = arrayOf(inputFilter)
+        }
+
+        bodyFatEditText?.apply {
+            inputType = InputType.TYPE_CLASS_NUMBER
+            filters = arrayOf(inputFilter)
+        }
+
+        //TODO: 이미지 업로드 작업
         uploadImageView?.setOnClickListener {
             val intent = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
             startActivityForResult(intent, PICK_IMAGE_REQUEST)

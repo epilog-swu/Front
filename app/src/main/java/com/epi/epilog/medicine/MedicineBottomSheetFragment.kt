@@ -31,6 +31,16 @@ class MedicineBottomSheetFragment : BottomSheetDialogFragment() {
 
     private var selectedTimeFromPicker: String? = null
 
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        val parentFragment = parentFragment
+        if (parentFragment !is MedicineChecklistFragment) {
+            Log.e("MedicineBottomSheetFragment", "Warning: This fragment was not attached to MedicineChecklistFragment")
+        } else {
+            Log.d("MedicineBottomSheetFragment", "Attached to MedicineChecklistFragment")
+        }
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -44,6 +54,7 @@ class MedicineBottomSheetFragment : BottomSheetDialogFragment() {
 
         val checklistItemId = arguments?.getInt("checklist_item_id")
         val selectedDate = arguments?.getString("selected_date")?.let { LocalDate.parse(it) }
+        val goalTimeFromArgs = arguments?.getString("goal_time") // 추가된 부분
         val parentFragment = parentFragment as? MedicineChecklistFragment
 
         // TimePicker에서 선택된 시간 수신 대기
@@ -56,10 +67,26 @@ class MedicineBottomSheetFragment : BottomSheetDialogFragment() {
         }
 
         binding.bottomButton1.setOnClickListener {
-            val goalTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"))
-            applyChanges(State.복용, goalTime, selectedDate)
+            // 서버에서 받은 goalTime을 특정 포맷으로 변환하여 사용
+            val goalTimeFromArgs = arguments?.getString("goal_time")
+            val formattedGoalTime = goalTimeFromArgs?.let {
+                LocalDateTime.parse(it, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"))
+                    .format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"))
+            }
+
+            if (formattedGoalTime != null) {
+                if (checklistItemId != null) {
+                    //서버 업데이트
+                    updateMedicineStatus(checklistItemId,State.복용,formattedGoalTime)
+                }
+                //UI 업데이트
+                applyChanges(State.복용, formattedGoalTime, selectedDate)
+            } else {
+                Log.e("MedicineBottomSheetFragment", "Error: goalTime is not properly formatted or missing")
+            }
         }
 
+        //TODO: 보내는 시간 GOALTIME 인지 확인. 제대로 보내고 있는지 확인해야함
         binding.bottomButton2.setOnClickListener {
             // TimePicker를 통해 시간을 선택하도록 BottomSheet2 열기
             val timePickerFragment = MedicineBottomSheetFragment2()
@@ -77,6 +104,7 @@ class MedicineBottomSheetFragment : BottomSheetDialogFragment() {
         return sharedPreferences?.getString("AuthToken", "") ?: ""
     }
 
+    //서버 상태 업데이트
     private fun updateMedicineStatus(checklistItemId: Int, newState: State, time: String) {
         val token = getTokenFromSession()
 
@@ -89,6 +117,9 @@ class MedicineBottomSheetFragment : BottomSheetDialogFragment() {
             time = time,
             status = newState
         )
+
+        // Request body 내용을 로그로 출력
+        Log.d("updateMedicineStatus", "Request body: time = ${requestBody.time}, status = ${requestBody.status}")
 
         RetrofitClient.retrofitService.updateMedicineStatus(checklistItemId, "Bearer $token", requestBody).enqueue(object :
             Callback<ApiResponse> {
@@ -106,20 +137,44 @@ class MedicineBottomSheetFragment : BottomSheetDialogFragment() {
         })
     }
 
+    //UI 업데이트
     private fun applyChanges(newState: State, time: String, selectedDate: LocalDate?) {
         val checklistItemId = arguments?.getInt("checklist_item_id")
+        Log.d("applyChanges", "Applying changes to item ID: $checklistItemId with state: $newState at $time")
 
+        // 로그 추가 예시
         checklistItemId?.let { id ->
             val parentFragment = parentFragment as? MedicineChecklistFragment
+
+            // parentFragment가 null인지 확인하는 로그 추가
+            if (parentFragment == null) {
+                Log.d("applyChanges", "parentFragment is null")
+            } else {
+                Log.d("applyChanges", "parentFragment is not null and is of type: ${parentFragment::class.java.simpleName}")
+            }
+
             parentFragment?.applyStateChangeToMedicineItem(id, newState)
 
-            updateMedicineStatus(id, newState, time)
-            Log.d("MedicineBottomSheetFragment", "ID: $id changed to State: $newState at $time")
+            // goalTime 설정
+            val goalTimeFromArgs = arguments?.getString("goal_time")
+            val formattedGoalTime = goalTimeFromArgs?.let {
+                LocalDateTime.parse(it, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"))
+                    .format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"))
+            }
 
-            // 상태가 변경되면 선택된 날짜의 데이터를 자동으로 새로고침
+            if (formattedGoalTime != null) {
+                updateMedicineStatus(id, newState, formattedGoalTime)
+            }
+            Log.d("applyChanges", "Called updateMedicineStatus for ID: $id")
+
+            // 상태 변경 후 UI 강제 새로고침 로그 추가
+            Log.d("applyChanges", "Invalidating RecyclerView and requesting layout refresh")
+            parentFragment?.recyclerView?.invalidate()
+            parentFragment?.recyclerView?.requestLayout()
+
             selectedDate?.let {
                 parentFragment?.selectDate(it)
-                Log.d("MedicineBottomSheetFragment", "날짜: $it")
+                Log.d("applyChanges", "Refetched data for date: $it")
             }
         }
 

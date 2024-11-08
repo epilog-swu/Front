@@ -136,10 +136,17 @@ class LoginActivity : AppCompatActivity() {
                     val responseBody = response.body()
                     saveTokenToSession(responseBody)
                     Log.d(TAG, "Token: $responseBody")
-                    navigateToMainActivity()
+
+                    // 토큰 유효성 검사
+                    validateToken(responseBody)
                 } else {
                     Log.d(TAG, "Login failed with HTTP status code: ${response.code()}")
-                    Toast.makeText(this@LoginActivity, "로그인 실패: HTTP status code ${response.code()}", Toast.LENGTH_SHORT).show()
+                    if (response.code() == 403) {
+                        // 403 Forbidden일 경우 StartActivity로 이동
+                        redirectToStartActivity()
+                    } else {
+                        Toast.makeText(this@LoginActivity, "로그인 실패: HTTP status code ${response.code()}", Toast.LENGTH_SHORT).show()
+                    }
                 }
             }
 
@@ -148,6 +155,39 @@ class LoginActivity : AppCompatActivity() {
                 Toast.makeText(this@LoginActivity, "로그인 실패: ${t.message}", Toast.LENGTH_SHORT).show()
             }
         })
+    }
+
+    private fun validateToken(token: String?) {
+        if (token.isNullOrEmpty()) {
+            Toast.makeText(this, "토큰이 없습니다.", Toast.LENGTH_SHORT).show()
+            redirectToStartActivity()
+            return
+        }
+
+        retrofitService.testApi("Bearer $token").enqueue(object : Callback<Void> {
+            override fun onResponse(call: Call<Void>, response: Response<Void>) {
+                if (response.isSuccessful) {
+                    navigateToMainActivity() // 유효할 경우 메인 액티비티로 이동
+                } else {
+                    Log.d(TAG, "Token validation failed with HTTP status code: ${response.code()}")
+                    if (response.code() == 403) {
+                        Toast.makeText(this@LoginActivity, "토큰 유효성 검사 실패: 403", Toast.LENGTH_SHORT).show()
+                        redirectToStartActivity()
+                    }
+                }
+            }
+
+            override fun onFailure(call: Call<Void>, t: Throwable) {
+                Log.d(TAG, "토큰 유효성 검사 실패: ${t.message}")
+                Toast.makeText(this@LoginActivity, "토큰 유효성 검사 실패: ${t.message}", Toast.LENGTH_SHORT).show()
+            }
+        })
+    }
+
+    private fun redirectToStartActivity() {
+        val intent = Intent(this, StartActivity::class.java)
+        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+        startActivity(intent)
     }
 
     private fun checkAndRequestPermissions() {
