@@ -342,11 +342,17 @@ class CalendarPage : Fragment() {
                         ).show()
                     }
                 } else {
-                    Toast.makeText(
-                        context,
-                        "Failed to download PDF: ${response.message()}",
-                        Toast.LENGTH_SHORT
-                    ).show()
+                    // 403 에러 시 로그인 페이지로 리다이렉트
+                    if (response.code() == 403) {
+                        Toast.makeText(context, "Session expired. Redirecting to login page...", Toast.LENGTH_SHORT).show()
+                        redirectToLogin()
+                    } else {
+                        Toast.makeText(
+                            context,
+                            "Failed to download PDF: ${response.message()}",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
                 }
             }
 
@@ -356,6 +362,7 @@ class CalendarPage : Fragment() {
             }
         })
     }
+
 
     private fun getAuthToken(): String {
         val sharedPrefs = context?.getSharedPreferences("AppPrefs", Context.MODE_PRIVATE)

@@ -41,7 +41,6 @@ class MedicineBottomSheetFragment : BottomSheetDialogFragment() {
         }
     }
 
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -86,7 +85,6 @@ class MedicineBottomSheetFragment : BottomSheetDialogFragment() {
                 Log.e("MedicineBottomSheetFragment", "Error: goalTime is not properly formatted or missing")
             }
         }
-
 
         //TODO: 보내는 시간 GOALTIME 인지 확인. 제대로 보내고 있는지 확인해야함
         binding.bottomButton2.setOnClickListener {
@@ -217,10 +215,8 @@ class MedicineBottomSheetFragment : BottomSheetDialogFragment() {
             }
         }
 
-
         dismiss()
     }
-
 
     override fun onDestroyView() {
         super.onDestroyView()

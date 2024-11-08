@@ -13,7 +13,6 @@ import android.widget.CheckBox
 import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
-import com.epi.epilog.signup.LoginActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.epi.epilog.R
@@ -23,6 +22,7 @@ import com.epi.epilog.api.MedicationChecklistResponse
 import com.epi.epilog.api.MedicationStatusUpdateRequest
 import com.epi.epilog.api.RetrofitClient
 import com.epi.epilog.api.State
+import com.epi.epilog.signup.LoginActivity
 import com.kizitonwose.calendar.core.WeekDay
 import com.kizitonwose.calendar.view.ViewContainer
 import com.kizitonwose.calendar.view.WeekCalendarView
@@ -42,26 +42,44 @@ class MedicineChecklistFragment : Fragment() {
     private var medicationId: Int? = null
     private var checklistItems: MutableList<ChecklistItem> = mutableListOf()
     private lateinit var instructionTextView: TextView
-    lateinit var recyclerView: RecyclerView
-    lateinit var medicineAdapter: MedicineAdapter // Define adapter here for easy access
+    internal lateinit var recyclerView: RecyclerView // 'internal'로 수정하여 외부에서 접근 가능하도록 변경
+
+    private lateinit var medicineAdapter: MedicineAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View? {
         val view = inflater.inflate(R.layout.fragment_medicine_checklist, container, false)
 
+        // "기존 약 관리하기" 버튼 클릭 리스너에 토큰 유효성 검사 추가
         view.findViewById<Button>(R.id.add_existing_medicine_button).setOnClickListener {
-            medicationId?.let {
-                val intent = Intent(context, MedicineDetailActivity::class.java)
-                intent.putExtra("medicationId", it)
-                startActivity(intent)
-            } ?: run {
-                Toast.makeText(context, "No medication ID found.", Toast.LENGTH_SHORT).show()
-                Log.e("MedicineChecklistFragment", "medicationId is null when trying to open MedicineDetailActivity")
-            }
+            validateToken(
+                onSuccess = { // 토큰이 유효할 경우 실행
+                    medicationId?.let {
+                        val intent = Intent(context, MedicineDetailActivity::class.java)
+                        intent.putExtra("medicationId", it)
+                        startActivity(intent)
+                    } ?: run {
+                        Toast.makeText(context, "No medication ID found.", Toast.LENGTH_SHORT).show()
+                        Log.e("MedicineChecklistFragment", "medicationId is null when trying to open MedicineDetailActivity")
+                    }
+                },
+                onFailure = { // 토큰이 만료되었을 경우 로그인 페이지로 리다이렉트
+                    redirectToLogin()
+                }
+            )
         }
+
+        // "약 추가하기" 버튼 클릭 리스너에 토큰 유효성 검사 추가
         view.findViewById<Button>(R.id.add_medicine_button).setOnClickListener {
-            startActivity(Intent(context, MedicineAddModifyActivity::class.java))
+            validateToken(
+                onSuccess = { // 토큰이 유효할 경우 실행
+                    startActivity(Intent(context, MedicineAddModifyActivity::class.java))
+                },
+                onFailure = { // 토큰이 만료되었을 경우 로그인 페이지로 리다이렉트
+                    redirectToLogin()
+                }
+            )
         }
 
         instructionTextView = view.findViewById(R.id.instruction_text_view)
@@ -73,7 +91,7 @@ class MedicineChecklistFragment : Fragment() {
                 arguments = Bundle().apply {
                     putInt("checklist_item_id", item.id)
                     putString("goal_time", item.goalTime)
-                    putString("selected_date", selectedDate.toString()) // 선택된 날짜 전달
+                    putString("selected_date", selectedDate.toString())
                 }
             }
             bottomSheetFragment.show(childFragmentManager, bottomSheetFragment.tag)
@@ -83,36 +101,45 @@ class MedicineChecklistFragment : Fragment() {
         return view
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        validateToken()
+        validateToken(
+            onSuccess = { // 토큰이 유효할 경우 초기 로직 실행
+                selectDate(LocalDate.now())
+            },
+            onFailure = { // 토큰이 만료되었을 경우 로그인 페이지로 리다이렉트
+                redirectToLogin()
+            }
+        )
 
         weekCalendarView = view.findViewById(R.id.meal_calendarView)
         initWeekCalendarView()
     }
 
-    private fun validateToken() {
+    // 토큰 유효성 검사 함수
+    private fun validateToken(onSuccess: () -> Unit, onFailure: () -> Unit) {
         val token = getTokenFromSession()
         if (token.isEmpty()) {
-            redirectToLogin()
+            redirectToLogin() // 토큰이 비어 있으면 바로 리다이렉트
             return
         }
         RetrofitClient.retrofitService.testApi("Bearer $token").enqueue(object : Callback<Void> {
             override fun onResponse(call: Call<Void>, response: Response<Void>) {
                 if (response.isSuccessful) {
-                    selectDate(LocalDate.now())
-                } else {
-                    redirectToLogin()
+                    onSuccess() // 토큰이 유효할 때
+                } else if (response.code() == 403) {
+                    onFailure() // 토큰이 만료되었을 때
                 }
             }
 
             override fun onFailure(call: Call<Void>, t: Throwable) {
                 Toast.makeText(context, "Network error: ${t.message}", Toast.LENGTH_LONG).show()
-                redirectToLogin()
+                onFailure() // 네트워크 오류 시에도 로그인 페이지로 리다이렉트
             }
         })
     }
 
+    // 로그인 페이지로 리다이렉트하는 함수
     private fun redirectToLogin() {
         val intent = Intent(context, LoginActivity::class.java)
         intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
@@ -125,22 +152,17 @@ class MedicineChecklistFragment : Fragment() {
     }
 
     fun selectDate(date: LocalDate) {
-        Log.d("selectDate", "Selecting date: $date")
         selectedDate = date
         fetchMedicationChecklist(date)
     }
 
     fun onDateSelected(date: LocalDate) {
         val currentSelection = selectedDate
-        Log.d("onDateSelected", "Current selection: $currentSelection, New selection: $date")
         selectedDate = date
 
         weekCalendarView.notifyDateChanged(date)
         currentSelection?.let {
-            if (it != date) {
-                weekCalendarView.notifyDateChanged(it)
-                Log.d("onDateSelected", "Notified calendar view to change date: $it")
-            }
+            if (it != date) weekCalendarView.notifyDateChanged(it)
         }
 
         Toast.makeText(context, "선택된 날짜: $date", Toast.LENGTH_SHORT).show()
@@ -150,7 +172,6 @@ class MedicineChecklistFragment : Fragment() {
     private fun fetchMedicationChecklist(date: LocalDate) {
         val dateString = date.toString()
         val token = "Bearer " + getTokenFromSession()
-        Log.d("fetchMedicationChecklist", "Fetching checklist for date: $dateString")
 
         RetrofitClient.retrofitService.getMedicationChecklist(dateString, token).enqueue(object :
             Callback<MedicationChecklistResponse> {
@@ -160,23 +181,18 @@ class MedicineChecklistFragment : Fragment() {
             ) {
                 if (response.isSuccessful) {
                     response.body()?.let { fetchedResponse ->
-                        Log.d("fetchMedicationChecklist", "Received response for date: $dateString with ${fetchedResponse.checklist.size} items")
                         medicationId = fetchedResponse.medicationId
 
                         checklistItems.clear()
                         checklistItems.addAll(fetchedResponse.checklist.filter {
                             it.goalTime.startsWith(dateString)
                         })
-                        Log.d("fetchMedicationChecklist", "Filtered and added ${checklistItems.size} items to the list")
-                        medicineAdapter.notifyDataSetChanged()
-                        Log.d("fetchMedicationChecklist", "Adapter notified of data set change")
+                        medicineAdapter.updateChecklist(ArrayList(checklistItems))
 
                         instructionTextView.visibility =
                             if (checklistItems.isEmpty()) View.GONE else View.VISIBLE
-                        Log.d("fetchMedicationChecklist", "Instruction text view visibility set to ${if (checklistItems.isEmpty()) "GONE" else "VISIBLE"}")
                     }
                 } else {
-                    Log.e("fetchMedicationChecklist", "Failed to load checklist. Response code: ${response.code()}, message: ${response.message()}")
                     Toast.makeText(
                         context,
                         "Failed to load medication checklist",
@@ -186,7 +202,6 @@ class MedicineChecklistFragment : Fragment() {
             }
 
             override fun onFailure(call: Call<MedicationChecklistResponse>, t: Throwable) {
-                Log.e("fetchMedicationChecklist", "Error fetching checklist: ${t.message}")
                 Toast.makeText(
                     context,
                     "Error fetching checklist: ${t.message}",
@@ -196,24 +211,15 @@ class MedicineChecklistFragment : Fragment() {
         })
     }
 
-
-    // applyStateChangeToMedicineItem()에서 로그 추가
     fun applyStateChangeToMedicineItem(medicineItemId: Int, newState: State) {
-        Log.d("applyStateChange", "Received newState: $newState for item ID: $medicineItemId")
-
         val itemIndex = checklistItems.indexOfFirst { it.id == medicineItemId }
         if (itemIndex != -1) {
             checklistItems[itemIndex] = checklistItems[itemIndex].copy(state = newState)
-            Log.d("applyStateChange", "Updated item: ${checklistItems[itemIndex]}")
             medicineAdapter.updateChecklist(ArrayList(checklistItems))
-            Log.d("applyStateChange", "Adapter updated")
         } else {
-            Log.d("applyStateChange", "Item not found")
             fetchMedicationChecklist(selectedDate!!)
         }
     }
-
-
 
     private fun initWeekCalendarView() {
         weekCalendarView.dayBinder = object : WeekDayBinder<DayViewContainer> {
@@ -266,17 +272,16 @@ class MedicineChecklistFragment : Fragment() {
                 medicineCheckbox.setOnClickListener {
                     if (item.state == State.미복용 || item.state == State.복용) {
                         item.state = State.상태없음
-                        applyStateChangeToMedicineItem(item.id, item.state)  // 상태를 변경하고 UI 갱신
-                        updateMedicineStatus(item.id, State.상태없음, item.goalTime)  // 서버에 상태 업데이트
-                        notifyItemChanged(adapterPosition)  // 아이템 업데이트
+                        applyStateChangeToMedicineItem(item.id, item.state)
+                        updateMedicineStatus(item.id, State.상태없음, item.goalTime)
+                        notifyItemChanged(adapterPosition)
                         Toast.makeText(itemView.context, "취소되었습니다.", Toast.LENGTH_SHORT).show()
-
                     }
                 }
 
-
                 medicineCheckbox.isClickable = item.state != State.상태없음
             }
+
             private fun updateMedicineStatus(checklistItemId: Int, newState: State, time: String) {
                 val token = getTokenFromSession()
 
@@ -290,24 +295,21 @@ class MedicineChecklistFragment : Fragment() {
                     status = newState
                 )
 
-                Log.d("b", "Updating status for ID: $checklistItemId to state: $newState at time: $time")
-
                 RetrofitClient.retrofitService.updateMedicineStatus(checklistItemId, "Bearer $token", requestBody).enqueue(object :
                     Callback<ApiResponse> {
                     override fun onResponse(call: Call<ApiResponse>, response: Response<ApiResponse>) {
                         if (response.isSuccessful) {
-                            Log.d("updateMedicineStatus", "Status updated successfully for ID: $checklistItemId to state: $newState")
+                            Log.d("updateMedicineStatus", "Status updated successfully for ID: $checklistItemId")
                         } else {
-                            Log.e("updateMedicineStatus", "Failed to update status for ID: $checklistItemId to state: $newState. Response code: ${response.code()}, message: ${response.message()}")
+                            Log.e("updateMedicineStatus", "Failed to update status. Response code: ${response.code()}, message: ${response.message()}")
                         }
                     }
 
                     override fun onFailure(call: Call<ApiResponse>, t: Throwable) {
-                        Log.e("updateMedicineStatus", "Error updating status for ID: $checklistItemId to state: $newState", t)
+                        Log.e("updateMedicineStatus", "Error updating status for ID: $checklistItemId", t)
                     }
                 })
             }
-
 
             private fun updateViewBasedOnState(item: ChecklistItem) {
                 when (item.state) {
@@ -315,24 +317,18 @@ class MedicineChecklistFragment : Fragment() {
                         applyStrikeThrough(medicineName, medicineTime, true)
                         itemView.setBackgroundResource(R.drawable.medicine_background)
                     }
-
                     State.상태없음 -> {
                         applyStrikeThrough(medicineName, medicineTime, false)
-
-                        // Set the background based on the goal time and current time
                         val goalTime = LocalDateTime.parse(
                             item.goalTime,
                             DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")
                         )
                         val currentTime = LocalDateTime.now()
 
-                        if (goalTime.isBefore(currentTime)) {
-                            // If the goal time is before the current time, set the background to red
-                            itemView.setBackgroundResource(R.drawable.background_red)
-                        } else {
-                            // If the goal time is after the current time, set the background to yellow
-                            itemView.setBackgroundResource(R.drawable.background_yellow)
-                        }
+                        itemView.setBackgroundResource(
+                            if (goalTime.isBefore(currentTime)) R.drawable.background_red
+                            else R.drawable.background_yellow
+                        )
                     }
                 }
             }
@@ -346,10 +342,8 @@ class MedicineChecklistFragment : Fragment() {
                     medicineName.paintFlags = medicineName.paintFlags or Paint.STRIKE_THRU_TEXT_FLAG
                     medicineTime.paintFlags = medicineTime.paintFlags or Paint.STRIKE_THRU_TEXT_FLAG
                 } else {
-                    medicineName.paintFlags =
-                        medicineName.paintFlags and Paint.STRIKE_THRU_TEXT_FLAG.inv()
-                    medicineTime.paintFlags =
-                        medicineTime.paintFlags and Paint.STRIKE_THRU_TEXT_FLAG.inv()
+                    medicineName.paintFlags = medicineName.paintFlags and Paint.STRIKE_THRU_TEXT_FLAG.inv()
+                    medicineTime.paintFlags = medicineTime.paintFlags and Paint.STRIKE_THRU_TEXT_FLAG.inv()
                 }
             }
         }
@@ -364,18 +358,12 @@ class MedicineChecklistFragment : Fragment() {
             holder.bind(checklist[position])
         }
 
-        fun updateItem(position: Int, updatedItem: ChecklistItem) {
-            checklist[position] = updatedItem
-            notifyItemChanged(position)
-        }
-
         override fun getItemCount(): Int = checklist.size
 
         fun updateChecklist(newChecklist: MutableList<ChecklistItem>) {
             checklist.clear()
             checklist.addAll(newChecklist)
-            notifyDataSetChanged() // 전체 리스트 갱신
+            notifyDataSetChanged()
         }
-
     }
 }
