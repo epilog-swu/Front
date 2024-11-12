@@ -35,7 +35,7 @@ class DiaryFragmentWeight : Fragment(), DiaryFragment {
         try {
             data.put("weight", weightEditText?.text.toString())
             data.put("bodyFatPercentage", bodyFatEditText?.text.toString())
-            //TODO : 일단 이미지 빼고.. 나중에 추가
+            // bodyPhoto 필드를 null로 설정
             data.put("bodyPhoto", JSONObject.NULL)
 
         } catch (e: JSONException) {

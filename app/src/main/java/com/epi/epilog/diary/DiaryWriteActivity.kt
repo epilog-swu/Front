@@ -148,7 +148,9 @@ class DiaryWriteActivity : AppCompatActivity() {
         val heartRate = getFragmentData<DiaryFragmentBloodPressure>()?.optString("heartRate") ?: null
         val weight = getFragmentData<DiaryFragmentWeight>()?.optString("weight") ?: null
         val bodyFatPercentage = getFragmentData<DiaryFragmentWeight>()?.optString("bodyFatPercentage") ?: null
-        val bodyPhoto = getFragmentData<DiaryFragmentWeight>()?.optString("bodyPhoto") ?: null
+        val bodyPhoto = getFragmentData<DiaryFragmentWeight>()?.let { fragmentData ->
+            if (fragmentData.isNull("bodyPhoto")) null else fragmentData.getString("bodyPhoto")
+        }
         val exercise = getFragmentData<DiaryFragmentExercise>()?.optJSONArray("exercise")?.let { parseExerciseEntries(it) } ?: null
         val mood = getFragmentData<DiaryFragmentMood>()?.optJSONArray("mood")?.let { parseMoodEntries(it) } ?: null
 
