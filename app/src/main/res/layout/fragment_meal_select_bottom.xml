@@ -1,0 +1,51 @@
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    app:behavior_hideable="true"
+    app:behavior_draggable="true"
+    android:background="@drawable/main_bottom"
+    app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
+
+    <ImageView
+        android:src="@drawable/main_bsd_small_line"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="5dp"/>
+
+    <Button
+        android:id="@+id/bottom_button1"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:text="등록된 시간에 식사했습니다"
+        android:background="@drawable/medicine_bottom_check_button"
+        app:layout_constraintTop_toBottomOf="@+id/yesdiary_bsd_small_line"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
+    <Button
+        android:id="@+id/bottom_button2"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="다른 시간에 식사했습니다"
+        android:background="@drawable/medicine_bottom_check_button"
+        app:layout_constraintTop_toBottomOf="@+id/bottom_button1"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
+    <Button
+        android:id="@+id/bottom_button3"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="식사를 건너뛰었습니다"
+        android:background="@drawable/medicine_bottom_check_button"
+        app:layout_constraintTop_toBottomOf="@+id/bottom_button2"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
+</androidx.constraintlayout.widget.ConstraintLayout>
