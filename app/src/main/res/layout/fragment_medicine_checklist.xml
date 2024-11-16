@@ -30,7 +30,7 @@
 
     <!-- Calendar Layout -->
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/weekcalendar_layout"
+        android:id="@+id/mealchklist_weekcalendar_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_constraintBottom_toTopOf="@id/header_view"
@@ -67,7 +67,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        app:layout_constraintTop_toBottomOf="@id/weekcalendar_layout"
+        app:layout_constraintTop_toBottomOf="@id/mealchklist_weekcalendar_layout"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginTop="10dp">

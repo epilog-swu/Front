@@ -1,0 +1,50 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="92dp"
+    android:orientation="horizontal"
+    android:gravity="center_vertical"
+    android:padding="40px"
+    android:layout_marginStart="12dp"
+    android:layout_marginEnd="12dp"
+    android:layout_marginTop="10dp"
+    android:layout_marginBottom="10dp">
+
+    <!--Todo: 나중에 이미지 다른거 네개 만들어야 될듯...? -->
+    <ImageView
+        android:layout_width="57dp"
+        android:layout_height="57dp"
+        android:src="@drawable/food_basic_image1" />
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:orientation="vertical"
+        android:layout_marginStart="16dp">
+
+        <TextView
+            android:id="@+id/meal_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Time"
+            android:textColor="#000"
+            android:textSize="16dp"
+            />
+
+        <TextView
+            android:id="@+id/meal_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Meal Name"
+            android:textColor="#000"
+            android:textSize="14dp"
+            />
+    </LinearLayout>
+
+    <CheckBox
+        android:id="@+id/meal_checkbox"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:background="@drawable/medicine_check_button"
+        android:button="@null" />
+</LinearLayout>
