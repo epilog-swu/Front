@@ -155,9 +155,18 @@ interface RetrofitService {
     ): Call<ApiResponse>
 
 
+    //식사 체크리스트 목록 조회
     @Headers("Content-Type: application/json")
     @GET("/api/meals")
     fun getMealChecklist(@Query("date") date: String, @Header("Authorization") token: String): Call<MealChecklistResponse>
+
+    //식사 체크리스트 수정
+    @PATCH("api/meals/{chklistId}")
+    fun updateMealStatus(
+        @Path("chklistId") chklistId: Int,
+        @Header("Authorization") token: String,
+        @Body request: MealStatusUpdateRequest
+    ): Call<ApiResponse>
 }
 
 enum class State {
@@ -361,6 +370,11 @@ data class MealChecklistItem(
     val title: String,
     var isComplete: Boolean,
     var state: MealState
+)
+
+data class MealStatusUpdateRequest(
+    val time: String,
+    val status: MealState
 )
 
 

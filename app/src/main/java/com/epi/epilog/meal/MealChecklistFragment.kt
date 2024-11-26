@@ -16,11 +16,14 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.epi.epilog.R
+import com.epi.epilog.api.ApiResponse
 import com.epi.epilog.api.MealChecklistItem
 import com.epi.epilog.api.MealChecklistResponse
 import com.epi.epilog.api.MedicationStatusUpdateRequest
 import com.epi.epilog.api.RetrofitClient
 import com.epi.epilog.api.MealState
+import com.epi.epilog.api.MealStatusUpdateRequest
+import com.epi.epilog.api.State
 import com.epi.epilog.medicine.MedicineAddModifyActivity
 import com.epi.epilog.medicine.MedicineBottomSheetFragment
 import com.epi.epilog.medicine.MedicineDetailActivity
@@ -90,25 +93,25 @@ class MealChecklistFragment : Fragment() {
             Log.e("MealChecklistFragment", "Button not found!")
         }
 
-        // "식사 시간 관리하기" 버튼 클릭 리스너에 토큰 유효성 검사 추가
-//        manageButton.setOnClickListener {
-//            validateToken(
-//                onSuccess = { // 토큰이 유효할 경우 실행
-//                    //TODO : 무슨 작업 할지 나중에 수정
-////                    medicationId?.let {
-////                        val intent = Intent(context, MedicineDetailActivity::class.java)
-////                        intent.putExtra("medicationId", it)
-////                        startActivity(intent)
-////                    } ?: run {
-////                        Toast.makeText(context, "No medication ID found.", Toast.LENGTH_SHORT).show()
-////                        Log.e("MedicineChecklistFragment", "medicationId is null when trying to open MedicineDetailActivity")
-////                    }
-//                },
-//                onFailure = { // 토큰이 만료되었을 경우 로그인 페이지로 리다이렉트
-//                    redirectToLogin()
-//                }
-//            )
-//        }
+        //"식사 시간 관리하기" 버튼 클릭 리스너에 토큰 유효성 검사 추가
+        manageButton.setOnClickListener {
+            validateToken(
+                onSuccess = { // 토큰이 유효할 경우 실행
+                    //TODO : 무슨 작업 할지 나중에 수정
+//                    medicationId?.let {
+//                        val intent = Intent(context, MedicineDetailActivity::class.java)
+//                        intent.putExtra("medicationId", it)
+//                        startActivity(intent)
+//                    } ?: run {
+//                        Toast.makeText(context, "No medication ID found.", Toast.LENGTH_SHORT).show()
+//                        Log.e("MedicineChecklistFragment", "medicationId is null when trying to open MedicineDetailActivity")
+//                    }
+                },
+                onFailure = { // 토큰이 만료되었을 경우 로그인 페이지로 리다이렉트
+                    redirectToLogin()
+                }
+            )
+        }
 
         // "식사 관리 하기" 버튼 클릭 리스너에 토큰 유효성 검사 추가
         view.findViewById<Button>(R.id.manage_mealtime_button).setOnClickListener {
@@ -163,6 +166,10 @@ class MealChecklistFragment : Fragment() {
             ) {
                 if (response.isSuccessful) {
                     response.body()?.let { fetchedResponse ->
+
+                        // 성공 로그 추가
+                        Log.d("FetchMealChecklist", "Successfully fetched meal checklist: $fetchedResponse")
+
                         checklistItems.clear()
                         checklistItems.addAll(fetchedResponse.checklist.filter {
                             it.goalTime.startsWith(dateString)
@@ -189,6 +196,16 @@ class MealChecklistFragment : Fragment() {
                 ).show()
             }
         })
+    }
+
+    fun applyStateChangeToMealItem(mealItemId: Int, newState: MealState) {
+        val itemIndex = checklistItems.indexOfFirst { it.id == mealItemId }
+        if (itemIndex != -1) {
+            checklistItems[itemIndex] = checklistItems[itemIndex].copy(state = newState)
+            mealAdapter.updateChecklist(ArrayList(checklistItems))
+        } else {
+            fetchMealChecklist(selectedDate!!)
+        }
     }
 
     private fun getTokenFromSession(): String {
@@ -256,6 +273,8 @@ class MealChecklistFragment : Fragment() {
         private val onItemClicked: (MealChecklistItem) -> Unit
     ) : RecyclerView.Adapter<MealAdapter.MealViewHolder>() {
 
+        //private var isClickable: Boolean = false
+
         inner class MealViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
             val mealTime: TextView = itemView.findViewById(com.epi.epilog.R.id.meal_time)
             val mealCheckBox: CheckBox = itemView.findViewById(com.epi.epilog.R.id.meal_checkbox)
@@ -270,55 +289,66 @@ class MealChecklistFragment : Fragment() {
                 itemView.setOnClickListener { onItemClicked(item) }
 
                 //TODO : 체크박스 클릭 리스너
-//                mealCheckBox.setOnClickListener {
-//                    if (item.state == State.미복용 || item.state == State.복용) {
-//                        item.state = State.상태없음
-//                        applyStateChangeToMedicineItem(item.id, item.state)
-//                        updateMedicineStatus(item.id, State.상태없음, item.goalTime)
-//                        notifyItemChanged(adapterPosition)
-//                        Toast.makeText(itemView.context, "취소되었습니다.", Toast.LENGTH_SHORT).show()
-//                    }
-//                }
+                mealCheckBox.setOnClickListener {
+                    if (item.state == MealState.건너뜀 || item.state == MealState.식사함) {
+                        item.state = MealState.상태없음
+                        applyStateChangeToMealItem(item.id, item.state)
+                        updateMealStatus(item.id, MealState.상태없음, item.goalTime)
+                        notifyItemChanged(adapterPosition)
+                        Toast.makeText(itemView.context, "취소되었습니다.", Toast.LENGTH_SHORT).show()
+                    }
+                    else {
+                        item.state = MealState.식사함
+                        applyStateChangeToMealItem(item.id,item.state)
+                        updateMealStatus(item.id,MealState.식사함,item.goalTime)
+                        notifyItemChanged(adapterPosition)
+                        Toast.makeText(itemView.context, "체크되었습니다.", Toast.LENGTH_SHORT).show()
+                    }
+                }
 
-                //mealAdapter.isClickable = item.state != State.상태없음
+                //mealAdapter.isClickable = item.state != MealState.상태없음
             }
 
-            //            private fun updateMedicineStatus(checklistItemId: Int, newState: State, time: String) {
-//                val token = getTokenFromSession()
-//
-//                if (token.isNullOrBlank()) {
-//                    Log.e("MedicineChecklistFragment", "Token is missing or invalid")
-//                    return
-//                }
-//
-//                val requestBody = MedicationStatusUpdateRequest(
-//                    time = time,
-//                    status = newState
-//                )
-//
-//                RetrofitClient.retrofitService.updateMedicineStatus(checklistItemId, "Bearer $token", requestBody).enqueue(object :
-//                    Callback<ApiResponse> {
-//                    override fun onResponse(call: Call<ApiResponse>, response: Response<ApiResponse>) {
-//                        if (response.isSuccessful) {
-//                            Log.d("updateMedicineStatus", "Status updated successfully for ID: $checklistItemId")
-//                        } else {
-//                            Log.e("updateMedicineStatus", "Failed to update status. Response code: ${response.code()}, message: ${response.message()}")
-//                        }
-//                    }
-//
-//                    override fun onFailure(call: Call<ApiResponse>, t: Throwable) {
-//                        Log.e("updateMedicineStatus", "Error updating status for ID: $checklistItemId", t)
-//                    }
-//                })
-//            }
-//
+            private fun updateMealStatus(checklistItemId: Int, newState: MealState, time: String) {
+                val token = getTokenFromSession()
+
+                if (token.isNullOrBlank()) {
+                    Log.e("MealChecklistFragment", "Token is missing or invalid")
+                    return
+                }
+
+                val requestBody = MealStatusUpdateRequest(
+                    time = time,
+                    status = newState
+                )
+
+                RetrofitClient.retrofitService.updateMealStatus(checklistItemId, "Bearer $token", requestBody).enqueue(object :
+                    Callback<ApiResponse> {
+                    override fun onResponse(call: Call<ApiResponse>, response: Response<ApiResponse>) {
+                        if (response.isSuccessful) {
+                            Log.d("updateMealStatus", "Status updated successfully for ID: $checklistItemId")
+                        } else {
+                            Log.e("updateMealStatus", "Failed to update status. Response code: ${response.code()}, message: ${response.message()}")
+                        }
+                    }
+
+                    override fun onFailure(call: Call<ApiResponse>, t: Throwable) {
+                        Log.e("updateMealStatus", "Error updating status for ID: $checklistItemId", t)
+                    }
+                })
+            }
+
+
+
             private fun updateViewBasedOnState(item: MealChecklistItem) {
                 when (item.state) {
                     MealState.식사함, MealState.건너뜀 -> {
+                        applyStrikeThrough(mealTime,true)
                         itemView.setBackgroundResource(R.drawable.medicine_background)
                     }
 
                     MealState.상태없음 -> {
+                        applyStrikeThrough(mealTime, false)
                         val goalTime = LocalDateTime.parse(
                             item.goalTime,
                             DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")
@@ -333,21 +363,16 @@ class MealChecklistFragment : Fragment() {
                 }
             }
 
-//            }
-
-//            private fun applyStrikeThrough(
-//                medicineName: TextView,
-//                medicineTime: TextView,
-//                isComplete: Boolean
-//            ) {
-//                if (isComplete) {
-//                    medicineName.paintFlags = medicineName.paintFlags or Paint.STRIKE_THRU_TEXT_FLAG
-//                    medicineTime.paintFlags = medicineTime.paintFlags or Paint.STRIKE_THRU_TEXT_FLAG
-//                } else {
-//                    medicineName.paintFlags = medicineName.paintFlags and Paint.STRIKE_THRU_TEXT_FLAG.inv()
-//                    medicineTime.paintFlags = medicineTime.paintFlags and Paint.STRIKE_THRU_TEXT_FLAG.inv()
-//                }
-//            }
+            private fun applyStrikeThrough(
+                mealTime: TextView,
+                isComplete: Boolean
+            ) {
+                if (isComplete) {
+                    mealTime.paintFlags = mealTime.paintFlags or Paint.STRIKE_THRU_TEXT_FLAG
+                } else {
+                    mealTime.paintFlags = mealTime.paintFlags and Paint.STRIKE_THRU_TEXT_FLAG.inv()
+                }
+            }
             }
 
 
