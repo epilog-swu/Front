@@ -153,6 +153,11 @@ interface RetrofitService {
         @Header("Authorization") token: String,
         @Body request: MedicationStatusUpdateRequest
     ): Call<ApiResponse>
+
+
+    @Headers("Content-Type: application/json")
+    @GET("/api/meals")
+    fun getMealChecklist(@Query("date") date: String, @Header("Authorization") token: String): Call<MealChecklistResponse>
 }
 
 enum class State {
@@ -343,6 +348,19 @@ data class MedicationDetailResponse(
     val effectiveness: String,
     val precautions: String,
     val storageMethod: String
+)
+
+data class MealChecklistResponse(
+    val date: String,
+    val checklist: List<MealChecklistItem>
+)
+
+data class MealChecklistItem(
+    val id: Int,
+    val goalTime: String,
+    val title: String,
+    var isComplete: Boolean,
+    var state: MealState
 )
 
 
