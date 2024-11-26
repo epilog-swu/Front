@@ -24,6 +24,7 @@ import com.epi.epilog.api.RetrofitClient
 import com.epi.epilog.api.MealState
 import com.epi.epilog.api.MealStatusUpdateRequest
 import com.epi.epilog.api.State
+import com.epi.epilog.medicine.MealBottomSheetFragment
 import com.epi.epilog.medicine.MedicineAddModifyActivity
 import com.epi.epilog.medicine.MedicineBottomSheetFragment
 import com.epi.epilog.medicine.MedicineDetailActivity
@@ -46,7 +47,7 @@ class MealChecklistFragment : Fragment() {
     private var selectedDate: LocalDate? = LocalDate.now()
     private var checklistItems: MutableList<MealChecklistItem> = mutableListOf()
     private lateinit var instructionTextView: TextView
-    private lateinit var recyclerView: RecyclerView
+    lateinit var recyclerView: RecyclerView
     private lateinit var mealAdapter: MealAdapter
 
     override fun onCreateView(
@@ -62,7 +63,7 @@ class MealChecklistFragment : Fragment() {
         recyclerView = view.findViewById(R.id.meal_content_layout)
         recyclerView.layoutManager = LinearLayoutManager(context)
         mealAdapter = MealAdapter(checklistItems) { item ->
-            val bottomSheetFragment = MedicineBottomSheetFragment().apply {
+            val bottomSheetFragment = MealBottomSheetFragment().apply {
                 arguments = Bundle().apply {
                     putInt("checklist_item_id", item.id)
                     putString("goal_time", item.goalTime)
@@ -273,7 +274,7 @@ class MealChecklistFragment : Fragment() {
         private val onItemClicked: (MealChecklistItem) -> Unit
     ) : RecyclerView.Adapter<MealAdapter.MealViewHolder>() {
 
-        //private var isClickable: Boolean = false
+        private var isClickable: Boolean = false
 
         inner class MealViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
             val mealTime: TextView = itemView.findViewById(com.epi.epilog.R.id.meal_time)
@@ -297,16 +298,16 @@ class MealChecklistFragment : Fragment() {
                         notifyItemChanged(adapterPosition)
                         Toast.makeText(itemView.context, "취소되었습니다.", Toast.LENGTH_SHORT).show()
                     }
-                    else {
-                        item.state = MealState.식사함
-                        applyStateChangeToMealItem(item.id,item.state)
-                        updateMealStatus(item.id,MealState.식사함,item.goalTime)
-                        notifyItemChanged(adapterPosition)
-                        Toast.makeText(itemView.context, "체크되었습니다.", Toast.LENGTH_SHORT).show()
-                    }
+//                    else {
+//                        item.state = MealState.식사함
+//                        applyStateChangeToMealItem(item.id,item.state)
+//                        updateMealStatus(item.id,MealState.식사함,item.goalTime)
+//                        notifyItemChanged(adapterPosition)
+//                        Toast.makeText(itemView.context, "체크되었습니다.", Toast.LENGTH_SHORT).show()
+//                    }
                 }
 
-                //mealAdapter.isClickable = item.state != MealState.상태없음
+                mealAdapter.isClickable = item.state != MealState.상태없음
             }
 
             private fun updateMealStatus(checklistItemId: Int, newState: MealState, time: String) {
