@@ -31,14 +31,14 @@
             android:textSize="16dp"
             />
 
-        <TextView
-            android:id="@+id/meal_name"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Meal Name"
-            android:textColor="#000"
-            android:textSize="14dp"
-            />
+<!--        <TextView-->
+<!--            android:id="@+id/meal_name"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:text="Meal Name"-->
+<!--            android:textColor="#000"-->
+<!--            android:textSize="14dp"-->
+<!--            />-->
     </LinearLayout>
 
     <CheckBox
