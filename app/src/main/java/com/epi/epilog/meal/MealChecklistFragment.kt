@@ -89,37 +89,12 @@ class MealChecklistFragment : Fragment() {
             }
         )
 
-        val manageButton = view.findViewById<Button>(R.id.manage_mealtime_button)
-        if (manageButton == null) {
-            Log.e("MealChecklistFragment", "Button not found!")
-        }
-
-        //"식사 시간 관리하기" 버튼 클릭 리스너에 토큰 유효성 검사 추가
-        manageButton.setOnClickListener {
-            validateToken(
-                onSuccess = { // 토큰이 유효할 경우 실행
-                    //TODO : 무슨 작업 할지 나중에 수정
-//                    medicationId?.let {
-//                        val intent = Intent(context, MedicineDetailActivity::class.java)
-//                        intent.putExtra("medicationId", it)
-//                        startActivity(intent)
-//                    } ?: run {
-//                        Toast.makeText(context, "No medication ID found.", Toast.LENGTH_SHORT).show()
-//                        Log.e("MedicineChecklistFragment", "medicationId is null when trying to open MedicineDetailActivity")
-//                    }
-                },
-                onFailure = { // 토큰이 만료되었을 경우 로그인 페이지로 리다이렉트
-                    redirectToLogin()
-                }
-            )
-        }
-
         // "식사 관리 하기" 버튼 클릭 리스너에 토큰 유효성 검사 추가
         view.findViewById<Button>(R.id.manage_mealtime_button).setOnClickListener {
             validateToken(
                 onSuccess = { // 토큰이 유효할 경우 실행
                     //TODO : 여기 실행 클래스명 바껴야함
-                    //startActivity(Intent(context, MedicineAddModifyActivity::class.java))
+                    startActivity(Intent(context, MealManageTimeActivity::class.java))
                 },
                 onFailure = { // 토큰이 만료되었을 경우 로그인 페이지로 리다이렉트
                     redirectToLogin()

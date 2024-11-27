@@ -167,6 +167,13 @@ interface RetrofitService {
         @Header("Authorization") token: String,
         @Body request: MealStatusUpdateRequest
     ): Call<ApiResponse>
+
+    //식사 시간 관리 조회
+    @Headers("Content-Type: application/json")
+    @GET("/api/meals/time")
+    fun getMealChecklist(@Header("Authorization") token: String): Call<List<MealManageResponse>>
+
+
 }
 
 enum class State {
@@ -376,6 +383,13 @@ data class MealStatusUpdateRequest(
     val time: String,
     val status: MealState
 )
+
+data class MealManageResponse(
+    val id : Int,
+    val title : String,
+    var isAlarm : Boolean
+)
+
 
 
 data class Medication(
