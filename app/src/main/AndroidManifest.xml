@@ -49,6 +49,7 @@
         <activity android:name=".meal.ActivityMealManageExercise"/>
         <activity android:name=".meal.ActivityMealManageWeight"/>
         <activity android:name=".meal.MealManageTimeActivity" />
+        <activity android:name=".meal.MealManageTime2Activity" />
 
 
     </application>

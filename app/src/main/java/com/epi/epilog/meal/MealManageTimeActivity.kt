@@ -1,6 +1,7 @@
 package com.epi.epilog.meal
 
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -40,9 +41,7 @@ class MealManageTimeActivity : AppCompatActivity() {
 
         // 식사 추가 버튼 이벤트
         binding.addMealtimeButton.setOnClickListener {
-            // 더미 데이터로 새로운 식사 추가
-            val newMeal = MealManageResponse(3, "저녁식사 18:30", true)
-            mealAdapter.addMeal(newMeal)
+            startActivity(Intent(this, MealManageTime2Activity::class.java))
         }
     }
 
@@ -130,11 +129,6 @@ class MealTimeAdapter(private val meals: MutableList<MealManageResponse>) :
 
     override fun getItemCount(): Int = meals.size
 
-    // 새로운 데이터 추가
-    fun addMeal(meal: MealManageResponse) {
-        meals.add(meal)
-        notifyItemInserted(meals.size - 1)
-    }
 
     // 기존 데이터를 업데이트
     fun updateMeals(newMeals: List<MealManageResponse>) {
