@@ -24,6 +24,7 @@ object RetrofitClient {
     private val retrofit by lazy {
         Retrofit.Builder()
             .baseUrl(BASE_URL)
+            .addConverterFactory(NullOnEmptyConverterFactory()) // 빈 응답 처리
             .addConverterFactory(GsonConverterFactory.create())
             .build()
     }
@@ -167,6 +168,21 @@ interface RetrofitService {
         @Header("Authorization") token: String,
         @Body request: MealStatusUpdateRequest
     ): Call<ApiResponse>
+
+    //식사 시간 관리 조회
+    @Headers("Content-Type: application/json")
+    @GET("/api/meals/time")
+    fun getMealChecklist(@Header("Authorization") token: String): Call<List<MealManageResponse>>
+
+    @Headers("Content-Type: application/json")
+    @POST("/api/meals/time")
+    fun MealManageAddTime(
+        @Header("Authorization") token: String,
+        @Body request: List<MealManageAddRequest> // 배열로 수정
+    ): Call<ApiResponse>
+
+
+
 }
 
 enum class State {
@@ -368,6 +384,8 @@ data class MealChecklistItem(
     val id: Int,
     val goalTime: String,
     val title: String,
+    val mealType: String,
+    val time: String,
     var isComplete: Boolean,
     var state: MealState
 )
@@ -376,6 +394,19 @@ data class MealStatusUpdateRequest(
     val time: String,
     val status: MealState
 )
+
+data class MealManageResponse(
+    val id : Int,
+    val title : String,
+    var isAlarm : Boolean
+)
+
+data class MealManageAddRequest(
+    val time: String,
+    val mealType: String,
+    val isAlarm: Boolean
+)
+
 
 
 data class Medication(

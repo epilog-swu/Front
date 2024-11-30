@@ -4,46 +4,42 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="50dp"
-    android:layout_marginBottom="15dp"
-    android:background="@drawable/diary_container_shape"
-    android:padding="8dp">
+    android:layout_marginTop="30dp"
+    android:layout_marginEnd="30dp"
+    android:layout_marginStart="30dp"
+    android:background="@drawable/diary_container_shape">
 
     <!-- LinearLayout for Medication Name and Remove Button -->
     <LinearLayout
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_weight="1"
         android:orientation="horizontal"
-        android:gravity="center_vertical"
-        android:padding="5dp">
+        android:gravity="center_vertical">
 
         <ImageView
             android:id="@+id/removeButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="8dp"
+            android:layout_marginStart="8dp"
             android:src="@drawable/ic_remove" />
 
         <TextView
-            android:id="@+id/manage_mealtime_mealName"
+            android:id="@+id/manage_mealNameTime"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="@color/black"
             android:textSize="16sp"
             tools:text="아침 식사" />
-
-        <TextView
-            android:id="@+id/manage_mealtime_mealTime"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="5dp"
-            android:textColor="@color/black"
-            android:textSize="16sp"
-            tools:text="07:30" />
     </LinearLayout>
 
     <!-- LinearLayout for Quantity Buttons and Text -->
     <LinearLayout
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
@@ -57,7 +53,7 @@
             android:layout_height="wrap_content"
             android:thumb="@drawable/checkbox_thumb_selector"
             android:track="@drawable/checkbox_track_selector"
-            app:thumbTextPadding="24dp"
+            app:thumbTextPadding="10dp"
             app:switchMinWidth="0dp" />
     </LinearLayout>
 

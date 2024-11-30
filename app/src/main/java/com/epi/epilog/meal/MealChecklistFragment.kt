@@ -89,37 +89,12 @@ class MealChecklistFragment : Fragment() {
             }
         )
 
-        val manageButton = view.findViewById<Button>(R.id.manage_mealtime_button)
-        if (manageButton == null) {
-            Log.e("MealChecklistFragment", "Button not found!")
-        }
-
-        //"식사 시간 관리하기" 버튼 클릭 리스너에 토큰 유효성 검사 추가
-        manageButton.setOnClickListener {
-            validateToken(
-                onSuccess = { // 토큰이 유효할 경우 실행
-                    //TODO : 무슨 작업 할지 나중에 수정
-//                    medicationId?.let {
-//                        val intent = Intent(context, MedicineDetailActivity::class.java)
-//                        intent.putExtra("medicationId", it)
-//                        startActivity(intent)
-//                    } ?: run {
-//                        Toast.makeText(context, "No medication ID found.", Toast.LENGTH_SHORT).show()
-//                        Log.e("MedicineChecklistFragment", "medicationId is null when trying to open MedicineDetailActivity")
-//                    }
-                },
-                onFailure = { // 토큰이 만료되었을 경우 로그인 페이지로 리다이렉트
-                    redirectToLogin()
-                }
-            )
-        }
-
         // "식사 관리 하기" 버튼 클릭 리스너에 토큰 유효성 검사 추가
         view.findViewById<Button>(R.id.manage_mealtime_button).setOnClickListener {
             validateToken(
                 onSuccess = { // 토큰이 유효할 경우 실행
                     //TODO : 여기 실행 클래스명 바껴야함
-                    //startActivity(Intent(context, MedicineAddModifyActivity::class.java))
+                    startActivity(Intent(context, MealManageTimeActivity::class.java))
                 },
                 onFailure = { // 토큰이 만료되었을 경우 로그인 페이지로 리다이렉트
                     redirectToLogin()
@@ -158,6 +133,7 @@ class MealChecklistFragment : Fragment() {
     private fun fetchMealChecklist(date: LocalDate) {
         val dateString = date.toString()
         val token = "Bearer " + getTokenFromSession()
+        Log.d("FetchMealChecklist","token : $token")
 
         RetrofitClient.retrofitService.getMealChecklist(dateString, token).enqueue(object :
             Callback<MealChecklistResponse> {
@@ -165,6 +141,25 @@ class MealChecklistFragment : Fragment() {
                 call: Call<MealChecklistResponse>,
                 response: Response<MealChecklistResponse>
             ) {
+
+                // 응답 상태 코드 로그 출력
+//                Log.d("FetchMealChecklist", "Response code: ${response.code()}")
+//                Log.d("FetchMealChecklist", "Raw response: ${response.raw()}")
+//                Log.d("FetchMealChecklist", "Response body: ${response.body()}")
+//                Log.d("FetchMealChecklist", "Error body: ${response.errorBody()?.string()}")
+
+                // 응답 본문 확인
+                if (response.body() == null) {
+                    Log.e("FetchMealChecklist", "Empty response body")
+                    Toast.makeText(
+                        context,
+                        "해당 날짜 체크리스트가 없습니다.",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                    return
+                }
+
+
                 if (response.isSuccessful) {
                     response.body()?.let { fetchedResponse ->
 
@@ -177,8 +172,17 @@ class MealChecklistFragment : Fragment() {
                         })
                         mealAdapter.updateChecklist(ArrayList(checklistItems))
 
-                        instructionTextView.visibility =
-                            if (checklistItems.isEmpty()) View.GONE else View.VISIBLE
+
+                        // RecyclerView와 안내문 상태 업데이트
+                        if (checklistItems.isEmpty()) {
+                            Log.d("FetchMealChecklist", "No items available. Showing instructionTextView.")
+                            instructionTextView.visibility = View.VISIBLE
+                            recyclerView.visibility = View.GONE
+                        } else {
+                            Log.d("FetchMealChecklist", "Items available. Showing RecyclerView.")
+                            instructionTextView.visibility = View.GONE
+                            recyclerView.visibility = View.VISIBLE
+                        }
                     }
                 } else {
                     Toast.makeText(
@@ -190,11 +194,18 @@ class MealChecklistFragment : Fragment() {
             }
 
             override fun onFailure(call: Call<MealChecklistResponse>, t: Throwable) {
+
+                Log.e("FetchMealChecklist", "Error fetching checklist: ${t.message}")
+                // 요청 정보 출력
+                Log.e("FetchMealChecklist", "Request info: ${call.request().toString()}")
+
+
                 Toast.makeText(
                     context,
                     "Error fetching checklist: ${t.message}",
                     Toast.LENGTH_SHORT
                 ).show()
+
             }
         })
     }
@@ -278,11 +289,12 @@ class MealChecklistFragment : Fragment() {
 
         inner class MealViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
             val mealTime: TextView = itemView.findViewById(com.epi.epilog.R.id.meal_time)
+            val mealName: TextView = itemView.findViewById(com.epi.epilog.R.id.meal_name)
             val mealCheckBox: CheckBox = itemView.findViewById(com.epi.epilog.R.id.meal_checkbox)
 
             fun bind(item: MealChecklistItem) {
-                mealTime.text = item.title
-                //TODO : 상태 바꿔야함
+                mealName.text = item.mealType
+                mealTime.text = item.time
                 mealCheckBox.isChecked = item.state == MealState.식사함 || item.state == MealState.건너뜀
 
                 updateViewBasedOnState(item)
@@ -298,13 +310,6 @@ class MealChecklistFragment : Fragment() {
                         notifyItemChanged(adapterPosition)
                         Toast.makeText(itemView.context, "취소되었습니다.", Toast.LENGTH_SHORT).show()
                     }
-//                    else {
-//                        item.state = MealState.식사함
-//                        applyStateChangeToMealItem(item.id,item.state)
-//                        updateMealStatus(item.id,MealState.식사함,item.goalTime)
-//                        notifyItemChanged(adapterPosition)
-//                        Toast.makeText(itemView.context, "체크되었습니다.", Toast.LENGTH_SHORT).show()
-//                    }
                 }
 
                 mealAdapter.isClickable = item.state != MealState.상태없음
@@ -387,14 +392,17 @@ class MealChecklistFragment : Fragment() {
         }
 
         override fun onBindViewHolder(holder: MealViewHolder, position: Int) {
+            Log.d("MealAdapter", "Binding item at position: $position -> ${checklist[position]}")
             holder.bind(checklist[position])
         }
 
         override fun getItemCount(): Int = checklist.size
 
         fun updateChecklist(newChecklist: MutableList<MealChecklistItem>) {
+            Log.d("MealAdapter", "Updating checklist. New size: ${newChecklist.size}")
             checklist.clear()
             checklist.addAll(newChecklist)
+            Log.d("MealAdapter", "Checklist after update: $checklist")
             notifyDataSetChanged()
         }
 
