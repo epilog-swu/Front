@@ -33,6 +33,7 @@ import retrofit2.Response
 import java.time.DayOfWeek
 import java.time.LocalDate
 import java.time.LocalDateTime
+import java.time.YearMonth
 import java.time.format.DateTimeFormatter
 
 class MedicineChecklistFragment : Fragment() {
@@ -227,6 +228,8 @@ override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
             override fun bind(container: DayViewContainer, data: WeekDay) {
                 container.textView.text = data.date.dayOfMonth.toString()
 
+                Log.d("WeekDayDebug", "WeekDay date: ${data.date}")
+
                 if (data.date == selectedDate) {
                     container.textView.setBackgroundResource(R.drawable.app_week_cal_selected_date)
                 } else {
@@ -238,11 +241,33 @@ override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         }
 
         val currentDate = LocalDate.now()
-        weekCalendarView.setup(
-            currentDate.minusMonths(100).withDayOfMonth(1),
-            currentDate.plusMonths(100).withDayOfMonth(currentDate.lengthOfMonth()),
-            DayOfWeek.SUNDAY
-        )
+
+        // 유효 날짜 계산 함수
+        fun getValidDate(baseDate: LocalDate, monthsToAdd: Long, day: Int): LocalDate {
+            val targetDate = baseDate.plusMonths(monthsToAdd)
+            val yearMonth = YearMonth.of(targetDate.year, targetDate.monthValue)
+            val validDay = if (day in 1..yearMonth.lengthOfMonth()) day else yearMonth.lengthOfMonth()
+            return LocalDate.of(targetDate.year, targetDate.monthValue, validDay)
+        }
+
+        // 시작 날짜와 종료 날짜 계산
+        val startDate = getValidDate(currentDate, -3, 1) // 유효한 첫 날짜
+        val endDate = getValidDate(currentDate, 3, currentDate.lengthOfMonth()) // 유효한 마지막 날짜
+
+        try {
+            // 유효성 검증
+            val testDateRange = generateSequence(startDate) { it.plusDays(1) }
+                .takeWhile { it <= endDate }
+                .toList()
+            Log.d("DateRangeValidation", "Generated dates are valid: ${testDateRange.size} days")
+
+            // weekCalendarView 설정
+            weekCalendarView.setup(startDate, endDate, DayOfWeek.SUNDAY)
+            weekCalendarView.scrollToWeek(currentDate)
+        } catch (e: Exception) {
+            Log.e("DateValidationError", "Invalid date in setup range: ${e.message}", e)
+        }
+        weekCalendarView.setup(startDate, endDate, DayOfWeek.SUNDAY)
         weekCalendarView.scrollToWeek(currentDate)
     }
 

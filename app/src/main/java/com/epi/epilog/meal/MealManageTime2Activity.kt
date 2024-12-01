@@ -1,6 +1,13 @@
 package com.epi.epilog.meal
 
+import android.app.AlarmManager
+import android.app.PendingIntent
+import android.content.Context
+import android.content.Intent
+import android.net.Uri
+import android.os.Build
 import android.os.Bundle
+import android.provider.Settings
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -24,6 +31,7 @@ import com.google.gson.Gson
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import java.util.Calendar
 
 class MealManageTime2Activity : AppCompatActivity() {
 
@@ -68,7 +76,6 @@ class MealManageTime2Activity : AppCompatActivity() {
 
         private fun fetchMealsFromServer() {
                 val token = "Bearer " + getTokenFromSession()
-
                 // 서버 요청
                 RetrofitClient.retrofitService.getMealChecklist(token).enqueue(object :
                         Callback<List<MealManageResponse>> {
@@ -147,6 +154,29 @@ class MealManageTime2Activity : AppCompatActivity() {
                 RetrofitClient.retrofitService.MealManageAddTime(token, mealList).enqueue(object : Callback<ApiResponse> {
                         override fun onResponse(call: Call<ApiResponse>, response: Response<ApiResponse>) {
                                 if (response.isSuccessful) {
+
+                                        // 권한 확인 및 설정 화면 이동 코드
+                                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                                                val alarmManager = getSystemService(AlarmManager::class.java)
+                                                if (!alarmManager.canScheduleExactAlarms()) {
+                                                        val intent = Intent(Settings.ACTION_REQUEST_SCHEDULE_EXACT_ALARM).apply {
+                                                                data = Uri.parse("package:$packageName")
+                                                        }
+                                                        startActivity(intent)
+                                                        Toast.makeText(
+                                                                this@MealManageTime2Activity,
+                                                                "정확한 알람을 설정하려면 권한을 허용해주세요.",
+                                                                Toast.LENGTH_LONG
+                                                        ).show()
+                                                        return // 권한 허용 후 다시 알람을 설정하도록 종료
+                                                }
+                                        }
+
+                                        if (isAlarmEnabled) {
+                                                Log.d("AlarmDebug", "Meal added successfully: $newMeal")
+                                                Log.d("AlarmDebug", "Setting alarm for $newMeal")
+                                                setMealAlarm(newMeal)
+                                        }
                                         Toast.makeText(this@MealManageTime2Activity, "식사 시간이 성공적으로 추가되었습니다.", Toast.LENGTH_SHORT).show()
                                 } else {
                                         Log.e("MealManageTime2", "Request failed! Response code: ${response.code()}")
@@ -161,6 +191,46 @@ class MealManageTime2Activity : AppCompatActivity() {
                         }
                 })
         }
+
+        private fun setMealAlarm(meal: MealManageAddRequest) {
+                val alarmManager = getSystemService(Context.ALARM_SERVICE) as AlarmManager
+                val intent = Intent(this, MealAlarmReceiver::class.java).apply {
+                        putExtra("mealType", meal.mealType)
+                        putExtra("time", meal.time)
+                }
+                val pendingIntent = PendingIntent.getBroadcast(
+                        this,
+                        meal.hashCode(),
+                        intent,
+                        PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+                )
+
+                val parts = meal.time.split(":")
+                val hour = parts[0].toInt()
+                val minute = parts[1].toInt()
+                val calendar = Calendar.getInstance().apply {
+                        timeInMillis = System.currentTimeMillis()
+                        set(Calendar.HOUR_OF_DAY, hour)
+                        set(Calendar.MINUTE, minute)
+                        set(Calendar.SECOND, 0)
+                        set(Calendar.MILLISECOND, 0)
+                        if (before(Calendar.getInstance())) {
+                                add(Calendar.DAY_OF_YEAR, 1)
+                        }
+                }
+
+                alarmManager.setExactAndAllowWhileIdle(
+                        AlarmManager.RTC_WAKEUP,
+                        calendar.timeInMillis,
+                        pendingIntent
+                )
+
+                Toast.makeText(this, "${meal.mealType} 알람이 ${meal.time}에 설정되었습니다.", Toast.LENGTH_SHORT).show()
+                Log.d("AlarmDebug", "Alarm set for ${calendar.time} with intent: ${intent.extras}")
+        }
+
+
+
 
         private fun getTokenFromSession(): String {
                 val sharedPreferences = getSharedPreferences("AppPrefs", MODE_PRIVATE)
